@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Http compression comparison</title>
+<meta name="description" content="Http compression algorithm (brotli, gzip, and zopfli) comparison. Upload your file and see the results.">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#282828">
+<script type="module" src="./script.mjs"></script>
+<style>
+@import '../fonts/asap.css';
+@import '../fonts/cascadia_code.css';
+*{margin:0;padding:0;box-sizing:border-box}
+html{width:100%;height:100%;background:#282828;background-size:100% 100%;color:#bbb;font:400 clamp(12pt, calc(.8vw + .8vh), 32pt) __asap__;font-stretch:115%;line-height:1.4}
+body{min-height:100%;display:grid;place-content:center;padding:2em}
+body.dragover{
+  --conic-bg-angle:0deg;animation:conic-bg-angle 4s infinite linear;
+  background:conic-gradient(from var(--conic-bg-angle) at 125% 50%, #282828, #1f2b3a, #312837, #1f2b3a, #282828);
+}
+@keyframes conic-bg-angle{100%{--conic-bg-angle:1turn}}@property --conic-bg-angle{syntax:'<angle>';inherits:false;initial-value:0deg}
+a,button{color:#adf;text-decoration-color:rgba(170,221,255,.5)}a:hover,button:hover{color:#6af}
+main{display:flex;flex-direction:column;gap:2em;justify-content:center;align-items:center}
+section{display:flex;flex-direction:column;gap:1em;justify-content:center}
+h1,svg,div.graph,section{max-width:50ch}
+h1{color:#daf;font-size:1.25rem;text-align:center;font-weight:900;font-stretch:125%;font-style:italic;letter-spacing:.05em}
+section{width:100%}
+.graph{position:relative;width:100%}
+.graph svg{width:100%}
+.graph svg+div{display:none}
+.empty.graph svg{opacity:.025}
+.empty.graph svg+div{font-size:.85em;position:absolute;inset:0;display:block;padding-top:8em}
+.empty.graph svg+div div{font-size:1.5em;font-style:italic;text-align:center}
+label{text-decoration:underline;cursor:pointer}
+form{display:inline-block}input[type=file]{width:10px;height:10px;opacity:0;overflow:hidden;position:absolute;z-index:-1;pointer-events:none}
+span.warning{color:#e45854}
+a[tabindex="-1"]{touch-action:none;color:#282828}
+</style>
+</head>
+<body class="nodata loading">
+<main>
+<section class="empty">
+<h1>Zlib, Zopfli and Brotli<br>compression comparison</h1>
+<div>You can learn about those compression choices <a href=".">here</a>.</div>
+<div class="empty graph">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -125 180 250">
+  <style>
+  g.bars>rect{transform:scale(1,0.5)}
+  g.bottom.bars>rect{transform:scale(1,0)}
+  g.bars rect.pending{transform:scale(1,0)}
+  g.bars rect{transition:transform 350ms linear}
+  g.bars rect:nth-child(1){fill:currentColor;color:#bd93f9}
+  g.bars rect:nth-child(2){fill:currentColor;color:#f4f99d}
+  g.bars rect:nth-child(3){fill:currentColor;color:#ff5555}
+  g.bars rect:nth-child(4){fill:currentColor;color:#50fa7b}
+  g.bars rect:nth-child(5){transform:none}
+  g.bars a rect{cursor:pointer}
+  g.top.bars rect:nth-child(5),g.axes,g.labels{color:#f8f8f2;fill:currentColor}
+  g.top.bars{transform:scale(1,-1) translate(0,4%)}
+  g.bottom.bars{transform:translate(0,4%)}
+  g.labels text{opacity:1;transition:opacity 300ms linear,transform 300ms linear}
+  g.labels text.pending{opacity:0}
+  g.top.labels{transform:translate(0,-6%)}
+  g.top.labels a{color:inherit}
+  g.top.labels a text{text-decoration:underline;cursor:pointer}
+  g.bottom.labels{transform:translate(0,7%)}
+  use[href="#spinner"]{z-index:-1;opacity:0;transition:opacity 300ms linear}
+  use[href="#spinner"].pending{opacity:1}
+  </style>
+  <defs>
+    <g id="spinner">
+      <path d="M-5,0 a1,1 0 0,0 10,0" fill="none" stroke-linecap="round" stroke-width="2"/>
+      <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="1s" repeatCount="indefinite"/>
+    </g>
+  </defs>
+  <g class="top bars">
+    <rect x="10" y="0" width="20" height="100"/>
+    <rect x="40" y="0" width="20" height="100"/>
+    <rect x="70" y="0" width="20" height="100"/>
+    <rect x="100" y="0" width="20" height="100"/>
+    <rect x="130" y="0" width="20" height="100"/>
+    <use href="#spinner" x="20" y="20" stroke="#bd93f9"/>
+    <use href="#spinner" x="50" y="20" stroke="#f4f99d"/>
+    <use href="#spinner" x="80" y="20" stroke="#ff5555"/>
+    <use href="#spinner" x="110" y="20" stroke="#50fa7b"/>
+  </g>
+  <g class="bottom bars">
+    <rect x="10" y="0" width="20" height="100"/>
+    <rect x="40" y="0" width="20" height="100"/>
+    <rect x="70" y="0" width="20" height="100"/>
+    <rect x="100" y="0" width="20" height="100"/>
+  </g>
+  <g class="top labels" font-size="6">
+    <a><text text-anchor="middle" x="20" y="0" fill="currentColor"></text></a>
+    <a><text text-anchor="middle" x="50" y="0" fill="currentColor"></text></a>
+    <a><text text-anchor="middle" x="80" y="0" fill="currentColor"></text></a>
+    <a><text text-anchor="middle" x="110" y="0" fill="currentColor"></text></a>
+    <text text-anchor="middle" x="140" y="0" fill="currentColor"></text>
+  </g>
+  <g class="bottom labels" font-size="6">
+    <text text-anchor="middle" x="20" y="0" fill="currentColor"></text>
+    <text text-anchor="middle" x="50" y="0" fill="currentColor"></text>
+    <text text-anchor="middle" x="80" y="0" fill="currentColor"></text>
+    <text text-anchor="middle" x="110" y="0" fill="currentColor"></text>
+  </g>
+  <g class="axes" font-size="6">
+    <text text-anchor="middle" x="160" y="-50" style="writing-mode:tb">Size</text>
+    <text text-anchor="middle" x="160" y="50" style="writing-mode:tb">Compression time</text>
+    <rect stroke="currentColor" fill="none" stroke-width="1" x="0" y="-10" height="20" width="170"/>
+    <text text-anchor="middle" x="20" y="-2" fill="currentColor">brotli</text>
+    <text text-anchor="middle" x="20" y="5" fill="currentColor">max</text>
+    <text text-anchor="middle" x="50" y="-2" fill="currentColor">brotli</text>
+    <text text-anchor="middle" x="50" y="5" fill="currentColor">q5</text>
+    <text text-anchor="middle" x="80" y="-2" fill="currentColor">gzip</text>
+    <text text-anchor="middle" x="80" y="5" fill="currentColor">zopfli</text>
+    <text text-anchor="middle" x="110" y="-2" fill="currentColor">gzip</text>
+    <text text-anchor="middle" x="110" y="5" fill="currentColor">zlib</text>
+    <text text-anchor="middle" x="140" y="-2" fill="currentColor">no</text>
+    <text text-anchor="middle" x="140" y="5" fill="currentColor">compression</text>
+  </g>
+</svg>
+<div>
+<div><span>Drop a file here</span><br>or<br><form><label for="file"><a>select&nbsp;one</a></label><input type="file" name="file" id="file"></form>&nbsp;to compress&nbsp;it.</div>
+<br>The compression is done in your browser and the file is never sent out or even saved in the browser storage.
+<br>
+<br><span class="warning">Warning:</span> Zopfli compression is quite slow. Be prepared to wait a while for large files.
+<br>
+<br>You can also try it on the <a id="sample_wasm" href="">wasm file</a> that does the brotli compression,
+or on the <a id="sample_html" href="">html file</a> of the <a href=".">full page</a>.
+</div>
+</div>
+</section>
+</main>
+<a href id="download" tabIndex="-1"></a>
+</body>
+</html>
