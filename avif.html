@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>AVIF Encoder</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Convert your image to AVIF and compare quality and size.">
+<meta name="theme-color" content="#282828">
+<style>
+@import './fonts/asap.css';
+*{margin:0;padding:0;box-sizing:border-box}
+html{width:100%;height:100%;background:#282828;color:#bbb;font:400 clamp(16pt, calc(12pt + .75vw + .75vh), 48pt) __asap__,sans-serif;font-stretch:115%;line-height:1.4}
+pre,code,samp{font:400 1em __cascadia_code__,monospace}
+body{min-height:100%;overflow:hidden;display:grid;place-items:center}
+body>*{grid-area:1/1}
+body[data-original-size-label]:before{content:attr(data-original-size-label);position:absolute;top:0;left:0;z-index:1;font-size:.5em;padding:.5em 1em;background:rgba(0,0,0,.2);color:#fff;border-bottom-right-radius:1em}
+body[data-compressed-size-label]:after{content:attr(data-compressed-size-label);position:absolute;bottom:0;left:0;z-index:1;font-size:.5em;padding:.5em 1em;background:rgba(0,0,0,.2);color:#fff;border-top-right-radius:1em}
+#helper{max-width:24ch;text-align:center}
+body.dragover:after{content:'';position:absolute;inset:0;background:#888;opacity:.2}
+body>img:not([src]){display:none}
+#handle{height:5px;width:100%;padding:10px;box-sizing:content-box;background:currentColor;background-clip:content-box;z-index:0;cursor:row-resize}
+body>img:not([src])+#handle{display:none}
+body>a>svg{position:absolute;bottom:0;right:0;width:1.5em;height:1.5em;padding:.25em}svg path{fill:currentColor}
+body>img:not([src])+#handle+a{display:none}
+#spinner{display:none}
+#spinner[active]{
+  display:block;position:absolute;top:0;right:0;margin:.25em;width:1em;height:1em;
+  border-radius:50%;border:3px solid rgba(200,200,200,.3);border-top-color:rgb(200,200,200);animation:spin 1s ease-in-out infinite
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+body:not([data-compressed-size-label]) #compressed{filter:grayscale(.67)}
+body:not([data-compressed-size-label]) a[download]{display:none}
+#compressed[src]{clip-path:inset(50% 0 0 0)}
+a{color:#adf}a:hover{color:#6af}
+img{position:absolute;width:auto;height:100%}
+</style>
+<style class="media-query"></style>
+</head>
+<body>
+<img id="original">
+<img id="compressed">
+<div id="handle"></div>
+<a href="#" download="compressed.avif" title="Download compressed image"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 12v7H5v-7H3v7l2 2h14l2-2v-7h-2zm-6 1 3-3 1 2-5 5-5-5 1-2 3 3V3h2v10z"/></svg></a>
+<div id="spinner"></div>
+<div id="helper">Paste (or drop) a photograph to compress it or try&nbsp;<a id="example" href="#">an&nbsp;example</a></div>
+</body>
+<script type="module">
+const sizeLabel=(size,original=false)=>{
+  let m='';
+  if(size>1024){
+    m='KB';size/=1024;
+    if(size>1024){
+      m='MB';size/=1024;
+    }
+  }
+  size=size.toFixed(2).replace(/[.]?0+$/,'');
+  return `${original?'Original image: ':'Compressed image: '}${size} ${m}`;
+};
+
+let mediaQuery=document.querySelector('style.media-query');
+const spinner=document.querySelector('#spinner');
+const original=document.querySelector('#original');
+const compressed=document.querySelector('#compressed');
+const img=document.createElement('img');
+let resizer=import('./lib/resize_worker.mjs');
+let encoder=import('./lib/avif_worker.mjs');
+let controller;
+function bytes(file){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=e=>resolve(new Uint8Array(e.target.result));
+    reader.onerror=e=>reject(e?.target?.error||e);
+    reader.readAsArrayBuffer(file);
+  });
+}
+async function open({bytes,type,uhd}){
+  controller?.abort();
+  spinner.setAttribute('active','');
+  controller=new AbortController();
+  const blob=new Blob([bytes],{type});
+  let url=URL.createObjectURL(blob);
+  try{
+    await new Promise((r,t)=>{
+      img.addEventListener('load',r);
+      img.addEventListener('error',t);
+      img.src=url;
+    });
+  }catch(_){
+    console.error('AVIF not natively supported');
+    URL.revokeObjectURL(url);
+    return;
+  }
+  await new Promise(r=>{
+    original.addEventListener('load',r);
+    original.src=url;
+  });
+  await new Promise(r=>{
+    compressed.addEventListener('load',r);
+    compressed.src=url;
+  });
+  document.body.setAttribute('data-original-size-label',sizeLabel(bytes.length,true));
+  const width=img.width;
+  const height=img.height;
+  uhd=uhd??(width+height)>5030;
+  let su='b';
+  let size=bytes.length;
+  if(size>1024){
+    size/=1024;
+    su='kb';
+    if(size>1024){
+      size/=1024;
+      su='mb';
+    }
+  }
+  size=size.toFixed(2).replace(/[.]?0+$/,'');
+  console.info(`Original image: width = ${width}px, height = ${height}px, ${size}${su}`);
+  const style=document.createElement('style');
+  style.classList.add('media-query');
+  style.textContent=`
+@media(min-aspect-ratio:${width}/${height}){
+  body>img{
+    width:100%;
+    height:auto;
+  }
+}`;
+  mediaQuery.parentElement.replaceChild(style,mediaQuery);
+  mediaQuery=style;
+  const canvas=new OffscreenCanvas(width,height);
+  const context=canvas.getContext('2d');
+  context.drawImage(img,0,0);
+  let rgba=new Uint8Array(context.getImageData(0,0,width,height).data);
+  canvas.width=canvas.height=1;
+  const {resize}=await resizer;
+  const {avif}=await encoder;
+  const ratio=Math.min(1,(uhd?2160:1440)/Math.min(width,height));
+  let compressedUrl;
+  const updateConverted=async(bytes)=>{
+    URL.revokeObjectURL(compressedUrl);
+    const blob=new Blob([bytes],{type:'image/avif'});
+    compressedUrl=URL.createObjectURL(blob);
+    try {
+      await new Promise((r, t) => {
+        compressed.addEventListener('load', r);
+        compressed.addEventListener('error', t);
+        compressed.src=compressedUrl;
+      });
+    }catch(_){
+      console.error('AVIF not natively supported');
+      return;
+    }
+    document.body.setAttribute('data-compressed-size-label',sizeLabel(bytes.length));
+    document.querySelector('a[download]').href=compressedUrl;
+  };
+  await(async()=>{
+    const w=Math.round(width*ratio);
+    const h=Math.round(height*ratio);
+    const w2=Math.round(w*.75);
+    const h2=Math.round(h*.75);
+    let resized=await resize(rgba,width,height,w2,h2,true,controller.signal);
+    await (async()=>{
+      const target=uhd?75:85;
+      let bytes=await avif(
+        resized,w2,h2,target,9,controller.signal,`AVIF(quality = ${target}%, speed = .9, resize(image, ${w2}, ${h2}))`
+      );
+      await updateConverted(bytes);
+    })();
+    resized=ratio!==1?await resize(rgba,width,height,w,h,true,controller.signal):rgba;
+    rgba=null;
+    const controller2=new AbortController();
+    await Promise.all([
+      (async()=>{
+        const target=uhd?65:70;
+        const bytes=await avif(
+          resized,w,h,target,7,controller2.signal,`AVIF(quality = ${target}%, speed = 7/10, width = ${w}px, height = ${h}px)`
+        );
+        await updateConverted(bytes);
+      })(),
+      (async()=>{
+        const target=uhd?65:70;
+        let bytes;
+        try{
+          bytes=await avif(
+            resized,w,h,target,2,controller.signal,`AVIF(quality = ${target}%, speed = 2/10, width = ${w}px, height = ${h}px)`
+          );
+        }finally{
+          controller2.abort(`AVIF(quality = ${target}%, speed = 2/10, width = ${w}px, height = ${h}px) finished first.`);
+          spinner.removeAttribute('active');
+        }
+        await updateConverted(bytes);
+      })()
+    ]);
+  })();
+}
+document.querySelector('#example').addEventListener('click',async e=>{
+  e.preventDefault();
+  const response=await fetch(
+    ['./samples/lowes-takes-photos-s8-unsplash.webp',
+      './samples/jan-kopriva-24-unsplash.webp',
+      './samples/asher-zhang-ro-unsplash.webp',
+      './samples/maxime-gilbert-v8jnzMR3wrM-unsplash.webp'
+    ][Math.trunc(Math.random()*4)]
+  );
+  await open({bytes:new Uint8Array(await response.arrayBuffer()),type:response.headers.get('content-type')});
+});
+['dragenter','dragover','dragleave','drop'].forEach(type=>document.body.addEventListener(type,e=>{
+  e.preventDefault();e.stopPropagation();
+  document.body.classList.remove('dragover');
+}));
+document.body.addEventListener('dragover',e=>{
+  e.dataTransfer.dropEffect='copy';document.body.classList.add('dragover');
+});
+document.body.addEventListener('drop',async e=>{
+  const file=[...e.dataTransfer.files]?.[0];
+  if(file?.type?.indexOf('image')===0) await open({bytes:await bytes(file),type:file.type});
+});
+document.body.addEventListener('paste',async e=>{
+  e.preventDefault();
+  const file=[...e.clipboardData.files]?.[0];
+  if(file?.type?.indexOf('image')===0) await open({bytes:await bytes(file),type:file.type});
+});
+const handle=document.querySelector('#handle');
+handle.addEventListener('pointerdown',e=>{
+  if(e.button!==0) return;
+  e.preventDefault();e.stopPropagation();
+  handle.setPointerCapture(e.pointerId);
+  const h=handle.clientHeight;
+  const y=handle.offsetTop+h/2;
+  let dy=e.clientY-y;
+  let r=null;
+  const frame=()=>{
+    r=requestAnimationFrame(frame);
+    const d=Math.min(y-h*2,Math.max(-y+h*2,dy));
+    handle.style.transform=`translateY(${d}px)`;
+    //compressed.style.background='red';
+    compressed.style.clipPath=`inset(calc(50% + ${d}px) 0 0 0)`;
+  }
+  r=requestAnimationFrame(frame);
+  const onmove=e=>{dy=e.clientY-y};
+  const onstop=e=>{
+    if(typeof e.button==='number'&&e.button!==0) return;
+    cancelAnimationFrame(r);
+    document.body.removeEventListener('pointerup',onstop);
+    document.body.removeEventListener('pointermove',onmove);
+  };
+  document.body.addEventListener('pointermove',onmove);
+  document.body.addEventListener('pointerup',onstop);
+});
+</script>
+</html>
