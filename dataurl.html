@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Data-URL Encoder</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Convert your image to AVIF and compare quality and size.">
+<meta name="theme-color" content="#282828">
+<link rel="icon" href="/favicon.svg" sizes="any" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple.png">
+<link rel="manifest" href="/pwa.json">
+<link rel="canonical" href="https://www.couique.com/dataurl">
+<style>
+@import './fonts/asap.css';
+@import './fonts/cascadia_code-reg.css';
+*{margin:0;padding:0;box-sizing:border-box}
+html{width:100%;height:100%;background:#282828;color:#bbb;font:400 clamp(7.5pt, calc(4pt + 1vw), 36pt) __asap__,sans-serif;font-stretch:115%;line-height:1.4}
+body{min-height:100%;overflow:hidden;padding:2em;display:grid;place-items:center;grid-template-rows:3fr auto 2fr auto 2fr;grid-template-columns:auto}
+body.busy:after{position:absolute;inset:0;background:rgba(40,40,40,.8);display:grid;place-items:center;animation:loop 1200ms linear 600ms infinite;content:'';font:800 4em monospace;font-style:normal}
+@keyframes loop{0%,100%{content:'⠋'}10%{content:"⠙"}20%{content:"⠹"}30%{content:"⠸"}40%{content:"⠼"}50%{content:"⠴"}60%{content:"⠦"}70%{content:"⠧"}80%{content:"⠇"}90%{content:"⠏"}}
+a,button{color:#adf;text-decoration-color:rgba(170,221,255,.5)}a:hover,button:hover{color:#6af}label{text-decoration:underline;cursor:pointer}
+#helper{font-size:max(12pt,1em);max-width:24ch;text-align:center}
+#dataurl{font:300 1em __cascadia_code__}
+#dataurl span{white-space:nowrap}
+body.dragover{
+  --conic-bg-angle:0deg;animation:conic-bg-angle 4s infinite linear;
+  background:conic-gradient(from var(--conic-bg-angle) at 125% 50%, #282828, #1f2b3a, #312837, #1f2b3a, #282828);
+}
+@keyframes conic-bg-angle{100%{--conic-bg-angle:1turn}}@property --conic-bg-angle{syntax:'<angle>';inherits:false;initial-value:0deg}
+#prefix,#suffix{color:#888}
+#scheme{color:#caffbf}
+#media-type{color:#a0c4ff;font-style:italic;opacity:.5;font-weight:100}
+#encoding{color:#ffc6ff}
+#encoded{position:relative;display:inline-block;border:0 solid #45494a;border-bottom-width:1px;outline:none;max-width:clamp(11ch,calc(100vw - 4em - var(--chs,40ch)),120ch);overflow-x:clip}
+#encoded:before{content:'raw: ' attr(data-original-length) '\A b64: ' attr(data-encoded-length);white-space:pre;line-height:1.75;font-style:italic;position:absolute;text-align:center;left:0;right:0;top:3em;font-size:.75em;opacity:.5}
+#encoded:focus-within{border-color:#6af}
+#encoded:not(:focus-within){text-overflow:ellipsis}
+a{color:#adf}a:hover{color:#6af}
+img{position:absolute;width:auto;height:100%}
+input[type="file"]{width:10px;height:10px;opacity:0;overflow:hidden;position:absolute;z-index:-1;pointer-events:none}
+</style>
+<style class="media-query"></style>
+</head>
+<body>
+<div></div>
+<div id="dataurl"><!--
+  --><span id="prefix">&lt;img src="</span><!--
+  --><span id="scheme">data</span>:<!--
+  --><span id="media-type">image/gif</span>;<!--
+  --><span id="encoding">base64</span>,<!--
+  --><span id="encoded" data-encoded-length="60b" data-original-length="43b" tabindex="1">R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==</span><!--
+  --><span id="suffix">"&gt;</span><!--
+--></div>
+<div></div>
+<div id="helper">Paste, drag &amp; drop,<br>or <label for="file"><a>select a file</a></label><input type="file" id="file">.</div>
+<div></div>
+</body>
+<script type="module">
+const types={
+  aac: 'audio/aac',
+  avif: 'image/avif',
+  gif: 'image/gif',
+  jpg: 'image/jpeg',
+  jpeg: 'image/jpeg',
+  js: 'text/javascript',
+  json: 'application/json',
+  jsonld: 'application/ld+json',
+  md: 'text/markdown',
+  mjs: 'text/javascript',
+  mp3: 'audio/mpeg',
+  mp4: 'video/mp4',
+  png: 'image/png',
+  pdf: 'application/pdf',
+  svg: 'image/svg+xml',
+  txt: 'text/plain',
+  wasm: 'application/wasm',
+  webp: 'image/webp',
+  woff: 'font/woff',
+  woff2: 'font/woff2',
+  xml: 'application/xml'
+};
+const prefix=document.querySelector("#prefix");
+const suffix=document.querySelector("#suffix");
+const mediaType=document.querySelector("#media-type");
+const encoded=document.querySelector('#encoded');
+let controller;
+const b64url=blob=>{
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=e=>resolve(e.target.result);
+    reader.onerror=e=>reject(e?.target?.error||e);
+    reader.readAsDataURL(blob);
+  });
+};
+const mediaTypeOf=blob=>{
+  if(!blob.type&&blob.name){
+    const i=blob.name.lastIndexOf('.');
+    if(i!==-1){
+      const ext=blob.name.substring(i+1);
+      return types[ext]??'application/octet-stream';
+    }
+  }
+  return blob.type??'application/octet-stream';
+}
+const formatLength=(len,other)=>{
+  let min=Math.min(len,other);
+  let unit='b';
+  if(min>1024){
+    unit='kb';
+    len/=1024;
+    min/=1024;
+  }
+  if(min>1024){
+    unit='mb';
+    len/=1024;
+  }
+  const rounded=parseFloat(len.toFixed(2));
+  return `${rounded}${unit}`;
+}
+const open=async(blob)=>{
+  controller?.abort();
+  controller=new AbortController();
+  const timeout=setTimeout(()=>document.body.classList.add('busy'),100);
+  const type=mediaTypeOf(blob);
+  const [category,sub]=type.split('/');
+  mediaType.textContent=type;
+  switch(category){
+    case 'image':{
+      prefix.textContent='<img src="';
+      suffix.textContent='">';
+      break;
+    }
+    case 'font':{
+      prefix.textContent='url(';
+      suffix.textContent=`) format('${sub}');`;
+      break;
+    }
+    case 'video': case 'audio':{
+      prefix.textContent='src="';
+      suffix.textContent='"';
+      break;
+    }
+    default:{
+      prefix.textContent='url(';
+      suffix.textContent=')';
+      break;
+    }
+  }
+  encoded.style.setProperty('--chs',`${prefix.textContent.length+suffix.textContent.length+type.length+22}ch`);
+  const url=await b64url(blob);
+  const i=url.indexOf('base64,')+7;
+  console.log(url.substring(0,i));
+  encoded.textContent=url.substring(i);
+  const originalLength=blob.size;
+  const encodedLength=url.length-i;
+  encoded.setAttribute('data-original-length',`${formatLength(originalLength,encodedLength)}`);
+  encoded.setAttribute('data-encoded-length',`${formatLength(encodedLength,originalLength)}`);
+  clearTimeout(timeout);
+  document.body.classList.remove('busy');
+};
+['dragenter','dragover','dragleave','drop'].forEach(type=>document.body.addEventListener(type,e=>{
+  e.preventDefault();e.stopPropagation();
+  document.body.classList.remove('dragover');
+}));
+document.body.addEventListener('dragover',e=>{
+  e.dataTransfer.dropEffect='copy';document.body.classList.add('dragover');
+});
+document.body.addEventListener('drop',async e=>{
+  const file=[...e.dataTransfer.files]?.[0];
+  await open(file);
+});
+document.body.addEventListener('paste',async e=>{
+  e.preventDefault();
+  const blob=[...e.clipboardData.files]?.[0]??new Blob([new TextEncoder().encode(e.clipboardData.getData('text/plain')??'')],{type:'text/plain'});
+  await open(blob);
+});
+encoded.addEventListener('click',e=>{
+  if(e.detail===2){
+    e.preventDefault();
+    getSelection().setBaseAndExtent(encoded,0,encoded,1);
+  }
+});
+encoded.addEventListener('touchend',e=>{
+  e.preventDefault();
+  getSelection().setBaseAndExtent(encoded,0,encoded,1);
+  navigator.clipboard.writeText(getSelection().toString());
+});
+const uploader=document.querySelector('#file');
+uploader.addEventListener('change',async e=>{
+  e.preventDefault();
+  const file=[...uploader.files]?.[0];
+  console.log(file);
+  await open(file);
+});
+</script>
+</html>
