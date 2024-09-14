@@ -18,7 +18,8 @@ html{width:100%;height:100%;background:#282828;color:#eee;font:400 clamp(7.5pt, 
 body{min-height:100%;overflow:hidden;padding:2em;display:grid;place-items:center;grid-template-rows:3fr auto auto 2fr auto 2fr;grid-template-columns:auto;gap:1em}
 body.busy:after{position:absolute;inset:0;background:rgba(40,40,40,.8);display:grid;place-items:center;animation:loop 1200ms linear 600ms infinite;content:'';font:800 4em monospace;font-style:normal}
 @keyframes loop{0%,100%{content:'⠋'}10%{content:"⠙"}20%{content:"⠹"}30%{content:"⠸"}40%{content:"⠼"}50%{content:"⠴"}60%{content:"⠦"}70%{content:"⠧"}80%{content:"⠇"}90%{content:"⠏"}}
-a,button{color:#adf;text-decoration-color:rgba(170,221,255,.5)}a:hover,button:hover{color:#6af}label{text-decoration:underline;cursor:pointer}
+a,button,label{color:#adf;text-decoration-color:rgba(170,221,255,.5);text-decoration:underline;cursor:pointer}a:hover,button:hover,label:hover{color:#6af}
+input:focus-visible+label{border-radius:3px;outline:1px solid #fff;outline-offset:1px}
 #helper{font-size:max(12pt,1em);color:#ccc;max-width:24ch;text-align:center}
 #dataurl{font:300 1em __cascadia_code__}
 #dataurl span{white-space:nowrap}
@@ -32,14 +33,13 @@ body.dragover{
 #media-type{color:#9bf6ff;font-style:italic}
 #encoding{color:#ffc6ff}
 #encoded{position:relative;display:inline-block;border:0 solid #45494a;border-bottom-width:1px;outline:none;max-width:clamp(11ch,calc(100vw - 4em - var(--chs,40ch)),120ch);overflow-x:clip}
-#encoded:focus-within{border-color:#6af}
-#encoded:not(:focus-within){text-overflow:ellipsis}
+#encoded[tabindex]:focus-within{border-color:#6af}
+#encoded[tabindex]:not(:focus-within){text-overflow:ellipsis}
 #stats{font-size:.75em;display:grid;gap:1em;grid-template-columns:auto auto 5em auto auto;grid-template-rows:auto auto}
 #stats div{opacity:.67;;font-style:italic;white-space:nowrap}
 #stats div:first-child{max-width:max(30vw,12ch);overflow:clip;text-overflow:ellipsis;direction:ltr}
 #stats div[aria-labelledby]{opacity:.85;font-style:normal;min-width:12ch;text-align:right}
-a{color:#adf}a:hover{color:#6af}
-img{position:absolute;width:auto;height:100%}
+#copy{font-style:italic;display:inline-block;width:7ch;text-align:center}
 input[type="file"]{width:10px;height:10px;opacity:0;overflow:hidden;position:absolute;z-index:-1;pointer-events:none}
 </style>
 <style class="media-query"></style>
@@ -63,7 +63,7 @@ input[type="file"]{width:10px;height:10px;opacity:0;overflow:hidden;position:abs
   <div id="encoded_compressed_label">compressed: </div><div aria-labelledby="encoded_compressed_label">50b</div>
 </div>
 <div></div>
-<div id="helper">Paste, drag &amp; drop,<br>or <label for="file"><a tabindex="0">select a file</a></label><input tabindex="-1" type="file" id="file">.</div>
+<div id="helper">Paste, drag &amp; drop,<br>or <input tabindex="0" type="file" id="file" title=" "><label for="file">select a file</label>.</div>
 <div></div>
 </body>
 <script type="module">
@@ -171,6 +171,7 @@ const formatLength=(len,other)=>{
   return `${rounded}${unit}`;
 }
 const open=async(blob)=>{
+  if(!blob) return;
   controller?.abort();
   controller=new AbortController();
   const signal=controller.signal;
@@ -201,6 +202,8 @@ const open=async(blob)=>{
       break;
     }
   }
+  encoded.textContent='';
+  encoded.removeAttribute('tabindex');
   encoded.style.setProperty('--chs',`${prefix.textContent.length+suffix.textContent.length+type.length+22}ch`);
   const url=await b64url(blob,signal);
   const i=url.indexOf('base64,')+7;
@@ -224,7 +227,23 @@ const open=async(blob)=>{
       encodedCompressedSize.textContent=formatLength(arr2.length,arr1.length);
     }
   });
-  encoded.textContent=result;
+  if(result.length>2e5){
+    encoded.textContent=`${result.substring(0,3)}…`;
+    const copy=document.createElement('a');
+    copy.textContent='copy';
+    copy.id='copy';
+    copy.setAttribute('tabindex','0');
+    copy.addEventListener('click',e=>{
+      e.preventDefault();
+      navigator.clipboard.writeText(result);
+      copy.textContent='copied';
+      setTimeout(()=>{if(!signal.aborted) copy.textContent='copy'},300);
+    });
+    encoded.appendChild(copy);
+  }else{
+    encoded.setAttribute('tabindex','0');
+    encoded.textContent=result;
+  }
   clearTimeout(timeout);
   document.body.classList.remove('busy');
 };

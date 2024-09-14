@@ -22,7 +22,8 @@ body.dragover{
   background:conic-gradient(from var(--conic-bg-angle) at 125% 50%, #282828, #1f2b3a, #312837, #1f2b3a, #282828);
 }
 @keyframes conic-bg-angle{100%{--conic-bg-angle:1turn}}@property --conic-bg-angle{syntax:'<angle>';inherits:false;initial-value:0deg}
-a,button{color:#adf;text-decoration-color:rgba(170,221,255,.5)}a:hover,button:hover{color:#6af}
+a,button,label{color:#adf;text-decoration-color:rgba(170,221,255,.5)}a:hover,button:hover,label:hover{color:#6af}
+input:focus-visible+label{border-radius:3px;outline:1px solid #fff;outline-offset:1px}
 main{display:flex;flex-direction:column;gap:2em;justify-content:center;align-items:center}
 section{display:flex;flex-direction:column;gap:1em;justify-content:center}
 h1,svg,div.graph,section{max-width:50ch}
@@ -123,7 +124,7 @@ a[tabindex="-1"]{touch-action:none;color:#282828}
   </g>
 </svg>
 <div>
-<div><span>Drop a file here</span><br>or<br><form><label for="file"><a>select&nbsp;one</a></label><input type="file" name="file" id="file"></form>&nbsp;to compress&nbsp;it.</div>
+<div><span>Drop a file here</span><br>or<br><form><input type="file" name="file" id="file"><label for="file">select&nbsp;one</label></form>&nbsp;to compress&nbsp;it.</div>
 <br>The compression is done in your browser and the file is never sent out or even saved in the browser storage.
 <br>
 <br><span class="warning">Warning:</span> Zopfli compression is quite slow. Be prepared to wait a while for large files.
