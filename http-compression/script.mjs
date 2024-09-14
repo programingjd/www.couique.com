@@ -31,11 +31,13 @@ const bottomLabels=[...svg.querySelectorAll('g.bottom.labels text'),null];
 const a=document.querySelector('a#download');
 topLabels[topLabels.length-1].style=`transform:translateY(-100px)`;
 (list=>((listener)=>list.forEach(it=>window.addEventListener(it,listener,false)))(e=>{
-  e.preventDefault();e.stopPropagation();if(e.dataTransfer.files.length) onDrop(e.dataTransfer.files.item(0));
+  e.preventDefault();e.stopPropagation();
+  if((e.dataTransfer??e.clipboardData).files.length) onDrop((e.dataTransfer??e.clipboardData).files.item(0));
 }))(['drop','paste']);
 const input=document.querySelector('input[type="file"]');
 input.addEventListener('change',e=>{
-  if(e.dataTransfer.files.length) onDrop(e.dataTransfer.files.item(0));
+  e.preventDefault();
+  if(input.files?.length) onDrop(input.files.item(0));
 });
 document.querySelector('#sample_wasm').addEventListener('click',async(e)=>{
   e.preventDefault();
