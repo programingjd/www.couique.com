@@ -227,7 +227,7 @@ const open=async(blob)=>{
       encodedCompressedSize.textContent=formatLength(arr2.length,arr1.length);
     }
   });
-  if(result.length>2e5){
+  if(result.length>5e5){
     encoded.textContent=`${result.substring(0,3)}…`;
     const copy=document.createElement('a');
     copy.textContent='copy';
