@@ -19,7 +19,7 @@ body{min-height:100%;overflow:hidden;padding:2em;display:grid;place-items:center
 body.busy:after{position:absolute;inset:0;background:rgba(40,40,40,.8);display:grid;place-items:center;animation:loop 1200ms linear 600ms infinite;content:'';font:800 4em monospace;font-style:normal}
 @keyframes loop{0%,100%{content:'⠋'}10%{content:"⠙"}20%{content:"⠹"}30%{content:"⠸"}40%{content:"⠼"}50%{content:"⠴"}60%{content:"⠦"}70%{content:"⠧"}80%{content:"⠇"}90%{content:"⠏"}}
 a,button{color:#adf;text-decoration-color:rgba(170,221,255,.5)}a:hover,button:hover{color:#6af}label{text-decoration:underline;cursor:pointer}
-#helper{font-size:max(12pt,1em);max-width:24ch;text-align:center}
+#helper{font-size:max(12pt,1em);color:#ccc;max-width:24ch;text-align:center}
 #dataurl{font:300 1em __cascadia_code__}
 #dataurl span{white-space:nowrap}
 body.dragover{
