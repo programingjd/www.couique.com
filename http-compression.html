@@ -57,7 +57,7 @@ summary::marker{display:none;content:none}
 summary{position:relative;cursor:pointer;text-decoration:underline;padding-inline-start:2em}
 summary>span{color:inherit}details code{font-weight:700;font-style:italic;padding:0;margin:0}
 summary::before{
-  content:counter(note);position:absolute;opacity:.33;left:0;top:0;bottom:0;aspect-ratio:1 / 1;text-align:center;
+  content:counter(note);position:absolute;opacity:.33;left:0;top:0;width:1.5em;height:1.5em;display:grid;place-items:center;
   background:#bbb;border-radius:50%;color:#282828;
 }
 details[open] summary{margin-block-end:.5em}
