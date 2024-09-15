@@ -119,7 +119,7 @@ This makes it the obvious choice for compressible content when maximum compatibi
     and <a href="https://www.rfc-editor.org/rfc/rfc9110#name-gzip-coding" target="_blank">gzip</a>
     HTTP <a href="https://www.rfc-editor.org/rfc/rfc9110#name-content-encoding" target="_blank" translate="no">content-encoding</a>s.
     <p>
-    <code>gzip</code> encapsulates the raw <span translate="no">deflate</span> stream in
+    <code>gzip</code>&nbsp;encapsulates the raw <span translate="no">deflate</span> stream in
     a <a href="https://datatracker.ietf.org/doc/html/rfc1952" target="_blank">gzip</a> container:
     <ul>
       <li>a header of at least 10 bytes, starting with <code>0x1f8b</code>;<br>
@@ -128,7 +128,7 @@ This makes it the obvious choice for compressible content when maximum compatibi
       and 4 for the decompressed size.
     </ul>
     <p>
-    <code>deflate</code> encapsulates the raw <span translate="no">deflate</span> stream in
+    <code>deflate</code>&nbsp;encapsulates the raw <span translate="no">deflate</span> stream in
     a <a href="https://datatracker.ietf.org/doc/html/rfc1950" target="_blank">zlib</a> container:
     <ul>
       <li>a header of 2 bytes starting with <code>0x78</code>.<br>
