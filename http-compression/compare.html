@@ -27,7 +27,7 @@ input:focus-visible+label{border-radius:3px;outline:1px solid #fff;outline-offse
 main{display:flex;flex-direction:column;gap:2em;justify-content:center;align-items:center}
 section{display:flex;flex-direction:column;gap:1em;justify-content:center}
 h1,svg,div.graph,section{max-width:50ch}
-h1{color:#daf;font-size:1.25rem;text-align:center;font-weight:900;font-stretch:125%;font-style:italic;letter-spacing:.05em}
+h1{color:#daf;font-size:1.25rem;text-align:center;font-weight:900;font-stretch:125%;font-style:italic;letter-spacing:.05em;text-wrap:pretty}
 section{width:100%}
 .graph{position:relative;width:100%}
 .graph svg{width:100%}
@@ -45,7 +45,7 @@ a[tabindex="-1"]{touch-action:none;color:#282828;opacity:0}
 <main>
 <section class="empty">
 <h1>Zlib, Zopfli and Brotli<br>compression comparison</h1>
-<div>You can learn about those compression choices <a href=".">here</a>.</div>
+<div>You might want to read about <a href=".">the tradeoffs</a> for using those tools to (pre)compress HTTP content.</div>
 <div class="empty graph">
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -125 180 250">
   <style>
