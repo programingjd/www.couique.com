@@ -19,7 +19,7 @@ html{width:100%;height:100%;background:#282828;color:#eee;font:400 clamp(7.5pt, 
 body{min-height:100%;overflow:hidden;padding:2em;display:grid;place-items:center;grid-template-rows:3fr auto auto 2fr auto 2fr;grid-template-columns:auto;gap:1em}
 body.busy:after{position:absolute;inset:0;background:rgba(40,40,40,.8);display:grid;place-items:center;animation:loop 1200ms linear 600ms infinite;content:'';font:800 4em monospace;font-style:normal}
 @keyframes loop{0%,100%{content:'⠋'}10%{content:"⠙"}20%{content:"⠹"}30%{content:"⠸"}40%{content:"⠼"}50%{content:"⠴"}60%{content:"⠦"}70%{content:"⠧"}80%{content:"⠇"}90%{content:"⠏"}}
-body>div:first-child{font:900 6em __afacad__;font-style:italic;color:#444;-webkit-text-stroke:.015em #eb96eb}
+body>div:first-child{font:900 min(64pt,4em) __afacad__;font-style:italic;color:#444;-webkit-text-stroke:.015em #eb96eb}
 a,button,label{color:#adf;text-decoration-color:rgba(170,221,255,.5);text-decoration:underline;cursor:pointer}a:hover,button:hover,label:hover{color:#6af}
 input:focus-visible+label{border-radius:3px;outline:1px solid #fff;outline-offset:1px}
 #helper{font-size:max(12pt,1em);color:#ccc;max-width:24ch;text-align:center}
@@ -47,7 +47,7 @@ button[popovertarget]{
   color:#9bf6ff;
 }
 button:focus-visible{color:#c92241}
-#about[popover]{background:#383838;color:inherit;border-radius:1em;border:none;padding:1em;margin:25vh auto 0 auto}
+#about[popover]{background:#383838;color:inherit;border-radius:.5em;border:none;padding:1em;margin:25vh auto 0 auto}
 input[type="file"]{width:10px;height:10px;opacity:0;overflow:hidden;position:absolute;z-index:-1;pointer-events:none}
 </style>
 <style class="media-query"></style>
