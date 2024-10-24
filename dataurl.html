@@ -23,6 +23,7 @@ h1{font:900 min(64pt,4em) __afacad__;font-style:italic;color:#444;-webkit-text-s
 h3{font-size:1.25em;font-weight:500;text-align:start;padding-block:.5em}
 h4{font-size:1em;font-weight:inherit;text-align:start;font-style:italic;padding-inline-end:1em;display:inline-block}
 h1>span{-webkit-text-stroke:initial;color:#9bf6ff}
+details[open] summary span{visibility:hidden}
 summary{list-style:none;cursor:pointer;text-align:center}
 details>div{font-size:min(1em,14pt);line-height:1.75;max-width:70ch;font-weight:300;padding-block-start:1em;font-stretch:100%}
 details li{margin-block-end:.5em}
@@ -59,19 +60,24 @@ input[type="file"]{width:10px;height:10px;opacity:0;overflow:hidden;position:abs
 <details>
   <summary><h1>data-url <span>*</span></h1></summary>
   <div>
-    <p>URLs with the <a href="https://datatracker.ietf.org/doc/html/rfc2397" target="_blank"><code>data</code></a> scheme are special URLs that embed the resource in-place inside the URL,
+    <p>URLs with the <a href="https://datatracker.ietf.org/doc/html/rfc2397" target="_blank"><code>data</code></a>
+      scheme are special URLs that embed the resource in-place inside the URL,
       eliminating the need for additional network calls.
     <p>They take the form:<br>
-      <code class="indented">data:[&lt;mediatype&gt;][;base64],&lt;data&gt;</code>
+      <code class="indented">data:[<i>&lt;mediatype&gt;</i>][;<i>&lt;encoding&gt;</i>],<i>&lt;data&gt;</i></code>
     <p>The <code>mediatype</code> is optional and defaults to <code>text/plain</code> with <code>charset US-ASCII</code>.
-    <p>The <code>encoding</code> can be omitted or specified as <a href="https://datatracker.ietf.org/doc/html/rfc4648" target="_blank"><code>base64</code></a>
-    (with padding but no newline). This encoding comes with about a 33% size overhead, but if omitted,
+    <p>The <code>encoding</code> can be omitted or specified as
+    <a href="https://datatracker.ietf.org/doc/html/rfc4648" target="_blank"><code>base64</code></a>
+    (with padding but no newline). <code>base64</code> introduces a 33% size overhead, but if the encoding is omitted,
     the data still needs to be <a href="https://datatracker.ietf.org/doc/html/rfc3986#section-2.1" target="_blank">percent-encoded</a>,
     which can negate some of the overhead.
     <h3>Limitations:</h3>
     <ul class="indented">
       <li><h4>Size:</h4> Browsers enforce different maximum size restrictions.</li>
-      <li><h4>Security:</h4> Browser security isolation is based on the `origin` of a site. Because data URLs do not have an `origin`, they can be blocked in some contexts depending on the media type, to prevent cross-site scripting or other potential security risks.</li>
+      <li><h4>Security:</h4> Browser security isolation is based on the
+        <a href="https://developer.mozilla.org/en-US/docs/Glossary/Origin" target="_blank">origin</a> of a site.
+        Because data URLs do not have an origin, they can be blocked in some contexts depending on the media type,
+        to prevent cross-site scripting or other potential security risks.</li>
       <li><h4>Caching:</h4> Although embedding the content directly in the URL can save a network trip on the first load, it also bypasses the browser cache which could have effectively saved even more.</li>
     </ul>
   </div>
@@ -314,5 +320,24 @@ uploader.addEventListener('change',async e=>{
 });
 await (await fetch('/lib/brotli_enc.wasm')).arrayBuffer();
 await (await fetch('/lib/brotli_enc_worker_script.mjs')).arrayBuffer();
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Data-URL Generator",
+  "url": "https://www.couique.com/dataurl",
+  "description": "Embed your data into a Data-URL.",
+  "applicationCategory": "UtilitiesApplication",
+  "browserRequirements": "Requires JavaScript.",
+  "operatingSystem": "All",
+  "about": {
+    "@type": "Thing",
+    "description": "Generate a data URL with the content included in-place inside the URL itself, and compare the size of the URL with the size of the embedded content."
+  },
+  "author": {
+    "@id":  "https://about.programingjd.me"
+  }
+}
 </script>
 </html>
