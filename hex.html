@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Hex Editor</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Encode content into a Data-URL.">
+<meta name="theme-color" content="#282828">
+<link rel="icon" href="/favicon.svg" sizes="any" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple.png">
+<link rel="manifest" href="/pwa.json">
+<link rel="canonical" href="https://www.couique.com/dataurl">
+<style>
+@import './fonts/asap.css';
+@import './fonts/cascadia_code-reg.css';
+:root{color-scheme:light dark}
+*{margin:0;padding:0;box-sizing:border-box}
+html{width:100%;height:100%;background:#282828;color:#eee;font:400 clamp(7.5pt, calc(100dvw / 48), 64pt) __asap__,sans-serif;font-stretch:115%;line-height:1.4}
+body{height:100%;display:grid;grid-template-rows:1fr;grid-template-columns:1fr}
+body.busy:after{position:absolute;inset:0;background:rgba(40,40,40,.8);display:grid;place-items:center;animation:loop 1200ms linear 600ms infinite;content:'';font:800 4em monospace;font-style:normal}
+@keyframes loop{0%,100%{content:'⠋'}10%{content:"⠙"}20%{content:"⠹"}30%{content:"⠸"}40%{content:"⠼"}50%{content:"⠴"}60%{content:"⠦"}70%{content:"⠧"}80%{content:"⠇"}90%{content:"⠏"}}
+body.dragover{
+  --conic-bg-angle:0deg;animation:conic-bg-angle 4s infinite linear;
+  background:conic-gradient(from var(--conic-bg-angle) at 125% 50%, #282828, #1f2b3a, #312837, #1f2b3a, #282828);
+}
+@keyframes conic-bg-angle{100%{--conic-bg-angle:1turn}}@property --conic-bg-angle{syntax:'<angle>';inherits:false;initial-value:0deg}
+a,button,label{color:#adf;text-decoration-color:rgba(170,221,255,.5);text-decoration:underline;cursor:pointer}a:hover,button:hover,label:hover{color:#6af}
+input:focus-visible+label{border-radius:3px;outline:1px solid #fff;outline-offset:1px}
+div[slot="placeholder"]{font-size:max(12pt,1em);color:#ccc;max-width:24ch;text-align:center}
+input[type="file"]{width:10px;height:10px;opacity:0;overflow:hidden;position:absolute;z-index:-1;pointer-events:none}
+.row{font:150 1em '__cascadia_code__';display:grid;grid-template-columns:auto repeat(16,auto) auto;grid-template-rows:auto;column-gap:.5em;align-items:center;padding-inline:.5em}
+.row>div{font-size:.75em;color:#caffbf;text-align:end;margin-right:1em;width:8ch}
+.row p{font-weight:250}
+[slot="header"],[slot="footer"]{padding:.25em}
+[slot="placeholder"]{padding:1em;place-self:center}
+.row>p{text-indent:1em}
+virtual-scroller{max-height:100%}
+</style>
+<style class="media-query"></style>
+</head>
+<body>
+<virtual-scroller>
+  <div slot="header"></div>
+  <template>
+    <div class="row">
+      <div>0</div>
+      <span>00</span><span>01</span><span>02</span><span>03</span><span>04</span><span>05</span><span>06</span><span>07</span>
+      <span>08</span><span>09</span><span>0a</span><span>0b</span><span>0c</span><span>0d</span><span>0e</span><span>0f</span>
+      <p>................</p>
+    </div>
+  </template>
+  <div slot="footer"></div>
+  <div slot="placeholder">Paste, drag &amp; drop,<br>or <input tabindex="0" type="file" id="file" title=" "><label for="file">select a file</label>.</div>
+</virtual-scroller>
+</body>
+<script type="module">
+import _ from "./lib/virtual_scroll.mjs";
+const vscroller=document.querySelector('virtual-scroller');
+const model={
+  data: new Uint8Array(0),
+  cols: 1,
+  count: 0,
+  render(row,index){
+    const slice=this.data.subarray(index*16,index*16+16);
+    row.querySelector('div').textContent=(index*16).toString(16);
+    row.querySelectorAll('span').forEach((el,i)=>el.textContent=slice[i]?.toString(16)?.padStart(2,'0')??'\u00a0\u00a0');
+    row.querySelector('p').textContent=[...slice].map(it=>{
+      if(it<32||it>126) return '.';
+      return String.fromCharCode(it);
+    }).join('').padEnd(16,'\u00a0');
+  }
+};
+model.render=model.render.bind(model);
+vscroller.model=model;
+const open=async(blob)=>{
+  model.data=new Uint8Array(await blob.arrayBuffer());
+  model.count=Math.ceil(model.data.length/16);
+  vscroller.model=model;
+};
+['dragenter','dragover','dragleave','drop'].forEach(type=>document.body.addEventListener(type,e=>{
+  e.preventDefault();e.stopPropagation();
+  document.body.classList.remove('dragover');
+}));
+document.body.addEventListener('dragover',e=>{
+  e.dataTransfer.dropEffect='copy';document.body.classList.add('dragover');
+});
+document.body.addEventListener('drop',async e=>{
+  const file=[...e.dataTransfer.files]?.[0];
+  await open(file);
+});
+document.body.addEventListener('paste',async e=>{
+  e.preventDefault();
+  const blob=[...e.clipboardData.files]?.[0]??new Blob([new TextEncoder().encode(e.clipboardData.getData('text/plain')??'')],{type:'text/plain'});
+  await open(blob);
+});
+const uploader=document.querySelector('#file');
+uploader.addEventListener('change',async e=>{
+  e.preventDefault();
+  const file=[...uploader.files]?.[0];
+  console.log(file);
+  await open(file);
+});
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Hex Editor",
+  "url": "https://www.couique.com/hex",
+  "description": "Hexadecimal editor",
+  "applicationCategory": "UtilitiesApplication",
+  "browserRequirements": "Requires JavaScript.",
+  "operatingSystem": "All",
+  "author": {
+    "@id":  "https://about.programingjd.me"
+  }
+}
+</script>
+</html>
