@@ -12,26 +12,26 @@
 <link rel="canonical" href="https://www.couique.com/dataurl">
 <style>
 @import './fonts/asap.css';
-@import './fonts/afacad-ital.css';
-@import './fonts/cascadia_code-reg.css';
+@import './fonts/cascadia_code.css';
 *{margin:0;padding:0;box-sizing:border-box}
 html{width:100%;height:100%;background:#282828;color:#eee;font:400 clamp(7.5pt, calc(4pt + 1vw), 36pt) __asap__,sans-serif;font-stretch:115%;line-height:1.4}
 body{min-height:100%;padding:2em;display:grid;place-items:center;grid-template-rows:2fr auto 2fr auto auto 3fr auto 1fr;grid-template-columns:auto;gap:1em}
 body.busy:after{position:absolute;inset:0;background:rgba(40,40,40,.8);display:grid;place-items:center;animation:loop 1200ms linear 600ms infinite;content:'';font:800 4em monospace;font-style:normal}
 @keyframes loop{0%,100%{content:'⠋'}10%{content:"⠙"}20%{content:"⠹"}30%{content:"⠸"}40%{content:"⠼"}50%{content:"⠴"}60%{content:"⠦"}70%{content:"⠧"}80%{content:"⠇"}90%{content:"⠏"}}
-h1{font:900 min(64pt,4em) __afacad__;font-style:italic;color:#444;-webkit-text-stroke:.015em #eb96eb}
+h1{color:#daf;font-size:2rem;text-align:center;font-weight:900;font-stretch:125%;font-style:italic;letter-spacing:.05em;text-wrap:pretty}
 h3{font-size:1.25em;font-weight:500;text-align:start;padding-block:.5em}
 h4{font-size:1em;font-weight:inherit;text-align:start;font-style:italic;padding-inline-end:1em;display:inline-block}
 h1>span{-webkit-text-stroke:initial;color:#9bf6ff}
 details[open] summary span{visibility:hidden}
 summary{list-style:none;cursor:pointer;text-align:center}
-details>div{font-size:min(1em,14pt);line-height:1.75;max-width:70ch;font-weight:300;padding-block-start:1em;font-stretch:100%}
+details>div{font-size:min(1em,14pt);line-height:1.75;max-width:72ch;font-weight:300;padding-block-start:1em;font-stretch:100%}
 details li{margin-block-end:.5em}
 details code{font-weight:500}
 .indented{display:inline-block;padding-inline-start:2em;list-style:none inside none}
 a,button,label{color:#adf;text-decoration-color:rgba(170,221,255,.5);text-decoration:underline;cursor:pointer}a:hover,button:hover,label:hover{color:#6af}
 input:focus-visible+label{border-radius:3px;outline:1px solid #fff;outline-offset:1px}
 #helper{font-size:max(12pt,1em);color:#ccc;max-width:24ch;text-align:center}
+#dataurl{display:grid;grid-template-rows:auto;grid-template-columns:repeat(7,auto) 1fr auto auto}
 #dataurl,code{font:300 1em __cascadia_code__}
 #dataurl span{white-space:nowrap}
 body.dragover{
@@ -43,14 +43,15 @@ body.dragover{
 #scheme{color:#caffbf}
 #media-type{color:#9bf6ff;font-style:italic}
 #encoding{color:#ffc6ff}
-#encoded{position:relative;display:inline-block;border:0 solid #45494a;border-bottom-width:1px;outline:none;max-width:clamp(11ch,calc(100vw - 4em - var(--chs,40ch)),120ch);overflow-x:clip}
+#encoded{position:relative;display:inline-block;border:0 solid #45494a;border-bottom-width:1px;outline:none;max-width:120ch;overflow-x:hidden}
 #encoded[tabindex]:focus-within{border-color:#6af}
-#encoded[tabindex]:not(:focus-within){text-overflow:ellipsis}
+#encoded:not([tabindex]){user-select:none;border:none}
+#encoded:not(:focus-within){text-overflow:ellipsis}
 #stats{font-size:.75em;display:grid;gap:1em;grid-template-columns:auto auto 5em auto auto;grid-template-rows:auto auto}
 #stats div{opacity:.67;;font-style:italic;white-space:nowrap}
-#stats div:first-child{max-width:max(30vw,12ch);overflow:clip;text-overflow:ellipsis;direction:ltr}
+#stats div:first-child{max-width:max(25vw,12ch);padding-right:.5ch;overflow:hidden;text-overflow:ellipsis;direction:ltr}
 #stats div[aria-labelledby]{opacity:.85;font-style:normal;min-width:12ch;text-align:right}
-#copy{font-style:italic;display:inline-block;width:7ch;text-align:center}
+.copy{font-style:italic;display:inline-block;padding-inline:.5em .25em;text-align:center;min-width:6.5ch}
 input[type="file"]{width:10px;height:10px;opacity:0;overflow:hidden;position:absolute;z-index:-1;pointer-events:none}
 </style>
 <style class="media-query"></style>
@@ -77,7 +78,7 @@ input[type="file"]{width:10px;height:10px;opacity:0;overflow:hidden;position:abs
       <li><h4>Security:</h4> Browser security isolation is based on the
         <a href="https://developer.mozilla.org/en-US/docs/Glossary/Origin" target="_blank">origin</a> of a site.
         Because data URLs do not have an origin, they can be blocked in some contexts depending on the media type,
-        to prevent cross-site scripting or other potential security risks.</li>
+        to prevent cross-site scripting or other potential attacks.</li>
       <li><h4>Caching:</h4> Although embedding the content directly in the URL can save a network trip on the first load, it also bypasses the browser cache which could have effectively saved even more.</li>
     </ul>
   </div>
@@ -89,6 +90,7 @@ input[type="file"]{width:10px;height:10px;opacity:0;overflow:hidden;position:abs
   --><span id="media-type">image/gif</span>;<!--
   --><span id="encoding">base64</span>,<!--
   --><span id="encoded" tabindex="0">R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==</span><!--
+  --><a class="copy" tabindex="0" style="display:none">copy</a><!--
   --><span id="suffix">"&gt;</span><!--
 --></div>
 <div id="stats">
@@ -105,7 +107,6 @@ input[type="file"]{width:10px;height:10px;opacity:0;overflow:hidden;position:abs
 </body>
 <script type="module">
 import encode from '/lib/dataurl.mjs';
-import br from '/lib/brotli_enc_worker.mjs';
 const types={
   aac: 'audio/aac',
   avif: 'image/avif',
@@ -133,8 +134,8 @@ const prefix=document.querySelector("#prefix");
 const suffix=document.querySelector("#suffix");
 const mediaType=document.querySelector("#media-type");
 const encoded=document.querySelector('#encoded');
+const copy=document.querySelector('.copy');
 const stats=[...document.querySelectorAll('#stats>div')];
-let controller;
 const compress=async(bytes,signal)=>{
   const worker=new Worker('/lib/brotli_enc_worker_script.mjs',{type:'module'});
   signal.onabort=_=>worker.terminate();
@@ -207,6 +208,7 @@ const formatLength=(len,other)=>{
   const rounded=parseFloat(len.toFixed(2));
   return `${rounded}${unit}`;
 }
+let controller;
 const open=async(blob)=>{
   if(!blob) return;
   controller?.abort();
@@ -241,8 +243,8 @@ const open=async(blob)=>{
   }
   encoded.textContent='';
   encoded.removeAttribute('tabindex');
-  encoded.style.setProperty('--chs',`${prefix.textContent.length+suffix.textContent.length+type.length+22}ch`);
   const url=await b64url(blob,signal);
+  if(signal.aborted) return;
   const i=url.indexOf('base64,')+7;
   const [
     originalLabel,originalSize,_gap1,originalCompressedLabel,originalCompressedSize,
@@ -252,10 +254,10 @@ const open=async(blob)=>{
   encodedLabel.textContent=`encoded: `;
   originalSize.textContent=formatLength(blob.size,url.length-i);
   encodedSize.textContent=formatLength(url.length-i,blob.size);
-  const result=url.substring(i);
+  const b64=url.substring(i);
   Promise.all([
     compress(new Uint8Array(await blob.arrayBuffer()),signal),
-    compress(new TextEncoder().encode(result),signal)
+    compress(new TextEncoder().encode(b64),signal)
   ]).then(([arr1,arr2])=>{
     if(arr1&&arr2){
       originalCompressedLabel.textContent='compressed: ';
@@ -264,22 +266,20 @@ const open=async(blob)=>{
       encodedCompressedSize.textContent=formatLength(arr2.length,arr1.length);
     }
   });
-  if(result.length>5e5){
-    encoded.textContent=`${result.substring(0,3)}…`;
-    const copy=document.createElement('a');
-    copy.textContent='copy';
-    copy.id='copy';
-    copy.setAttribute('tabindex','0');
-    copy.addEventListener('click',e=>{
+  if(b64.length>5e5){
+    copy.style.removeProperty('display');
+    encoded.textContent=`${b64.substring(0,118)}…`;
+    copy.onclick=e=>{
       e.preventDefault();
-      navigator.clipboard.writeText(result);
+      navigator.clipboard.writeText(b64);
       copy.textContent='copied';
       setTimeout(()=>{if(!signal.aborted) copy.textContent='copy'},300);
-    });
-    encoded.appendChild(copy);
+    };
   }else{
+    copy.style.setProperty('display','none');
+    copy.onclick=null;
     encoded.setAttribute('tabindex','0');
-    encoded.textContent=result;
+    encoded.textContent=b64;
   }
   clearTimeout(timeout);
   document.body.classList.remove('busy');
@@ -310,6 +310,11 @@ encoded.addEventListener('touchend',e=>{
   e.preventDefault();
   getSelection().setBaseAndExtent(encoded,0,encoded,1);
   navigator.clipboard.writeText(getSelection().toString());
+  const copy=encoded.querySelector('.copy');
+  if(copy){
+    copy.textContent='copied';
+    setTimeout(()=>{copy.textContent='copy'},300);
+  }
 });
 const uploader=document.querySelector('#file');
 uploader.addEventListener('change',async e=>{

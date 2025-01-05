@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>ASCII</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Table of ASCII character codes">
+<meta name="theme-color" content="#282828">
+<link rel="icon" href="/favicon.svg" sizes="any" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple.png">
+<link rel="manifest" href="/pwa.json">
+<link rel="canonical" href="https://www.couique.com/ascii">
+<style>
+@import './fonts/asap.css';
+@import './fonts/cascadia_code.css';
+@import './fonts/symbols.css';
+:root{color-scheme:light dark}
+*{margin:0;padding:0;box-sizing:border-box}
+html{width:100%;height:100%;background:#282828;color:#eee;font:300 clamp(7.5pt, calc(100dvw / 96 + 4pt), 32pt) __asap__,sans-serif;font-stretch:115%;line-height:1.4}
+body{min-height:100%;padding:3em 1em;display:grid;place-items:start center;grid-template-columns:1fr;gap:1em}
+h1{color:#daf;font-size:2rem;text-align:center;font-weight:900;font-stretch:125%;font-style:italic;letter-spacing:.05em;text-wrap:pretty}
+section{display:grid;grid-template-columns:repeat(3, auto) minmax(auto, 1fr);grid-auto-rows:auto;gap:.25em 1em}
+section:first-of-type{grid-template-columns:repeat(4, auto) minmax(auto, 1fr)}
+section:last-of-type{grid-column:1 / -1;display:block;padding:5em 1em 0 1em}
+section>*:where(ul,p){list-style:none;padding:1em}
+section>ul>li{font-style:italic;padding-bottom:1em}
+section>ul>li>a{display:block;font-style:normal}
+h2{text-align:center;font-size:1.75em;padding:1em;grid-column:1 / -1}
+section>div{display:contents}
+div:where([aria-label="character"],[aria-label$="escape"],[aria-label$="entity"]){font-family:__symbols__,__cascadia_code__,monospace}
+div[aria-label="character"]{font-weight:600}
+div[aria-label="decimal escape"]:before{content:'&#';opacity:0.5}
+div[aria-label="hexadecimal escape"]:before{content:'&#x';opacity:0.5}
+div:where([aria-label="decimal escape"],[aria-label="hexadecimal escape"]):after{content:';';opacity:0.5}
+div[aria-label="decimal escape"]{color:#caffbf}
+div[aria-label="hexadecimal escape"]{color:#9bf6ff}
+div[aria-label="backslash escape"]{color:#ffc6ff}
+div[aria-label="name"]{color:#bbb}
+.space:before{content:'\2423';position:absolute}
+pre{font:inherit;display:inline}
+.break{display:none}
+@media(min-width:720px){
+  body{grid-template-rows:repeat(3,auto);grid-template-columns:repeat(2,auto)}
+  h1{grid-column:1 / -1}
+  section{font-size:min(.85em,20pt)}
+  section:nth-of-type(2){grid-row:2 / -1;grid-column:2}
+  section:last-of-type{grid-row:3;grid-column:1;padding-bottom:16em}
+}
+</style>
+</head>
+<body>
+<h1>ASCII</h1>
+<section>
+  <h2>Control characters</h2>
+  <div>
+    <div aria-label="decimal escape">0</div>
+    <div aria-label="hexadecimal escape">0</div>
+    <div aria-label="backslash escape">\0</div>
+    <div aria-label="character">NUL</div>
+    <div aria-label="name">Null</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">1</div>
+    <div aria-label="hexadecimal escape">1</div>
+    <div aria-label="backslash escape"></div>
+    <div aria-label="character">SOH</div>
+    <div aria-label="name">Start Of Heading</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">2</div>
+    <div aria-label="hexadecimal escape">2</div>
+    <div aria-label="backslash escape"></div>
+    <div aria-label="character">STX</div>
+    <div aria-label="name">Start Of Text</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">3</div>
+    <div aria-label="hexadecimal escape">3</div>
+    <div aria-label="backslash escape"></div>
+    <div aria-label="character">ETX</div>
+    <div aria-label="name">End Of Text</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">4</div>
+    <div aria-label="hexadecimal escape">4</div>
+    <div aria-label="backslash escape"></div>
+    <div aria-label="character">EOT</div>
+    <div aria-label="name">End Of Transmission</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">5</div>
+    <div aria-label="hexadecimal escape">5</div>
+    <div aria-label="backslash escape"></div>
+    <div aria-label="character">ENQ</div>
+    <div aria-label="name">Enquiry</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">6</div>
+    <div aria-label="hexadecimal escape">6</div>
+    <div aria-label="backslash escape"></div>
+    <div aria-label="character">ACK</div>
+    <div aria-label="name">Acknowledge</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">7</div>
+    <div aria-label="hexadecimal escape">7</div>
+    <div aria-label="backslash escape">\a</div>
+    <div aria-label="character">BEL</div>
+    <div aria-label="name">Bell / Alert</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">8</div>
+    <div aria-label="hexadecimal escape">8</div>
+    <div aria-label="backslash escape">\b</div>
+    <div aria-label="character">BS</div>
+    <div aria-label="name">Backspace</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">9</div>
+    <div aria-label="hexadecimal escape">9</div>
+    <div aria-label="backslash escape">\t</div>
+    <div aria-label="character">HT</div>
+    <div aria-label="name">(Horizontal) Tab</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">10</div>
+    <div aria-label="hexadecimal escape">a</div>
+    <div aria-label="backslash escape">\n</div>
+    <div aria-label="character">LF</div>
+    <div aria-label="name">Line Feed (Newline)</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">11</div>
+    <div aria-label="hexadecimal escape">b</div>
+    <div aria-label="backslash escape">\v</div>
+    <div aria-label="character">VT</div>
+    <div aria-label="name">Vertical Tab</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">12</div>
+    <div aria-label="hexadecimal escape">c</div>
+    <div aria-label="backslash escape">\f</div>
+    <div aria-label="character">FF</div>
+    <div aria-label="name">Form Feed</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">13</div>
+    <div aria-label="hexadecimal escape">d</div>
+    <div aria-label="backslash escape">\r</div>
+    <div aria-label="character">CR</div>
+    <div aria-label="name">Carriage Return</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">14</div>
+    <div aria-label="hexadecimal escape">e</div>
+    <div aria-label="backslash escape"></div>
+    <div aria-label="character">SO</div>
+    <div aria-label="name">Shift Out</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">15</div>
+    <div aria-label="hexadecimal escape">f</div>
+    <div aria-label="backslash escape"></div>
+    <div aria-label="character">SI</div>
+    <div aria-label="name">Shift In</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">16</div>
+    <div aria-label="hexadecimal escape">10</div>
+    <div aria-label="backslash escape"></div>
+    <div aria-label="character">DLE</div>
+    <div aria-label="name">Data Link Escape</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">17</div>
+    <div aria-label="hexadecimal escape">11</div>
+    <div aria-label="backslash escape"></div>
+    <div aria-label="character">DC1</div>
+    <div aria-label="name">Device Control 1</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">18</div>
+    <div aria-label="hexadecimal escape">12</div>
+    <div aria-label="backslash escape"></div>
+    <div aria-label="character">DC2</div>
+    <div aria-label="name">Device Control 2</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">19</div>
+    <div aria-label="hexadecimal escape">13</div>
+    <div aria-label="backslash escape"></div>
+    <div aria-label="character">DC3</div>
+    <div aria-label="name">Device Control 3</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">20</div>
+    <div aria-label="hexadecimal escape">14</div>
+    <div aria-label="backslash escape"></div>
+    <div aria-label="character">DC4</div>
+    <div aria-label="name">Device Control 4</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">21</div>
+    <div aria-label="hexadecimal escape">15</div>
+    <div aria-label="backslash escape"></div>
+    <div aria-label="character">NAK</div>
+    <div aria-label="name">Negative Acknowledge</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">22</div>
+    <div aria-label="hexadecimal escape">16</div>
+    <div aria-label="backslash escape"></div>
+    <div aria-label="character">SYN</div>
+    <div aria-label="name">Synchronous Idle</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">23</div>
+    <div aria-label="hexadecimal escape">17</div>
+    <div aria-label="backslash escape"></div>
+    <div aria-label="character">ETB</div>
+    <div aria-label="name">End of Transmit Block</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">24</div>
+    <div aria-label="hexadecimal escape">18</div>
+    <div aria-label="backslash escape"></div>
+    <div aria-label="character">CAN</div>
+    <div aria-label="name">Cancel</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">25</div>
+    <div aria-label="hexadecimal escape">19</div>
+    <div aria-label="backslash escape"></div>
+    <div aria-label="character">EM</div>
+    <div aria-label="name">End of Medium</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">26</div>
+    <div aria-label="hexadecimal escape">1a</div>
+    <div aria-label="backslash escape"></div>
+    <div aria-label="character">SUB</div>
+    <div aria-label="name">Substitute</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">27</div>
+    <div aria-label="hexadecimal escape">1b</div>
+    <div aria-label="backslash escape"></div>
+    <div aria-label="character">ESC</div>
+    <div aria-label="name">Escape</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">28</div>
+    <div aria-label="hexadecimal escape">1c</div>
+    <div aria-label="backslash escape"></div>
+    <div aria-label="character">FS</div>
+    <div aria-label="name">File Separator</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">29</div>
+    <div aria-label="hexadecimal escape">1d</div>
+    <div aria-label="backslash escape"></div>
+    <div aria-label="character">GS</div>
+    <div aria-label="name">Group Separator</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">30</div>
+    <div aria-label="hexadecimal escape">1e</div>
+    <div aria-label="backslash escape"></div>
+    <div aria-label="character">RS</div>
+    <div aria-label="name">Record Separator</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">31</div>
+    <div aria-label="hexadecimal escape">1f</div>
+    <div aria-label="backslash escape"></div>
+    <div aria-label="character">US</div>
+    <div aria-label="name">Unit Separator</div>
+  </div>
+</section>
+<section>
+  <h2>Printable characters</h2>
+  <div>
+    <div aria-label="decimal escape">32</div>
+    <div aria-label="hexadecimal escape">20</div>
+    <div aria-label="character" class="space"><pre> </pre></div>
+    <div aria-label="name">Space</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">33</div>
+    <div aria-label="hexadecimal escape">21</div>
+    <div aria-label="character">!</div>
+    <div aria-label="name">Exclamation Point</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">34</div>
+    <div aria-label="hexadecimal escape">22</div>
+    <div aria-label="character">"</div>
+    <div aria-label="name">Double Quotes</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">35</div>
+    <div aria-label="hexadecimal escape">23</div>
+    <div aria-label="character">#</div>
+    <div aria-label="name">Pound/Number Sign</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">36</div>
+    <div aria-label="hexadecimal escape">24</div>
+    <div aria-label="character">$</div>
+    <div aria-label="name">Dollar Sign</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">37</div>
+    <div aria-label="hexadecimal escape">25</div>
+    <div aria-label="character">%</div>
+    <div aria-label="name">Percent Sign</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">38</div>
+    <div aria-label="hexadecimal escape">26</div>
+    <div aria-label="character">&</div>
+    <div aria-label="name">Ampersand</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">39</div>
+    <div aria-label="hexadecimal escape">27</div>
+    <div aria-label="character">'</div>
+    <div aria-label="name">Single Quote</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">40</div>
+    <div aria-label="hexadecimal escape">28</div>
+    <div aria-label="character">(</div>
+    <div aria-label="name">Open/Left Paren(thesis)</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">41</div>
+    <div aria-label="hexadecimal escape">29</div>
+    <div aria-label="character">)</div>
+    <div aria-label="name">Close/Right Paren(thesis)</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">42</div>
+    <div aria-label="hexadecimal escape">2a</div>
+    <div aria-label="character">*</div>
+    <div aria-label="name">Star/Asterisk</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">43</div>
+    <div aria-label="hexadecimal escape">2b</div>
+    <div aria-label="character">+</div>
+    <div aria-label="name">Plus Sign</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">44</div>
+    <div aria-label="hexadecimal escape">2c</div>
+    <div aria-label="character">,</div>
+    <div aria-label="name">Comma</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">45</div>
+    <div aria-label="hexadecimal escape">2d</div>
+    <div aria-label="character">-</div>
+    <div aria-label="name">Dash/Hyphen</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">46</div>
+    <div aria-label="hexadecimal escape">2e</div>
+    <div aria-label="character">.</div>
+    <div aria-label="name">Dot/Period</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">47</div>
+    <div aria-label="hexadecimal escape">2f</div>
+    <div aria-label="character">/</div>
+    <div aria-label="name">(Forward) Slash</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">48</div>
+    <div aria-label="hexadecimal escape">30</div>
+    <div aria-label="character">0</div>
+    <div aria-label="name">Zero</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">49</div>
+    <div aria-label="hexadecimal escape">31</div>
+    <div aria-label="character">1</div>
+    <div aria-label="name">One</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">50</div>
+    <div aria-label="hexadecimal escape">32</div>
+    <div aria-label="character">2</div>
+    <div aria-label="name">Two</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">51</div>
+    <div aria-label="hexadecimal escape">33</div>
+    <div aria-label="character">3</div>
+    <div aria-label="name">Three</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">52</div>
+    <div aria-label="hexadecimal escape">34</div>
+    <div aria-label="character">4</div>
+    <div aria-label="name">Four</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">53</div>
+    <div aria-label="hexadecimal escape">35</div>
+    <div aria-label="character">5</div>
+    <div aria-label="name">Five</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">54</div>
+    <div aria-label="hexadecimal escape">36</div>
+    <div aria-label="character">6</div>
+    <div aria-label="name">Six</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">55</div>
+    <div aria-label="hexadecimal escape">37</div>
+    <div aria-label="character">7</div>
+    <div aria-label="name">Seven</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">56</div>
+    <div aria-label="hexadecimal escape">38</div>
+    <div aria-label="character">8</div>
+    <div aria-label="name">Eight</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">57</div>
+    <div aria-label="hexadecimal escape">39</div>
+    <div aria-label="character">9</div>
+    <div aria-label="name">Nine</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">58</div>
+    <div aria-label="hexadecimal escape">3a</div>
+    <div aria-label="character">:</div>
+    <div aria-label="name">Colon</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">59</div>
+    <div aria-label="hexadecimal escape">3b</div>
+    <div aria-label="character">;</div>
+    <div aria-label="name">Semicolon</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">60</div>
+    <div aria-label="hexadecimal escape">3c</div>
+    <div aria-label="character">&lt;</div>
+    <div aria-label="name">Open/Left Angled Bracket</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">61</div>
+    <div aria-label="hexadecimal escape">3d</div>
+    <div aria-label="character">=</div>
+    <div aria-label="name">Equals Sign</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">62</div>
+    <div aria-label="hexadecimal escape">3e</div>
+    <div aria-label="character">&gt;</div>
+    <div aria-label="name">Close/Right Angle Bracket</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">63</div>
+    <div aria-label="hexadecimal escape">3f</div>
+    <div aria-label="character">?</div>
+    <div aria-label="name">Question Mark</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">64</div>
+    <div aria-label="hexadecimal escape">40</div>
+    <div aria-label="character">@</div>
+    <div aria-label="name">At Symbol</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">65</div>
+    <div aria-label="hexadecimal escape">41</div>
+    <div aria-label="character">A</div>
+    <div aria-label="name">Uppercase A</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">66</div>
+    <div aria-label="hexadecimal escape">42</div>
+    <div aria-label="character">B</div>
+    <div aria-label="name">Uppercase B</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">67</div>
+    <div aria-label="hexadecimal escape">43</div>
+    <div aria-label="character">C</div>
+    <div aria-label="name">Uppercase C</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">68</div>
+    <div aria-label="hexadecimal escape">44</div>
+    <div aria-label="character">D</div>
+    <div aria-label="name">Uppercase D</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">69</div>
+    <div aria-label="hexadecimal escape">45</div>
+    <div aria-label="character">E</div>
+    <div aria-label="name">Uppercase E</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">70</div>
+    <div aria-label="hexadecimal escape">46</div>
+    <div aria-label="character">F</div>
+    <div aria-label="name">Uppercase F</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">71</div>
+    <div aria-label="hexadecimal escape">47</div>
+    <div aria-label="character">G</div>
+    <div aria-label="name">Uppercase G</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">72</div>
+    <div aria-label="hexadecimal escape">48</div>
+    <div aria-label="character">H</div>
+    <div aria-label="name">Uppercase H</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">73</div>
+    <div aria-label="hexadecimal escape">49</div>
+    <div aria-label="character">I</div>
+    <div aria-label="name">Uppercase I</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">74</div>
+    <div aria-label="hexadecimal escape">4a</div>
+    <div aria-label="character">J</div>
+    <div aria-label="name">Uppercase J</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">75</div>
+    <div aria-label="hexadecimal escape">4b</div>
+    <div aria-label="character">K</div>
+    <div aria-label="name">Uppercase K</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">76</div>
+    <div aria-label="hexadecimal escape">4c</div>
+    <div aria-label="character">L</div>
+    <div aria-label="name">Uppercase L</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">77</div>
+    <div aria-label="hexadecimal escape">4d</div>
+    <div aria-label="character">M</div>
+    <div aria-label="name">Uppercase M</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">78</div>
+    <div aria-label="hexadecimal escape">4e</div>
+    <div aria-label="character">N</div>
+    <div aria-label="name">Uppercase N</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">79</div>
+    <div aria-label="hexadecimal escape">4f</div>
+    <div aria-label="character">O</div>
+    <div aria-label="name">Uppercase O</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">80</div>
+    <div aria-label="hexadecimal escape">50</div>
+    <div aria-label="character">P</div>
+    <div aria-label="name">Uppercase P</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">81</div>
+    <div aria-label="hexadecimal escape">51</div>
+    <div aria-label="character">Q</div>
+    <div aria-label="name">Uppercase Q</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">82</div>
+    <div aria-label="hexadecimal escape">52</div>
+    <div aria-label="character">R</div>
+    <div aria-label="name">Uppercase R</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">83</div>
+    <div aria-label="hexadecimal escape">53</div>
+    <div aria-label="character">S</div>
+    <div aria-label="name">Uppercase S</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">84</div>
+    <div aria-label="hexadecimal escape">54</div>
+    <div aria-label="character">T</div>
+    <div aria-label="name">Uppercase T</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">85</div>
+    <div aria-label="hexadecimal escape">55</div>
+    <div aria-label="character">U</div>
+    <div aria-label="name">Uppercase U</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">86</div>
+    <div aria-label="hexadecimal escape">56</div>
+    <div aria-label="character">V</div>
+    <div aria-label="name">Uppercase V</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">87</div>
+    <div aria-label="hexadecimal escape">57</div>
+    <div aria-label="character">W</div>
+    <div aria-label="name">Uppercase W</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">88</div>
+    <div aria-label="hexadecimal escape">58</div>
+    <div aria-label="character">X</div>
+    <div aria-label="name">Uppercase X</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">89</div>
+    <div aria-label="hexadecimal escape">59</div>
+    <div aria-label="character">Y</div>
+    <div aria-label="name">Uppercase Y</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">90</div>
+    <div aria-label="hexadecimal escape">5a</div>
+    <div aria-label="character">Z</div>
+    <div aria-label="name">Uppercase Z</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">91</div>
+    <div aria-label="hexadecimal escape">5b</div>
+    <div aria-label="character">[</div>
+    <div aria-label="name">Open/Left Square Bracket</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">92</div>
+    <div aria-label="hexadecimal escape">5c</div>
+    <div aria-label="character">\</div>
+    <div aria-label="name">Backslash</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">93</div>
+    <div aria-label="hexadecimal escape">5d</div>
+    <div aria-label="character">]</div>
+    <div aria-label="name">Close/Right Square Bracket</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">94</div>
+    <div aria-label="hexadecimal escape">5e</div>
+    <div aria-label="character">^</div>
+    <div aria-label="name">Hat/Caret</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">95</div>
+    <div aria-label="hexadecimal escape">5f</div>
+    <div aria-label="character">_</div>
+    <div aria-label="name">Underscore</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">96</div>
+    <div aria-label="hexadecimal escape">60</div>
+    <div aria-label="character">`</div>
+    <div aria-label="name">Backtick</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">97</div>
+    <div aria-label="hexadecimal escape">61</div>
+    <div aria-label="character">a</div>
+    <div aria-label="name">Lowercase a</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">98</div>
+    <div aria-label="hexadecimal escape">62</div>
+    <div aria-label="character">b</div>
+    <div aria-label="name">Lowercase b</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">99</div>
+    <div aria-label="hexadecimal escape">63</div>
+    <div aria-label="character">c</div>
+    <div aria-label="name">Lowercase c</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">100</div>
+    <div aria-label="hexadecimal escape">64</div>
+    <div aria-label="character">d</div>
+    <div aria-label="name">Lowercase d</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">101</div>
+    <div aria-label="hexadecimal escape">65</div>
+    <div aria-label="character">e</div>
+    <div aria-label="name">Lowercase e</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">102</div>
+    <div aria-label="hexadecimal escape">66</div>
+    <div aria-label="character">f</div>
+    <div aria-label="name">Lowercase f</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">103</div>
+    <div aria-label="hexadecimal escape">67</div>
+    <div aria-label="character">g</div>
+    <div aria-label="name">Lowercase g</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">104</div>
+    <div aria-label="hexadecimal escape">68</div>
+    <div aria-label="character">h</div>
+    <div aria-label="name">Lowercase h</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">105</div>
+    <div aria-label="hexadecimal escape">69</div>
+    <div aria-label="character">i</div>
+    <div aria-label="name">Lowercase i</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">106</div>
+    <div aria-label="hexadecimal escape">6a</div>
+    <div aria-label="character">j</div>
+    <div aria-label="name">Lowercase j</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">107</div>
+    <div aria-label="hexadecimal escape">6b</div>
+    <div aria-label="character">k</div>
+    <div aria-label="name">Lowercase k</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">108</div>
+    <div aria-label="hexadecimal escape">6c</div>
+    <div aria-label="character">l</div>
+    <div aria-label="name">Lowercase l</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">109</div>
+    <div aria-label="hexadecimal escape">6d</div>
+    <div aria-label="character">m</div>
+    <div aria-label="name">Lowercase m</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">110</div>
+    <div aria-label="hexadecimal escape">6e</div>
+    <div aria-label="character">n</div>
+    <div aria-label="name">Lowercase n</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">111</div>
+    <div aria-label="hexadecimal escape">6f</div>
+    <div aria-label="character">o</div>
+    <div aria-label="name">Lowercase o</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">112</div>
+    <div aria-label="hexadecimal escape">70</div>
+    <div aria-label="character">p</div>
+    <div aria-label="name">Lowercase p</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">113</div>
+    <div aria-label="hexadecimal escape">71</div>
+    <div aria-label="character">q</div>
+    <div aria-label="name">Lowercase q</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">114</div>
+    <div aria-label="hexadecimal escape">72</div>
+    <div aria-label="character">r</div>
+    <div aria-label="name">Lowercase r</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">115</div>
+    <div aria-label="hexadecimal escape">73</div>
+    <div aria-label="character">s</div>
+    <div aria-label="name">Lowercase s</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">116</div>
+    <div aria-label="hexadecimal escape">74</div>
+    <div aria-label="character">t</div>
+    <div aria-label="name">Lowercase t</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">117</div>
+    <div aria-label="hexadecimal escape">75</div>
+    <div aria-label="character">u</div>
+    <div aria-label="name">Lowercase u</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">118</div>
+    <div aria-label="hexadecimal escape">76</div>
+    <div aria-label="character">v</div>
+    <div aria-label="name">Lowercase v</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">119</div>
+    <div aria-label="hexadecimal escape">77</div>
+    <div aria-label="character">w</div>
+    <div aria-label="name">Lowercase w</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">120</div>
+    <div aria-label="hexadecimal escape">78</div>
+    <div aria-label="character">x</div>
+    <div aria-label="name">Lowercase x</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">121</div>
+    <div aria-label="hexadecimal escape">79</div>
+    <div aria-label="character">y</div>
+    <div aria-label="name">Lowercase y</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">122</div>
+    <div aria-label="hexadecimal escape">7a</div>
+    <div aria-label="character">z</div>
+    <div aria-label="name">Lowercase z</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">123</div>
+    <div aria-label="hexadecimal escape">7b</div>
+    <div aria-label="character">{</div>
+    <div aria-label="name">Open/Left Curly Brace</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">124</div>
+    <div aria-label="hexadecimal escape">7c</div>
+    <div aria-label="character">|</div>
+    <div aria-label="name">Pipe/Vertical Bar</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">125</div>
+    <div aria-label="hexadecimal escape">7d</div>
+    <div aria-label="character">}</div>
+    <div aria-label="name">Close/Right Curly Brace</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">126</div>
+    <div aria-label="hexadecimal escape">7e</div>
+    <div aria-label="character">~</div>
+    <div aria-label="name">Tilde</div>
+  </div>
+  <div>
+    <div aria-label="decimal escape">127</div>
+    <div aria-label="hexadecimal escape">7f</div>
+    <div aria-label="character">DEL</div>
+    <div aria-label="name">Delete</div>
+  </div>
+</section>
+<section>
+  <p>ASCII compatibility is maintained<br>
+  by other more complete encodings:</p>
+  <ul>
+    <li><a href="https://datatracker.ietf.org/doc/html/rfc3629" rel="noopener" target="_blank">UTF-8</a> the most common unicode encoding
+    <li><a href="http://www.unicode.org/Public/MAPPINGS/ISO8859/8859-1.TXT" rel="noopener" target="_blank">ISO-8859-1</a> Latin 1 extension
+    <li><a href="http://www.unicode.org/Public/MAPPINGS/VENDORS/MICSFT/WINDOWS/CP1252.TXT" rel="noopener" target="_blank">CP-1252</a> Windows legacy encoding
+  </ul>
+</section>
+</body>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "ASCII",
+  "url": "https://www.couique.com/ascii",
+  "description": "Table of ASCII character codes.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "All",
+  "about": {
+    "@type": "Thing",
+    "description": "The ASCII 7-bit text encoding character list with their names and escape sequences."
+  },
+  "author": {
+    "@id": "https://about.programingjd.me"
+  }
+}
+</script>
+</html>

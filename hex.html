@@ -9,10 +9,10 @@
 <link rel="icon" href="/favicon.svg" sizes="any" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple.png">
 <link rel="manifest" href="/pwa.json">
-<link rel="canonical" href="https://www.couique.com/dataurl">
+<link rel="canonical" href="https://www.couique.com/hex">
 <style>
 @import './fonts/asap.css';
-@import './fonts/cascadia_code-reg.css';
+@import './fonts/cascadia_code.css';
 :root{color-scheme:light dark}
 *{margin:0;padding:0;box-sizing:border-box}
 html{width:100%;height:100%;background:#282828;color:#eee;font:400 clamp(7.5pt, calc(100dvw / 48), 64pt) __asap__,sans-serif;font-stretch:115%;line-height:1.4}
@@ -33,49 +33,63 @@ input[type="file"]{width:10px;height:10px;opacity:0;overflow:hidden;position:abs
 .row p{font-weight:250}
 [slot="header"],[slot="footer"]{padding:.25em}
 [slot="placeholder"]{padding:1em;place-self:center}
-.row>p{text-indent:1em}
-virtual-scroller{max-height:100%}
+.row>pre{text-indent:1em}
+list-view:empty:after{
+  content:'Paste or drag & drop';
+  font-style:italic;
+  display:grid;
+  place-items:center;
+}
 </style>
 <style class="media-query"></style>
 </head>
 <body>
-<virtual-scroller>
-  <div slot="header"></div>
+<list-view>
   <template>
     <div class="row">
       <div>0</div>
       <span>00</span><span>01</span><span>02</span><span>03</span><span>04</span><span>05</span><span>06</span><span>07</span>
       <span>08</span><span>09</span><span>0a</span><span>0b</span><span>0c</span><span>0d</span><span>0e</span><span>0f</span>
-      <p>................</p>
+      <pre>................</pre>
     </div>
   </template>
-  <div slot="footer"></div>
   <div slot="placeholder">Paste, drag &amp; drop,<br>or <input tabindex="0" type="file" id="file" title=" "><label for="file">select a file</label>.</div>
-</virtual-scroller>
+</list-view>
 </body>
 <script type="module">
-import _ from "./lib/virtual_scroll.mjs";
-const vscroller=document.querySelector('virtual-scroller');
-const model={
-  data: new Uint8Array(0),
-  cols: 1,
-  count: 0,
-  render(row,index){
-    const slice=this.data.subarray(index*16,index*16+16);
-    row.querySelector('div').textContent=(index*16).toString(16);
-    row.querySelectorAll('span').forEach((el,i)=>el.textContent=slice[i]?.toString(16)?.padStart(2,'0')??'\u00a0\u00a0');
-    row.querySelector('p').textContent=[...slice].map(it=>{
-      if(it<32||it>126) return '.';
+import _ from "./lib/listview-min.mjs";
+const list=document.querySelector('list-view');
+const template=document.querySelector('template');
+const model=data=>({
+  count: Math.ceil(data.length/16),
+  createPlaceholderRow(){
+    return document.importNode(template.content,true);
+  },
+  render(placeholder,index){
+    const slice=data.subarray(index*16,index*16+16);
+    placeholder.querySelector('div').textContent=(index*16).toString(16);
+    placeholder.querySelectorAll('span').forEach((el,i)=>el.textContent=slice[i]?.toString(16)?.padStart(2,'0')??'\u00a0\u00a0');
+    placeholder.querySelector('pre').textContent=[...slice].map(it=>{
+      if(it<0x20||it>0x7e) return '.';
       return String.fromCharCode(it);
     }).join('').padEnd(16,'\u00a0');
   }
-};
-model.render=model.render.bind(model);
-vscroller.model=model;
-const open=async(blob)=>{
-  model.data=new Uint8Array(await blob.arrayBuffer());
-  model.count=Math.ceil(model.data.length/16);
-  vscroller.model=model;
+});
+let controller=null;
+const open=async(data)=>{
+  controller?.abort();
+  controller=new AbortController();
+  const signal=controller.signal;
+  list.model=model(await new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    signal.onabort=e=>{
+      reader.abort();
+      reject(e);
+    };
+    reader.onload=e=>resolve(new Uint8Array(e.target.result));
+    reader.onerror=e=>reject(e?.target?.error||e);
+    reader.readAsArrayBuffer(data);
+  }));
 };
 ['dragenter','dragover','dragleave','drop'].forEach(type=>document.body.addEventListener(type,e=>{
   e.preventDefault();e.stopPropagation();

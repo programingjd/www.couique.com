@@ -12,60 +12,175 @@
 <link rel="canonical" href="https://www.couique.com/dataurl">
 <style>
 @import './fonts/asap.css';
-@import './fonts/cascadia_code-reg.css';
+@import './fonts/cascadia_code.css';
 *{margin:0;padding:0;box-sizing:border-box}
-html{width:100%;height:100%;background:#282828;color:#eee;font:400 clamp(7.5pt, calc(4pt + 1vw), 36pt)/1.4 __asap__,sans-serif;font-stretch:115%}
-body{min-height:100%;overflow:hidden;padding:2em;display:grid;place-items:center;grid-template-rows:1fr auto 1fr auto 2fr auto 2fr;grid-template-columns:auto;gap:1em}
+html{width:100%;height:100%;background:#282828;color:#eee;font:400 clamp(7.5pt, calc(4pt + 1vw), 36pt) __asap__,sans-serif;font-stretch:115%;line-height:1.4}
+body{min-height:100%;padding:2em;display:grid;place-items:center;grid-template-rows:2fr auto 2fr auto auto auto 3fr auto 1fr;grid-template-columns:auto;gap:1em}
 body.busy:after{position:absolute;inset:0;background:rgba(40,40,40,.8);display:grid;place-items:center;animation:loop 1200ms linear 600ms infinite;content:'';font:800 4em monospace;font-style:normal}
 @keyframes loop{0%,100%{content:'⠋'}10%{content:"⠙"}20%{content:"⠹"}30%{content:"⠸"}40%{content:"⠼"}50%{content:"⠴"}60%{content:"⠦"}70%{content:"⠧"}80%{content:"⠇"}90%{content:"⠏"}}
-a,button,label{color:#adf;text-decoration-color:rgba(170,221,255,.5);text-decoration:underline;cursor:pointer}a:hover,button:hover,label:hover{color:#6af}
+h1{color:#daf;font-size:2rem;text-align:center;font-weight:900;font-stretch:125%;font-style:italic;letter-spacing:.05em;text-wrap:pretty}
+h1>span{-webkit-text-stroke:initial;color:#9bf6ff}
+details[open] summary span{visibility:hidden}
+summary{list-style:none;cursor:pointer;text-align:center}
+details>div{font-size:min(1em,14pt);line-height:1.75;max-width:72ch;font-weight:300;padding-block-start:1em;font-stretch:100%}
+details>div span{color:#ffc6ff;padding-right:.5ch}
+details>div :is(em,span){font-style:italic;font-weight:400;color:#fff}
+details code{font-family:__cascadia_code__;color:#caffbf}
+label{color:#caffbf}
+a,button,#helper label{color:#adf;text-decoration-color:rgba(170,221,255,.5);text-decoration:underline;cursor:pointer}a:hover,button:hover,#helper label:hover{color:#6af}
 input:focus-visible+label{border-radius:3px;outline:1px solid #fff;outline-offset:1px}
 #helper{font-size:max(12pt,1em);color:#ccc;max-width:24ch;text-align:center}
-#base64{font:300 1em __cascadia_code__}
-section{max-width:65ch;font-size:clamp(9pt, calc(4pt + 1vw), 32pt);font-stretch:125%;font-weight:200;line-height:1.65}
-section :is(em,span){font-style:italic;font-weight:400;color:#fff}
-section span{color:#ffc6ff}
-section p:not(:last-child){margin-bottom:.5em}
-section code{font-family:__cascadia_code__;color:#caffbf}
-#dataurl span{white-space:nowrap}
+#base64{font:300 1em __cascadia_code__;display:grid;grid-template-columns:auto 2ch 1fr auto;gap:.5em 0}
+#base64 span{white-space:nowrap}
+#base64>label{grid-column:1}
+#prefix{color:#bbb}
 body.dragover{
   --conic-bg-angle:0deg;animation:conic-bg-angle 4s infinite linear;
   background:conic-gradient(from var(--conic-bg-angle) at 125% 50%, #282828, #1f2b3a, #312837, #1f2b3a, #282828);
 }
 @keyframes conic-bg-angle{100%{--conic-bg-angle:1turn}}@property --conic-bg-angle{syntax:'<angle>';inherits:false;initial-value:0deg}
-#result{position:relative;display:inline-block;border:0 solid #45494a;border-bottom-width:1px;outline:none;max-width:clamp(11ch,calc(100vw - 4em - var(--chs,40ch)),120ch);overflow-x:clip}
-#result[tabindex]:focus-within{border-color:#6af}
-#result[tabindex]:not(:focus-within){text-overflow:ellipsis}
-#copy{font-style:italic;display:inline-block;width:7ch;text-align:center}
+:where(#encoded,#unencoded){grid-column:3;position:relative;display:inline-block;border:0 solid #45494a;border-bottom-width:1px;outline:none;max-width:max-content;overflow-x:hidden}
+:where(#encoded,#unencoded)[tabindex]:focus-within{border-color:#6af}
+:where(#encoded,#unencoded):not([tabindex]){user-select:none;border:none}
+:where(#encoded,#unencoded):not(:focus-within){text-overflow:ellipsis}
+#stats{font-size:.75em;display:grid;gap:1em;grid-template-columns:auto auto 5em auto auto;grid-template-rows:auto auto}
+#stats div{opacity:.67;;font-style:italic;white-space:nowrap}
+#stats div:first-child{max-width:max(25vw,12ch);padding-right:.5ch;overflow:hidden;text-overflow:ellipsis;direction:ltr}
+#stats div[aria-labelledby]{opacity:.85;font-style:normal;min-width:12ch;text-align:right}
+.copy,.download{font-style:italic;display:inline-block;text-align:center}.copy{min-width:6.5ch}.download{min-width:10.5ch}
 input[type="file"]{width:10px;height:10px;opacity:0;overflow:hidden;position:absolute;z-index:-1;pointer-events:none}
 </style>
 <style class="media-query"></style>
 </head>
 <body>
 <div></div>
-<section>
-  <p>The goal is to represent a byte sequence with printable ascii characters, without too much overhead.
-  <p>We take bytes <em>3 by 3</em>, and instead of interpreting each chunk as <em>3 * 256</em> possible values,
-  we interpret them as <em>4 * 64</em> possible values.
-  <p>For the regular <span>base64</span> encoding, those 64 possible values are taken from this "alphabet":<br>
-  <code>ABCDEFGHIJKLMNOPQRSTUVWXZY<wbr>abcdefghijklmnopqrstuvwxyz<wbr>0123456789<wbr>+/</code>
-  <p>If the byte sequence length is not divisible by 3, the last character missing bits are set to zero,
-  and depending on the number of missing bits (2 or 4), one or two padding characters <code>=</code> are added to the end.
-  <p>The characters <code>+</code> and <code>/</code> in the regular alphabet are not safe to use for urls.
-  Therefore, there's an official variation called <span>base64url</span> that uses <code>-</code> and <code>_</code> instead,
-  and that makes the padding characters optional.
-</section>
+<details>
+  <summary><h1>base64 <span>*</span></h1></summary>
+  <div>
+    <p>The goal is to represent a byte sequence with printable ascii characters, without too much overhead.
+    <p>We take bytes <em>3 by 3</em>, and instead of interpreting each chunk as <em>3 * 256</em> possible values,
+      we interpret them as <em>4 * 64</em> possible values.
+    <p>For the regular <span>base64</span> encoding, those 64 possible values are taken from this "alphabet":<br>
+      <code>ABCDEFGHIJKLMNOPQRSTUVWXZY<wbr>abcdefghijklmnopqrstuvwxyz<wbr>0123456789<wbr>+/</code>
+    <p>If the byte sequence length is not divisible by 3, the last character missing bits are set to zero,
+      and depending on the number of missing bits (2 or 4), one or two padding characters <code>=</code> are added to the end.
+    <p>The characters <code>+</code> and <code>/</code> in the regular alphabet are not safe to use for urls.
+      Therefore, there's an official variation called <span>base64url</span> that uses <code>-</code> and <code>_</code> instead.
+      It also makes the padding characters optional.
+  </div>
+</details>
 <div></div>
 <div id="base64"><!--
-  --><span id="result" tabindex="0">R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==</span><!--
+  --><label for="unencoded">Raw</label><!--
+  --><span id="prefix">0x</span><!--
+  --><span id="unencoded" tabindex="0">47494638396101000100800000ffffff00000021f90401000000002c00000000010001000002024401003b</span><!--
+  --><a class="copy_or_download" tabindex="0" style="display:none"></a><!--
+  --><label for="encoded">Encoded</label><!--
+  --><span id="encoded" tabindex="0">R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==</span><!--
+  --><a class="copy" tabindex="0" style="display:none">copy</a><!--
 --></div>
+<form id="options">
+  <label><input type="radio" name="variant" value="base64">base64</label>
+  <div class="toggle"></div>
+  <label><input type="radio" name="variant" value="base64url">base64url</label>
+  <label><input type="checkbox" name="padding" value="padding">padding</label>
+</form>
+<div id="stats">
+  <div id="original_label">transparent_pixel.gif: </div><div aria-labelledby="original_label">43b</div>
+  <div></div>
+  <div id="original_compressed_label">compressed: </div><div aria-labelledby="original_compressed_label">48b</div>
+  <div id="encoded_label">encoded: </div><div aria-labelledby="encoded_label">60b</div>
+  <div></div>
+  <div id="encoded_compressed_label">compressed: </div><div aria-labelledby="encoded_compressed_label">50b</div>
+</div>
 <div></div>
 <div id="helper">Paste, drag &amp; drop,<br>or <input tabindex="0" type="file" id="file" title=" "><label for="file">select a file</label>.</div>
 <div></div>
 </body>
 <script type="module">
 import {encode,decode} from '/lib/base64.mjs';
-const result=document.querySelector('#result');
+const encoded=document.querySelector('#encoded');
+const unencoded=document.querySelector('#unencoded');
+const prefix=document.querySelector('#prefix');
+const copy=document.querySelector('.copy');
+const copyOrDownload=document.querySelector('.copy_or_download');
+const stats=[...document.querySelectorAll('#stats>div')];
+const compress=async(bytes,signal)=>{
+  const worker=new Worker('/lib/brotli_enc_worker_script.mjs',{type:'module'});
+  signal.onabort=_=>worker.terminate();
+  try{
+    return await new Promise((resolve,reject)=>{
+      worker.onerror=e=>{
+        reject(e);
+        worker.terminate();
+      };
+      worker.onmessage=msg=>{
+        if(msg.data==='ready'){
+          if(signal.aborted){
+            reject();
+            worker.terminate();
+          }else{
+            worker.onmessage=msg=>{
+              resolve(msg.data);
+              worker.terminate();
+            }
+          }
+          worker.postMessage({bytes,level:11});
+        }
+      }
+    });
+  }catch(ignore){}
+};
+const formatLength=(len,other)=>{
+  let min=Math.min(len,other);
+  let unit='b';
+  if(min>1024){
+    unit='kb';
+    len/=1024;
+    min/=1024;
+  }
+  if(min>1024){
+    unit='mb';
+    len/=1024;
+  }
+  const rounded=parseFloat(len.toFixed(2));
+  return `${rounded}${unit}`;
+}
+const nibbles=[
+  '0'.charCodeAt(0),'1'.charCodeAt(0),'2'.charCodeAt(0),'3'.charCodeAt(0),'4'.charCodeAt(0),'5'.charCodeAt(0),
+  '6'.charCodeAt(0),'7'.charCodeAt(0),'8'.charCodeAt(0),'9'.charCodeAt(0),'a'.charCodeAt(0),'b'.charCodeAt(0),
+  'c'.charCodeAt(0),'d'.charCodeAt(0),'e'.charCodeAt(0),'f'.charCodeAt(0)
+];
+const hex=buffer=>{
+  const bytes=new Uint8Array(buffer);
+  const hex=new Uint8Array(bytes.length*2);
+  let j=0;
+  bytes.forEach((b,i)=>{
+    hex[j++]=nibbles[b>>4];
+    hex[j++]=nibbles[b&0x0f];
+  });
+  return new TextDecoder('utf-8',{fatal:true,ignoreBOM:true}).decode(hex);
+}
+const tryText=async(buffer)=>{
+  try{
+    return new TextDecoder('utf-8',{fatal:true,ignoreBOM:true}).decode(buffer);
+  }catch(e){
+    return null;
+  }
+}
+const tryDecode=async(blob,signal)=>{
+  try{
+    const buffer=await blob.arrayBuffer();
+    if(signal.aborted) return null;
+    const base64=await tryText(buffer);
+    if(signal.aborted||!base64) return {};
+    const raw=await decode(base64,signal);
+    if(signal.aborted) return {};
+    return { base64, raw };
+  }catch(_){
+    return {};
+  }
+}
 let controller;
 const open=async(blob)=>{
   if(!blob) return;
@@ -73,26 +188,85 @@ const open=async(blob)=>{
   controller=new AbortController();
   const signal=controller.signal;
   const timeout=setTimeout(()=>document.body.classList.add('busy'),100);
-  const type='application/octet-stream';
-  result.textContent='';
-  result.removeAttribute('tabindex');
-  const encoded=await encode(blob,signal);
-  if(encoded.length>5e5){
-    result.textContent=`${encoded.substring(0,22)}…`;
-    const copy=document.createElement('a');
-    copy.textContent='copy';
-    copy.id='copy';
-    copy.setAttribute('tabindex','0');
-    copy.addEventListener('click',e=>{
+  stats.forEach(it=>it.textContent='');
+  encoded.textContent=unencoded.textContent='';
+  prefix.textContent='';
+  unencoded.removeAttribute('tabindex');
+  encoded.removeAttribute('tabindex');
+  let {raw,base64}=await tryDecode(blob,signal);
+  if(signal.aborted) return;
+  if(!raw){
+    raw=await blob.arrayBuffer();
+    if(signal.aborted) return;
+    base64=await encode(blob,signal);
+    if(signal.aborted) return;
+  }
+  let text=await tryText(raw);
+  if(!text){
+    prefix.textContent='0x';
+    text=hex(raw);
+  }
+  const [
+    originalLabel,originalSize,_gap1,originalCompressedLabel,originalCompressedSize,
+    encodedLabel,encodedSize,_gap2,encodedCompressedLabel,encodedCompressedSize
+  ]=stats;
+  originalLabel.textContent=`${blob.name??'unencoded'}: `;
+  encodedLabel.textContent=`encoded: `;
+  originalSize.textContent=formatLength(raw.byteLength,base64.length);
+  encodedSize.textContent=formatLength(base64.length,raw.byteLength);
+  Promise.all([
+    compress(new Uint8Array(raw),signal),
+    compress(new TextEncoder().encode(base64),signal)
+  ]).then(([arr1,arr2])=>{
+    if(arr1&&arr2){
+      originalCompressedLabel.textContent='compressed: ';
+      encodedCompressedLabel.textContent='compressed: ';
+      originalCompressedSize.textContent=formatLength(arr1.length,arr2.length);
+      encodedCompressedSize.textContent=formatLength(arr2.length,arr1.length);
+    }
+  });
+  if(text.length>5e5||prefix.textContent){
+    copyOrDownload.style.removeProperty('display');
+    if(prefix.textContent){
+      unencoded.textContent=`${text.substring(0,118)}…`;
+      copyOrDownload.textContent='download';
+      copyOrDownload.onclick=_=>{
+        copyOrDownload.download=blob.name??'raw.bin';
+        copyOrDownload.href=`data:;base64,${base64}`;
+        copyOrDownload.textContent='downloaded';
+        setTimeout(()=>{
+          if(!signal.aborted) copyOrDownload.textContent='download'
+        },300);
+      };
+    }else{
+      unencoded.textContent=`${text.substring(0,30)}…`;
+      copyOrDownload.textContent='copy';
+      copyOrDownload.onclick=e=>{
+        e.preventDefault();
+        navigator.clipboard.writeText(text);
+        copyOrDownload.textContent='copied';
+        setTimeout(()=>{if(!signal.aborted) copyOrDownload.textContent='copy'},300);
+      };
+    }
+  }else{
+    copyOrDownload.style.setProperty('display','none');
+    copyOrDownload.onclick=null;
+    unencoded.setAttribute('tabindex','0');
+    unencoded.textContent=text;
+  }
+  if(base64.length>5e5){
+    copy.style.removeProperty('display');
+    encoded.textContent=`${base64.substring(0,118)}…`;
+    copy.onclick=e=>{
       e.preventDefault();
-      navigator.clipboard.writeText(encoded);
+      navigator.clipboard.writeText(base64);
       copy.textContent='copied';
       setTimeout(()=>{if(!signal.aborted) copy.textContent='copy'},300);
-    });
-    result.appendChild(copy);
+    };
   }else{
-    result.setAttribute('tabindex','0');
-    result.textContent=encoded;
+    copy.style.setProperty('display','none');
+    encoded.setAttribute('tabindex','0');
+    encoded.textContent=base64;
   }
   clearTimeout(timeout);
   document.body.classList.remove('busy');
@@ -113,16 +287,43 @@ document.body.addEventListener('paste',async e=>{
   const blob=[...e.clipboardData.files]?.[0]??new Blob([new TextEncoder().encode(e.clipboardData.getData('text/plain')??'')],{type:'text/plain'});
   await open(blob);
 });
-result.addEventListener('click',e=>{
+encoded.addEventListener('click',e=>{
   if(e.detail===2){
     e.preventDefault();
-    getSelection().setBaseAndExtent(result,0,result,1);
+    getSelection().setBaseAndExtent(encoded,0,encoded,1);
   }
 });
-result.addEventListener('touchend',e=>{
+encoded.addEventListener('touchend',e=>{
   e.preventDefault();
-  getSelection().setBaseAndExtent(result,0,result,1);
+  getSelection().setBaseAndExtent(encoded,0,encoded,1);
   navigator.clipboard.writeText(getSelection().toString());
+  const copy=encoded.querySelector('.copy');
+  if(copy){
+    copy.textContent='copied';
+    setTimeout(()=>{copy.textContent='copy'},300);
+  }
+});
+unencoded.addEventListener('click',e=>{
+  if(!prefix.textContent){
+    if(e.detail===2){
+      e.preventDefault();
+      getSelection().setBaseAndExtent(encoded,0,encoded,1);
+    }
+  }
+});
+unencoded.addEventListener('touchend',e=>{
+  if(!prefix.textContent){
+    e.preventDefault();
+    getSelection().setBaseAndExtent(encoded,0,encoded,1);
+    navigator.clipboard.writeText(getSelection().toString());
+    const copy=unencoded.querySelector('.copy');
+    if(copy){
+      copy.textContent='copied';
+      setTimeout(()=>{
+        copy.textContent='copy'
+      },300);
+    }
+  }
 });
 const uploader=document.querySelector('#file');
 uploader.addEventListener('change',async e=>{
@@ -131,20 +332,26 @@ uploader.addEventListener('change',async e=>{
   console.log(file);
   await open(file);
 });
-const random=await encode(new Blob([crypto.getRandomValues(new Uint8Array(65536))]));
-const encoder=new TextEncoder();
-const decoder=new TextDecoder();
-const t0 = performance.now();
-random.replaceAll('+','-').replaceAll('/','_').replaceAll('=','');
-const t1 = performance.now();
-decoder.decode(encoder.encode(random).map(c=>{
-  switch(c){
-    case 43: return 45;
-    case 47: return 95;
-    default: return c;
+await (await fetch('/lib/brotli_enc.wasm')).arrayBuffer();
+await (await fetch('/lib/brotli_enc_worker_script.mjs')).arrayBuffer();
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Base64 Encoder and Decoder",
+  "url": "https://www.couique.com/dataurl",
+  "description": "Encode/Decode data to/from its printable Base64 representation",
+  "applicationCategory": "UtilitiesApplication",
+  "browserRequirements": "Requires JavaScript.",
+  "operatingSystem": "All",
+  "about": {
+    "@type": "Thing",
+    "description": "Encode or decode data to or from its printable Base64 representation, and compare the size of both versions."
+  },
+  "author": {
+    "@id":  "https://about.programingjd.me"
   }
-}));
-const t2 = performance.now();
-console.log(t1-t0, t2-t1);
+}
 </script>
 </html>
