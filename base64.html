@@ -16,7 +16,7 @@
 *{margin:0;padding:0;box-sizing:border-box}
 html{width:100%;height:100%;background:#282828;color:#eee;font:400 clamp(7.5pt, calc(4pt + 1vw), 36pt) __asap__,sans-serif;font-stretch:115%;line-height:1.4}
 body{min-height:100%;padding:2em;display:grid;place-items:center;grid-template-rows:2fr auto 2fr auto auto auto 3fr auto 1fr;grid-template-columns:auto;gap:1em}
-body.busy:after{position:absolute;inset:0;background:rgba(40,40,40,.8);display:grid;place-items:center;animation:loop 1200ms linear 600ms infinite;content:'';font:800 4em monospace;font-style:normal}
+body[inert]:after{position:absolute;inset:0;background:rgba(40,40,40,.8);display:grid;place-items:center;animation:loop 1200ms linear 600ms infinite;content:'';font:800 4em monospace;font-style:normal}
 @keyframes loop{0%,100%{content:'⠋'}10%{content:"⠙"}20%{content:"⠹"}30%{content:"⠸"}40%{content:"⠼"}50%{content:"⠴"}60%{content:"⠦"}70%{content:"⠧"}80%{content:"⠇"}90%{content:"⠏"}}
 h1{color:#daf;font-size:2rem;text-align:center;font-weight:900;font-stretch:125%;font-style:italic;letter-spacing:.05em;text-wrap:pretty}
 h1>span{-webkit-text-stroke:initial;color:#9bf6ff}
@@ -28,11 +28,10 @@ details>div :is(em,span){font-style:italic;font-weight:400;color:#fff}
 details code{font-family:__cascadia_code__;color:#caffbf}
 label{color:#caffbf}
 a,button,#helper label{color:#adf;text-decoration-color:rgba(170,221,255,.5);text-decoration:underline;cursor:pointer}a:hover,button:hover,#helper label:hover{color:#6af}
-input:focus-visible+label{border-radius:3px;outline:1px solid #fff;outline-offset:1px}
 #helper{font-size:max(12pt,1em);color:#ccc;max-width:24ch;text-align:center}
-#base64{font:300 1em __cascadia_code__;display:grid;grid-template-columns:auto 2ch 1fr auto;gap:.5em 0}
-#base64 span{white-space:nowrap}
-#base64>label{grid-column:1}
+#b64{font:300 1em __cascadia_code__;display:grid;grid-template-columns:auto 2ch 1fr auto;gap:.5em 0}
+#b64 span{white-space:nowrap}
+#b64>label{grid-column:1}
 #prefix{color:#bbb}
 body.dragover{
   --conic-bg-angle:0deg;animation:conic-bg-angle 4s infinite linear;
@@ -43,6 +42,12 @@ body.dragover{
 :where(#encoded,#unencoded)[tabindex]:focus-within{border-color:#6af}
 :where(#encoded,#unencoded):not([tabindex]){user-select:none;border:none}
 :where(#encoded,#unencoded):not(:focus-within){text-overflow:ellipsis}
+#options{display:grid;place-items:start center;justify-self:stretch;justify-content:space-evenly;grid-auto-flow:column;margin-block:3em}
+fieldset{display:flex;flex-direction:column;gap:.5em;padding:1.5em;border-radius:1em;border-color:#ffc6ff}
+fieldset label{display:flex;flex-wrap:wrap;color:inherit;cursor:pointer}
+legend{color:#ffc6ff;padding:0 .5em}
+#options input{cursor:pointer;accent-color:#c9c;margin-inline-end:1em;outline-color:#a2f}
+#options label:has(input:checked){color:#ffc6ff}
 #stats{font-size:.75em;display:grid;gap:1em;grid-template-columns:auto auto 5em auto auto;grid-template-rows:auto auto}
 #stats div{opacity:.67;;font-style:italic;white-space:nowrap}
 #stats div:first-child{max-width:max(25vw,12ch);padding-right:.5ch;overflow:hidden;text-overflow:ellipsis;direction:ltr}
@@ -70,7 +75,7 @@ input[type="file"]{width:10px;height:10px;opacity:0;overflow:hidden;position:abs
   </div>
 </details>
 <div></div>
-<div id="base64"><!--
+<div id="b64"><!--
   --><label for="unencoded">Raw</label><!--
   --><span id="prefix">0x</span><!--
   --><span id="unencoded" tabindex="0">47494638396101000100800000ffffff00000021f90401000000002c00000000010001000002024401003b</span><!--
@@ -80,10 +85,16 @@ input[type="file"]{width:10px;height:10px;opacity:0;overflow:hidden;position:abs
   --><a class="copy" tabindex="0" style="display:none">copy</a><!--
 --></div>
 <form id="options">
-  <label><input type="radio" name="variant" value="base64">base64</label>
-  <div class="toggle"></div>
-  <label><input type="radio" name="variant" value="base64url">base64url</label>
-  <label><input type="checkbox" name="padding" value="padding">padding</label>
+  <fieldset name="variant">
+    <legend>Variant</legend>
+    <label><input type="radio" name="variant" id="base64" value="base64" checked>base64</label>
+    <label><input type="radio" name="variant" id="base64url" value="base64url">base64url</label>
+  </fieldset>
+  <fieldset name="padding">
+    <legend>Padding</legend>
+    <label><input type="radio" name="padding" id="with_padding" value="with_padding" checked>with padding</label>
+    <label><input type="radio" name="padding" id="without_padding" value="without_padding">without padding</label>
+  </fieldset>
 </form>
 <div id="stats">
   <div id="original_label">transparent_pixel.gif: </div><div aria-labelledby="original_label">43b</div>
@@ -105,6 +116,11 @@ const prefix=document.querySelector('#prefix');
 const copy=document.querySelector('.copy');
 const copyOrDownload=document.querySelector('.copy_or_download');
 const stats=[...document.querySelectorAll('#stats>div')];
+const unsafe=document.querySelector('input#base64');
+const safe=document.querySelector('input#base64url');
+const padded=document.querySelector('input#with_padding');
+const unpadded=document.querySelector('input#without_padding');
+let standard='R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
 const compress=async(bytes,signal)=>{
   const worker=new Worker('/lib/brotli_enc_worker_script.mjs',{type:'module'});
   signal.onabort=_=>worker.terminate();
@@ -151,19 +167,21 @@ const nibbles=[
   '6'.charCodeAt(0),'7'.charCodeAt(0),'8'.charCodeAt(0),'9'.charCodeAt(0),'a'.charCodeAt(0),'b'.charCodeAt(0),
   'c'.charCodeAt(0),'d'.charCodeAt(0),'e'.charCodeAt(0),'f'.charCodeAt(0)
 ];
+const decoder=new TextDecoder('utf-8',{fatal:true,ignoreBOM:true});
+const encoder=new TextEncoder();
 const hex=buffer=>{
   const bytes=new Uint8Array(buffer);
   const hex=new Uint8Array(bytes.length*2);
   let j=0;
-  bytes.forEach((b,i)=>{
+  bytes.forEach(b=>{
     hex[j++]=nibbles[b>>4];
     hex[j++]=nibbles[b&0x0f];
   });
-  return new TextDecoder('utf-8',{fatal:true,ignoreBOM:true}).decode(hex);
+  return decoder.decode(hex);
 }
 const tryText=async(buffer)=>{
   try{
-    return new TextDecoder('utf-8',{fatal:true,ignoreBOM:true}).decode(buffer);
+    return decoder.decode(buffer);
   }catch(e){
     return null;
   }
@@ -174,32 +192,76 @@ const tryDecode=async(blob,signal)=>{
     if(signal.aborted) return null;
     const base64=await tryText(buffer);
     if(signal.aborted||!base64) return {};
-    const raw=await decode(base64,signal);
+    const pad=base64.endsWith('=');
+    let url=null;
+    let c='\x00';
+    let converted=base64;
+    for(let i=0;i<base64.length;++i){
+      c=base64.charAt(i);
+      if(c==='+'||c==='/'){
+        url=false;
+        break;
+      }
+      if(c==='-'||c==='_'){
+        url=true;
+        converted=decoder.decode(encoder.encode(base64).map(c=>{
+          switch(c){
+            case 45: return 43;
+            case 95: return 47;
+            default: return c;
+          }
+        }));
+        break;
+      }
+    }
+    const raw=await decode(converted,signal);
     if(signal.aborted) return {};
-    return { base64, raw };
+    return { converted, base64, raw, url, pad };
   }catch(_){
     return {};
   }
 }
-let controller;
+let controller=new AbortController();
 const open=async(blob)=>{
   if(!blob) return;
   controller?.abort();
   controller=new AbortController();
   const signal=controller.signal;
-  const timeout=setTimeout(()=>document.body.classList.add('busy'),100);
+  const timeout=setTimeout(()=>document.body.setAttribute('inert',''),100);
   stats.forEach(it=>it.textContent='');
   encoded.textContent=unencoded.textContent='';
   prefix.textContent='';
   unencoded.removeAttribute('tabindex');
   encoded.removeAttribute('tabindex');
-  let {raw,base64}=await tryDecode(blob,signal);
+  let {raw,converted,base64,url,pad}=await tryDecode(blob,signal);
   if(signal.aborted) return;
   if(!raw){
+    url=safe.checked;
+    pad=padded.checked;
     raw=await blob.arrayBuffer();
     if(signal.aborted) return;
-    base64=await encode(blob,signal);
+    converted=base64=await encode(blob,signal);
+    if(url){
+      base64=decoder.decode(encoder.encode(base64).map(c=>{
+        switch(c){
+          case 43: return 45;
+          case 47: return 95;
+          default: return c;
+        }
+      }));
+    }
+    let len=base64.length;
+    if(!pad){
+      if(base64[len-1]==='='){
+        --len;
+        if(base64[len-1]==='=') --len;
+        base64=base64.substring(0,len);
+      }
+    }
     if(signal.aborted) return;
+  }else{
+    if(url===true&&!safe.checked) safe.checked=true;
+    if(pad===true&&!padded.checked) padded.checked=true;
   }
   let text=await tryText(raw);
   if(!text){
@@ -232,7 +294,17 @@ const open=async(blob)=>{
       copyOrDownload.textContent='download';
       copyOrDownload.onclick=_=>{
         copyOrDownload.download=blob.name??'raw.bin';
-        copyOrDownload.href=`data:;base64,${base64}`;
+        let converted=base64;
+        if(url===true){
+          converted=decoder.decode(encoder.encode(base64).map(c=>{
+            switch(c){
+              case 45: return 43;
+              case 95: return 47;
+              default: return c;
+            }
+          }));
+        }
+        copyOrDownload.href=`data:;base64,${converted}`;
         copyOrDownload.textContent='downloaded';
         setTimeout(()=>{
           if(!signal.aborted) copyOrDownload.textContent='download'
@@ -254,7 +326,7 @@ const open=async(blob)=>{
     unencoded.setAttribute('tabindex','0');
     unencoded.textContent=text;
   }
-  if(base64.length>5e5){
+  if(converted.length>5e5){
     copy.style.removeProperty('display');
     encoded.textContent=`${base64.substring(0,118)}…`;
     copy.onclick=e=>{
@@ -268,8 +340,9 @@ const open=async(blob)=>{
     encoded.setAttribute('tabindex','0');
     encoded.textContent=base64;
   }
+  standard=converted;
   clearTimeout(timeout);
-  document.body.classList.remove('busy');
+  document.body.removeAttribute('inert');
 };
 ['dragenter','dragover','dragleave','drop'].forEach(type=>document.body.addEventListener(type,e=>{
   e.preventDefault();e.stopPropagation();
@@ -332,6 +405,111 @@ uploader.addEventListener('change',async e=>{
   console.log(file);
   await open(file);
 });
+padded.onclick=_=>{
+  let text=standard;
+  if(safe.checked){
+    text=decoder.decode(encoder.encode(standard).map(c=>{
+      switch(c){
+        case 43: return 45;
+        case 47: return 95;
+        default: return c;
+      }
+    }));
+  }
+  if(copy.style.getPropertyValue('display')==='none'){
+    encoded.textContent=text;
+  }else{
+    encoded.textContent=`${text.substring(0,118)}…`;
+    const signal=controller.signal;
+    copy.onclick=e=>{
+      e.preventDefault();
+      navigator.clipboard.writeText(text);
+      copy.textContent='copied';
+      setTimeout(()=>{if(!signal.aborted) copy.textContent='copy'},300);
+    };
+  }
+};
+unpadded.onclick=_=>{
+  let text=standard;
+  if(safe.checked){
+    text=decoder.decode(encoder.encode(standard).map(c=>{
+      switch(c){
+        case 43: return 45;
+        case 47: return 95;
+        default: return c;
+      }
+    }));
+  }
+  if(text.charAt(text.length-1)==='='){
+    let index=text.length-1;
+    if(text.charAt(index-1)==='=') --index;
+    text=text.substring(0,index);
+  }
+  if(copy.style.getPropertyValue('display')==='none'){
+    encoded.textContent=text;
+  }else{
+    encoded.textContent=`${text.substring(0,118)}…`;
+    const signal=controller.signal;
+    copy.onclick=e=>{
+      e.preventDefault();
+      navigator.clipboard.writeText(text);
+      copy.textContent='copied';
+      setTimeout(()=>{if(!signal.aborted) copy.textContent='copy'},300);
+    };
+  }
+};
+safe.onclick=_=>{
+  let text=decoder.decode(encoder.encode(standard).map(c=>{
+    switch(c){
+      case 43: return 45;
+      case 47: return 95;
+      default: return c;
+    }
+  }));
+  if(unpadded.checked&&text.charAt(text.length-1)==='='){
+    let index=text.length-1;
+    if(text.charAt(index-1)==='=') --index;
+    text=text.substring(0,index);
+  }
+  if(copy.style.getPropertyValue('display')==='none'){
+    encoded.textContent=text;
+  }else{
+    encoded.textContent=`${text.substring(0,118)}…`;
+    const signal=controller.signal;
+    copy.onclick=e=>{
+      e.preventDefault();
+      navigator.clipboard.writeText(text);
+      copy.textContent='copied';
+      setTimeout(()=>{if(!signal.aborted) copy.textContent='copy'},300);
+    };
+  }
+};
+unsafe.onclick=_=>{
+  let text=decoder.decode(encoder.encode(standard).map(c=>{
+    switch(c){
+      case 45: return 43;
+      case 95: return 47;
+      default: return c;
+    }
+  }));
+  if(unpadded.checked&&text.charAt(text.length-1)==='='){
+    let index=text.length-1;
+    if(text.charAt(index-1)==='=') --index;
+    text=text.substring(0,index);
+  }
+  if(copy.style.getPropertyValue('display')==='none'){
+    encoded.textContent=text;
+  }else{
+    encoded.textContent=`${text.substring(0,118)}…`;
+    const signal=controller.signal;
+    copy.onclick=e=>{
+      e.preventDefault();
+      navigator.clipboard.writeText(text);
+      copy.textContent='copied';
+      setTimeout(()=>{if(!signal.aborted) copy.textContent='copy'},300);
+    };
+  }
+};
 await (await fetch('/lib/brotli_enc.wasm')).arrayBuffer();
 await (await fetch('/lib/brotli_enc_worker_script.mjs')).arrayBuffer();
 </script>
