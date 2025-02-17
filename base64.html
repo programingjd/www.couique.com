@@ -52,7 +52,7 @@ legend{color:#ffc6ff;padding:0 .5em}
 #stats div{opacity:.67;;font-style:italic;white-space:nowrap}
 #stats div:first-child{max-width:max(25vw,12ch);padding-right:.5ch;overflow:hidden;text-overflow:ellipsis;direction:ltr}
 #stats div[aria-labelledby]{opacity:.85;font-style:normal;min-width:12ch;text-align:right}
-.copy,.download{font-style:italic;display:inline-block;text-align:center}.copy{min-width:6.5ch}.download{min-width:10.5ch}
+#copy,#copy_or_download{font-style:italic;display:inline-block;text-align:center}#copy{min-width:6.5ch}#copy_or_download{min-width:10.5ch}
 input[type="file"]{width:10px;height:10px;opacity:0;overflow:hidden;position:absolute;z-index:-1;pointer-events:none}
 </style>
 <style class="media-query"></style>
@@ -79,10 +79,10 @@ input[type="file"]{width:10px;height:10px;opacity:0;overflow:hidden;position:abs
   --><label for="unencoded">Raw</label><!--
   --><span id="prefix">0x</span><!--
   --><span id="unencoded" tabindex="0">47494638396101000100800000ffffff00000021f90401000000002c00000000010001000002024401003b</span><!--
-  --><a class="copy_or_download" tabindex="0" style="display:none"></a><!--
+  --><a id="copy_or_download" tabindex="0" style="display:none"></a><!--
   --><label for="encoded">Encoded</label><!--
   --><span id="encoded" tabindex="0">R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==</span><!--
-  --><a class="copy" tabindex="0" style="display:none">copy</a><!--
+  --><a id="copy" tabindex="0" style="display:none">copy</a><!--
 --></div>
 <form id="options">
   <fieldset name="variant">
@@ -113,8 +113,8 @@ import {encode,decode} from '/lib/base64.mjs';
 const encoded=document.querySelector('#encoded');
 const unencoded=document.querySelector('#unencoded');
 const prefix=document.querySelector('#prefix');
-const copy=document.querySelector('.copy');
-const copyOrDownload=document.querySelector('.copy_or_download');
+const copy=document.querySelector('#copy');
+const copyOrDownload=document.querySelector('#copy_or_download');
 const stats=[...document.querySelectorAll('#stats>div')];
 const unsafe=document.querySelector('input#base64');
 const safe=document.querySelector('input#base64url');
@@ -363,12 +363,12 @@ document.body.addEventListener('paste',async e=>{
 encoded.addEventListener('click',e=>{
   if(e.detail===2){
     e.preventDefault();
-    getSelection().setBaseAndExtent(encoded,0,encoded,1);
+    getSelection().setBaseAndExtent(encoded,0,encoded.nextElementSibling,0);
   }
 });
 encoded.addEventListener('touchend',e=>{
   e.preventDefault();
-  getSelection().setBaseAndExtent(encoded,0,encoded,1);
+  getSelection().setBaseAndExtent(encoded,0,encoded.nextElementSibling,0);
   navigator.clipboard.writeText(getSelection().toString());
   const copy=encoded.querySelector('.copy');
   if(copy){
@@ -380,14 +380,14 @@ unencoded.addEventListener('click',e=>{
   if(!prefix.textContent){
     if(e.detail===2){
       e.preventDefault();
-      getSelection().setBaseAndExtent(encoded,0,encoded,1);
+      getSelection().setBaseAndExtent(unencoded,0,unencoded.nextElementSibling,0);
     }
   }
 });
 unencoded.addEventListener('touchend',e=>{
   if(!prefix.textContent){
     e.preventDefault();
-    getSelection().setBaseAndExtent(encoded,0,encoded,1);
+    getSelection().setBaseAndExtent(unencoded,0,unencoded.nextElementSibling,0);
     navigator.clipboard.writeText(getSelection().toString());
     const copy=unencoded.querySelector('.copy');
     if(copy){

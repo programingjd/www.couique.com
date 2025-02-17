@@ -51,7 +51,7 @@ body.dragover{
 #stats div{opacity:.67;;font-style:italic;white-space:nowrap}
 #stats div:first-child{max-width:max(25vw,12ch);padding-right:.5ch;overflow:hidden;text-overflow:ellipsis;direction:ltr}
 #stats div[aria-labelledby]{opacity:.85;font-style:normal;min-width:12ch;text-align:right}
-.copy{font-style:italic;display:inline-block;padding-inline:.5em .25em;text-align:center;min-width:6.5ch}
+#copy{font-style:italic;display:inline-block;padding-inline:.5em .25em;text-align:center;min-width:6.5ch}
 input[type="file"]{width:10px;height:10px;opacity:0;overflow:hidden;position:absolute;z-index:-1;pointer-events:none}
 </style>
 <style class="media-query"></style>
@@ -90,7 +90,7 @@ input[type="file"]{width:10px;height:10px;opacity:0;overflow:hidden;position:abs
   --><span id="media-type">image/gif</span>;<!--
   --><span id="encoding">base64</span>,<!--
   --><span id="encoded" tabindex="0">R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==</span><!--
-  --><a class="copy" tabindex="0" style="display:none">copy</a><!--
+  --><a id="copy" tabindex="0" style="display:none">copy</a><!--
   --><span id="suffix">"&gt;</span><!--
 --></div>
 <div id="stats">
@@ -134,7 +134,7 @@ const prefix=document.querySelector("#prefix");
 const suffix=document.querySelector("#suffix");
 const mediaType=document.querySelector("#media-type");
 const encoded=document.querySelector('#encoded');
-const copy=document.querySelector('.copy');
+const copy=document.querySelector('#copy');
 const stats=[...document.querySelectorAll('#stats>div')];
 const compress=async(bytes,signal)=>{
   const worker=new Worker('/lib/brotli_enc_worker_script.mjs',{type:'module'});
@@ -303,18 +303,15 @@ document.body.addEventListener('paste',async e=>{
 encoded.addEventListener('click',e=>{
   if(e.detail===2){
     e.preventDefault();
-    getSelection().setBaseAndExtent(encoded,0,encoded,1);
+    getSelection().setBaseAndExtent(encoded,0,encoded.nextElementSibling,0);
   }
 });
 encoded.addEventListener('touchend',e=>{
   e.preventDefault();
-  getSelection().setBaseAndExtent(encoded,0,encoded,1);
+  getSelection().setBaseAndExtent(encoded,0,encoded.nextElementSibling,0);
   navigator.clipboard.writeText(getSelection().toString());
-  const copy=encoded.querySelector('.copy');
-  if(copy){
-    copy.textContent='copied';
-    setTimeout(()=>{copy.textContent='copy'},300);
-  }
+  copy.textContent='copied';
+  setTimeout(()=>{copy.textContent='copy'},300);
 });
 const uploader=document.querySelector('#file');
 uploader.addEventListener('change',async e=>{
