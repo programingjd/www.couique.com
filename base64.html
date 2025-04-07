@@ -180,6 +180,7 @@ const hex=buffer=>{
   return decoder.decode(hex);
 }
 const tryText=async(buffer)=>{
+  if(!new Uint8Array(buffer).every(b=>!(b<0x09||(b>0x0a&&b<0x0c)||(b>0x0d&&b<0x20)))) return null;
   try{
     return decoder.decode(buffer);
   }catch(e){
