@@ -63,8 +63,8 @@ input[type="file"]{width:10px;height:10px;opacity:0;overflow:hidden;position:abs
   <summary><h1>base64 <span>*</span></h1></summary>
   <div>
     <p>The goal is to represent a byte sequence with printable ascii characters, without too much overhead.
-    <p>We take bytes <em>3 by 3</em>, and instead of interpreting each chunk as <em>3 * 256</em> possible values,
-      we interpret them as <em>4 * 64</em> possible values.
+    <p>We take the bytes <em>3 by 3</em>, and instead of interpreting each chunk as <em>3 * 256 (8bit)</em> possible values,
+      we interpret them as <em>4 * 64 (6bit)</em> possible values.
     <p>For the regular <span>base64</span> encoding, those 64 possible values are taken from this "alphabet":<br>
       <code>ABCDEFGHIJKLMNOPQRSTUVWXZY<wbr>abcdefghijklmnopqrstuvwxyz<wbr>0123456789<wbr>+/</code>
     <p>If the byte sequence length is not divisible by 3, the last character missing bits are set to zero,
