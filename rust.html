@@ -845,7 +845,7 @@ if(downloadLink){
 const autoRotateInput=document.querySelector('input#auto-rotate');
 const autoHideInput=document.querySelector('input#auto-hide');
 if(autoHideInput&&window.matchMedia('(hover:none)').matches) autoHideInput.style.display='none';
-if(autoRotateInput&&window.matchMedia('(hover:none)').matches&&window.matchMedia('(pointer:coarse)').matches&&window.matchMedia('(portrait)').matches) autoRotateInput.checked=true;
+if(autoRotateInput&&window.matchMedia('(hover:none)').matches&&window.matchMedia('(pointer:coarse)').matches&&window.matchMedia('(orientation:portrait)').matches) autoRotateInput.checked=true;
 const first=(e)=>{
   e.preventDefault();
   location.hash=document.querySelector('main>section').id;
