@@ -391,7 +391,7 @@ footer{
         <div>
           <h3>Build system and package manager</h3>
           <div><code>cargo</code></div>
-          <div><i>Includes test and benchmark runner</i></div>
+          <div><i>Includes a test runner</i></div>
         </div>
         <div>
           <h3>Compiler</h3>
@@ -647,10 +647,9 @@ footer{
           <div><span>Apply suggested fixes:</span> <code>rustup clippy --fix</code></div>
         </div>
         <div>
-          <h3>Tests and benchmarks</h3>
+          <h3>Tests</h3>
           <div><span>Run all the tests:</span><br><code>cargo test <i>--all-features --no-fail-fast</i></code></div>
           <div><span>Run a single "example" test with stdout output:</span><br><code>cargo test example <i>-- --no-capture</i></code></div>
-          <div><span>Run a single "example" benchmark:</span><br><code>cargo bench -- example</code></div>
         </div>
         <div>
           <h3>Run commands</h3>
@@ -728,6 +727,11 @@ footer{
             </li>
           </ul>
         </li>
+        <li class="optional">
+          <style>@scope{color:oklch(from currentColor calc((l + 0.5) / 2) 0.2 30)}</style>
+          <svg viewBox="0 0 16 16"><use href="#expanded-icon"></use></svg><svg viewBox="0 0 16 16"><use href="#folder-icon"></use></svg>
+          <span>examples</span>
+        </li>
         <li>
           <style>@scope{&>svg:nth-of-type(2){color:oklch(from currentColor calc((l + 0.5) / 2) 0.1 250)}}</style>
           <svg viewBox="0 0 16 16"><use href="#expanded-icon"></use></svg><svg viewBox="0 0 16 16"><use href="#folder-icon"></use></svg>
@@ -785,22 +789,17 @@ footer{
               <svg viewBox="0 0 16 16"><use href="#file-icon"></use></svg>
               <span>mod2.rs</span>
             </li>
-            <li class="optional">
-              <style>@scope{color:oklch(from currentColor calc((l + 0.5) / 2) 0.1 150)}</style>
-              <svg viewBox="0 0 16 16"><use href="#expanded-icon"></use></svg><svg viewBox="0 0 16 16"><use href="#folder-icon"></use></svg>
-              <span>tests</span>
-            </li>
-            <li class="optional">
-              <style>@scope{color:oklch(from currentColor calc((l + 0.5) / 2) 0.2 30)}</style>
-              <svg viewBox="0 0 16 16"><use href="#expanded-icon"></use></svg><svg viewBox="0 0 16 16"><use href="#folder-icon"></use></svg>
-              <span>benches</span>
-            </li>
           </ul>
         </li>
         <li>
           <style>@scope{svg,span{opacity:.25}}</style>
           <svg viewBox="0 0 16 16"><use href="#collapsed-icon"></use></svg><svg viewBox="0 0 16 16"><use href="#folder-icon"></use></svg>
           <span>target</span>
+        </li>
+        <li class="optional">
+          <style>@scope{color:oklch(from currentColor calc((l + 0.5) / 2) 0.1 150)}</style>
+          <svg viewBox="0 0 16 16"><use href="#expanded-icon"></use></svg><svg viewBox="0 0 16 16"><use href="#folder-icon"></use></svg>
+          <span>tests</span>
         </li>
         <li class="optional">
           <svg viewBox="0 0 16 16"><use href="#file-icon"></use></svg>
