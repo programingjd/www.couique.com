@@ -670,12 +670,26 @@ footer{
         place-items:center;
         gap:1em;
         &>svg{display:none};
-        h1{grid-area:title}
+        h1{
+          grid-area:title;
+          padding:0 1em;
+        }
         &>ul{
-          grid-area:tree;font-size:.8em;
+          grid-area:tree;font-size:.67em;
           &::before{display:none}
         }
-        &>div{grid-area:content}
+        &>div{
+          grid-area:content;
+          padding:0 5em;
+          columns:2;
+          column-gap:5em;
+          &>div{
+            font-size:.9em;
+            break-inside:avoid;
+            padding:.5em 0;
+            code{font-style:italic}
+          }
+        }
         ul{
           &::before{
             content:'';
@@ -731,6 +745,26 @@ footer{
           <style>@scope{color:oklch(from currentColor calc((l + 0.5) / 2) 0.2 30)}</style>
           <svg viewBox="0 0 16 16"><use href="#expanded-icon"></use></svg><svg viewBox="0 0 16 16"><use href="#folder-icon"></use></svg>
           <span>examples</span>
+          <ul>
+            <li>
+              <svg viewBox="0 0 16 16"><use href="#expanded-icon"></use></svg><svg viewBox="0 0 16 16"><use href="#folder-icon"></use></svg>
+              <span>example1.rs</span>
+              <ul>
+                <li>
+                  <svg viewBox="0 0 16 16"><use href="#file-icon"></use></svg>
+                  <span>main.rs</span>
+                </li>
+                <li>
+                  <svg viewBox="0 0 16 16"><use href="#file-icon"></use></svg>
+                  <span>utils.rs</span>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <svg viewBox="0 0 16 16"><use href="#file-icon"></use></svg>
+              <span>example2.rs</span>
+            </li>
+          </ul>
         </li>
         <li>
           <style>@scope{&>svg:nth-of-type(2){color:oklch(from currentColor calc((l + 0.5) / 2) 0.1 250)}}</style>
@@ -747,7 +781,7 @@ footer{
                   <ul>
                     <li>
                       <svg viewBox="0 0 16 16"><use href="#file-icon"></use></svg>
-                      <span>bin1_utils.rs</span>
+                      <span>utils.rs</span>
                     </li>
                     <li>
                       <svg viewBox="0 0 16 16"><use href="#file-icon"></use></svg>
@@ -771,7 +805,7 @@ footer{
                 </li>
                 <li>
                   <svg viewBox="0 0 16 16"><use href="#file-icon"></use></svg>
-                  <span>mod1_utils.rs</span>
+                  <span>utils.rs</span>
                 </li>
               </ul>
             </li>
@@ -800,6 +834,26 @@ footer{
           <style>@scope{color:oklch(from currentColor calc((l + 0.5) / 2) 0.1 150)}</style>
           <svg viewBox="0 0 16 16"><use href="#expanded-icon"></use></svg><svg viewBox="0 0 16 16"><use href="#folder-icon"></use></svg>
           <span>tests</span>
+          <ul>
+            <li>
+              <svg viewBox="0 0 16 16"><use href="#expanded-icon"></use></svg><svg viewBox="0 0 16 16"><use href="#folder-icon"></use></svg>
+              <span>integration-test1.rs</span>
+              <ul>
+                <li>
+                  <svg viewBox="0 0 16 16"><use href="#file-icon"></use></svg>
+                  <span>main.rs</span>
+                </li>
+                <li>
+                  <svg viewBox="0 0 16 16"><use href="#file-icon"></use></svg>
+                  <span>utils.rs</span>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <svg viewBox="0 0 16 16"><use href="#file-icon"></use></svg>
+              <span>integration-test2.rs</span>
+            </li>
+          </ul>
         </li>
         <li class="optional">
           <svg viewBox="0 0 16 16"><use href="#file-icon"></use></svg>
@@ -818,7 +872,56 @@ footer{
           <span>rust-toolchain.toml</span>
         </li>
       </ul>
-      <div>Text</div>
+      <div>
+        <div>
+          The only required files are the <code>Cargo.toml</code> package manifest and
+          <code>src/main.rs</code> with a main function for a binary project or
+          <code>src/lib.rs</code> for a library project.
+        </div>
+        <div>
+          A <code>crate</code> is a unit of compilation: either a binary or a library. A single package (described by
+          its <code>Cargo.toml</code> manifest) can have many binary crates, but only one library crate (or none).
+        </div>
+        <div>
+          <code>Cargo</code> expects all entries under the <code>src/bin</code> directory to be separate binaries
+          (with a main function).
+        </div>
+        <div>
+          <code>Cargo</code> creates a <code>Cargo.lock</code> lock file when it resolves dependencies for the
+          first time, and updates it every time you add, remove or update dependencies in the manifest.
+        </div>
+        <div>
+          <code>build.rs</code> is an optional build script that is compiled and run before the crates are compiled.
+        </div>
+        <div>
+          A <code>rust-toolchain.toml</code> file can be used to overwrite rustup defaults and
+          specify a specific toolchain to use for the package.
+        </div>
+        <div>
+          Project-specific <code>Cargo</code> configuration options can be specified in a
+          <code>.cargo/config.toml</code> file.
+        </div>
+        <div>
+          Unit tests usually reside in a <code>test</code> submodule in the same file as the code they test. This
+          grants them access to elements only visible from that crate.
+          Integration tests go in a dedicated <code>tests</code> directory of the package root.
+        </div>
+        <div>
+          Examples also have a dedicated <code>examples</code> directory in the package root.
+        </div>
+        <div>
+          Modules can either be a single <code>.rs</code> file or a directory with a <code>mod.rs</code> entry point inside it.
+        </div>
+        <div>
+          A binary entry point can also be a single <code>.rs</code> file or a directory with a <code>main.rs</code> entry point inside it.
+          This also applies to tests and examples.
+        </div>
+        <div>
+          The default library entry point of the package: <code>lib.rs</code>, cannot be replaced with a directory
+          alternative without editing the <code>Cargo.toml</code> manifest to specify its path explicitely.
+          The same goes for the default binary entry point: <code>main.rs</code>.
+        </div>
+      </div>
     </div>
   </section>
   <section id="table-of-content">
