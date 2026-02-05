@@ -959,6 +959,10 @@ footer{
             font-weight:200;
             color:oklch(from currentColor l .07 160);
           }
+          .bool{
+            font-weight:300;
+            color:oklch(from currentColor calc((l + 0.5) / 2) .07 260);
+          }
           display:grid;
           grid-auto-rows:auto;
           gap:1em;
@@ -982,7 +986,14 @@ footer{
         <div class="optional">
           <span class="optional">[dependencies]</span><br>
           <span class="key">serde</span> = { <span class="attr">version</span> = <span class="str">"1"</span>, <span class="attr">features</span> = [ <span class="str">"derive"</span> ] }<br>
-          <span class="key">serde_json</span> = <span class="str">"1"</span></div>
+          <span class="key">serde_json</span> = <span class="str">"1"</span>
+        </div>
+        <div class="optional">
+          <span class="optional">[dependencies.tokio]</span><br>
+          <span class="key">version</span> = <span class="str">"1"</span><br>
+          <span class="key">default-features</span> = <span class="bool">false</span><br>
+          <span class="key">features</span> = [ <span class="str">"rt"</span>, <span class="str">"fs"</span> ]<br>
+        </div>
       </code>
       <div></div>
     </div>
