@@ -666,7 +666,9 @@ footer{
         inset:0;
         padding:3em;
         display:grid;
-        grid-template-areas:"tree title" "tree content";
+        grid-template-areas:
+          "tree title"
+          "tree content";
         place-items:center;
         gap:1em;
         &>svg{display:none};
@@ -695,7 +697,7 @@ footer{
             content:'';
             position:absolute;
             inset:1.25em 0 .5em .67em;
-            border-left:.1em dotted oklch(from currentColor calc(l + 0.5 / 2) c h /.25);
+            border-left:.1em dotted oklch(from currentColor calc((l + 0.5) / 2) c h /.25);
           }
           li{
             position:relative;
@@ -922,6 +924,67 @@ footer{
           The same goes for the default binary entry point: <code>main.rs</code>.
         </div>
       </div>
+    </div>
+  </section>
+  <section id="manifest">
+    <style>
+    @scope{
+      style+div{
+        position:absolute;
+        inset:0;
+        padding:3em;
+        display:grid;
+        place-items:center;
+        gap:1em;
+        grid-template-areas:
+          "manifest title"
+          "manifest subtitle"
+          "manifest content";
+        h1{
+          grid-area:title;
+          padding:0 1em;
+        }
+        h1+div{
+          grid-area:subtitle;
+        }
+        &>code{
+          grid-area:manifest;
+          .optional{opacity:.67}
+          &>div>span:first-of-type{font-weight:600}
+          .key,.attr{
+            font-weight:400;
+            color:oklch(from currentColor calc((l + 0.5) / 2) .05 67);
+          }
+          .str{
+            font-weight:200;
+            color:oklch(from currentColor l .07 160);
+          }
+          display:grid;
+          grid-auto-rows:auto;
+          gap:1em;
+          letter-spacing:-.05em;
+        }
+        &>code+div{
+          grid-area:content;
+        }
+      }
+    }
+    </style>
+    <div>
+      <h1><code>Cargo.toml</code></h1>
+      <div>The package manifest.</div>
+      <code>
+        <div>
+          <span>[package]</span><br>
+          <span class="key">name</span> = <span class="str">"my-project"</span><br>
+          <span class="key">version</span> = <span class="str">"0.1.0"</span><br>
+          <span class="key">edition</span> = <span class="str">"2024"</span></div>
+        <div class="optional">
+          <span class="optional">[dependencies]</span><br>
+          <span class="key">serde</span> = { <span class="attr">version</span> = <span class="str">"1"</span>, <span class="attr">features</span> = [ <span class="str">"derive"</span> ] }<br>
+          <span class="key">serde_json</span> = <span class="str">"1"</span></div>
+      </code>
+      <div></div>
     </div>
   </section>
   <section id="table-of-content">
