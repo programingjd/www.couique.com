@@ -298,7 +298,6 @@ footer{
         gap:3em;
         h1{display:none}
         div{
-          text-wrap:balance;
           grid-area:philosophy;
           font-weight:150;
           font-size:1.65em;
@@ -325,13 +324,13 @@ footer{
     </style>
     <div>
       <h1>Why Rust</h1>
-      <div>Rust philosophy is to have a type system and memory model that allows the compiler to <b>enforce correctness</b>
-        and help with clear messages and explanations of common pitfalls. All of this <b>without sacrificing performances</b>.</div>
+      <div>Rust type system and memory model are designed to <b>enforce correctness</b>. Emphasis is placed on the
+        compiler to provide clear explanations for errors along with suggestions on how to fix them.</div>
       <ul>
         <li>Static dispatch by default, but dynamic dispatch is still possible.</li>
-        <li>No garbage collector, instead it has an ownership model (borrow checker) that provides memory and thread-safety.</li>
+        <li>No garbage collector, instead it has an ownership model (borrow checker) that provides memory and thread safety.</li>
         <li>Modern functional-style constructs with zero runtime cost.</li>
-        <li>Errors are handled with dedicated types, with special syntax to automatically convert them and propage them up the stack.</li>
+        <li>Errors are handled with dedicated types, with special syntax to automatically convert and propagate them up the stack.</li>
         <li>Pattern matching makes sure you handle all cases and can only access variants when they are valid.</li>
         <li>No classes with inheritance, only structs, but with a powerful trait system and generics with constraints.</li>
       </ul>
@@ -890,13 +889,13 @@ footer{
         </div>
         <div>
           <code>Cargo</code> creates a <code>Cargo.lock</code> lock file when it resolves dependencies for the
-          first time, and updates it every time you add, remove or update dependencies in the manifest.
+          first time, and updates it every time you add, remove, or update dependencies in the manifest.
         </div>
         <div>
           <code>build.rs</code> is an optional build script that is compiled and run before the crates are compiled.
         </div>
         <div>
-          A <code>rust-toolchain.toml</code> file can be used to overwrite rustup defaults and
+          A <code>rust-toolchain.toml</code> file can be used to override rustup defaults and
           specify a specific toolchain to use for the package.
         </div>
         <div>
@@ -905,14 +904,16 @@ footer{
         </div>
         <div>
           Unit tests usually reside in a <code>test</code> submodule in the same file as the code they test. This
-          grants them access to elements only visible from that crate.
+          grants them access to elements visible only within that crate.
           Integration tests go in a dedicated <code>tests</code> directory of the package root.
         </div>
         <div>
           Examples also have a dedicated <code>examples</code> directory in the package root.
         </div>
         <div>
-          Modules can either be a single <code>.rs</code> file or a directory with a <code>mod.rs</code> entry point inside it.
+          A module entry point can be a single <code>.rs</code> file named after the module,
+          or a <code>mod.rs</code> file within a directory named after the module.
+          Submodules can live in the directory regardless.
         </div>
         <div>
           A binary entry point can also be a single <code>.rs</code> file or a directory with a <code>main.rs</code> entry point inside it.
@@ -920,7 +921,7 @@ footer{
         </div>
         <div>
           The default library entry point of the package: <code>lib.rs</code>, cannot be replaced with a directory
-          alternative without editing the <code>Cargo.toml</code> manifest to specify its path explicitely.
+          alternative without editing the <code>Cargo.toml</code> manifest to specify its path explicitly.
           The same goes for the default binary entry point: <code>main.rs</code>.
         </div>
       </div>
