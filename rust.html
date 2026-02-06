@@ -998,6 +998,7 @@ footer{
           <span class="key">edition</span> = <span class="str">"2024"</span></div>
         <div class="optional">
           <span class="optional">[dependencies]</span><br>
+          <span class="key">tracing</span> = { <span class="attr">optional</span> = <span class="bool">true</span> }<br>
           <span class="key">serde</span> = { <span class="attr">version</span> = <span class="str">"1"</span>, <span class="attr">features</span> = [ <span class="str">"derive"</span> ] }<br>
           <span class="key">serde_json</span> = <span class="str">"1"</span>
         </div>
@@ -1006,6 +1007,13 @@ footer{
           <span class="key">version</span> = <span class="str">"1"</span><br>
           <span class="key">default-features</span> = <span class="bool">false</span><br>
           <span class="key">features</span> = [ <span class="str">"rt"</span>, <span class="str">"fs"</span> ]<br>
+        </div>
+        <div class="optional">
+          <span class="optional">[features]</span><br>
+          <span class="key">default</span> = [ <span class="str">"std"</span> ]<br>
+          <span class="key">std</span> = []<br>
+          <span class="key">tracing</span> = [ <span class="str">"dep:tracing"</span> ]<br>
+          <span class="key">log</span> = [ <span class="str">"tracing?/log-always"</span> ]<br>
         </div>
       </code>
       <div>
@@ -1020,6 +1028,9 @@ footer{
         <div>
           Dependencies can define optional, named features. They specify which ones are enabled by default.
           You can keep the default features, add some, or disable the defaults and select features explicitly.
+        </div>
+        <div>
+          Features can enable other features, optional dependencies, and even dependency features.
         </div>
       </div>
     </div>
