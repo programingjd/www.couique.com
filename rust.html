@@ -688,7 +688,10 @@ footer{
             font-size:.9em;
             break-inside:avoid;
             padding:.5em 0;
-            code{font-style:italic}
+            code{
+              font-style:italic;
+              color:oklch(from var(--accent-color) l .05 h);
+            }
           }
         }
         ul{
@@ -936,7 +939,7 @@ footer{
         padding:3em;
         display:grid;
         place-items:center;
-        gap:1em;
+        gap:3em;
         grid-template-areas:
           "manifest title"
           "manifest subtitle"
@@ -952,6 +955,7 @@ footer{
         }
         &>code{
           grid-area:manifest;
+          font-size:.9em;
           .optional{opacity:.67}
           &>div>span:first-of-type{font-weight:600}
           .key,.attr{
@@ -973,6 +977,12 @@ footer{
         }
         &>code+div{
           grid-area:content;
+          font-size:.9em;
+          display:flex;flex-direction:column;gap:1em;
+          code{
+            font-style:italic;
+            color:oklch(from var(--accent-color) l .05 h);
+          }
         }
       }
     }
@@ -998,7 +1008,20 @@ footer{
           <span class="key">features</span> = [ <span class="str">"rt"</span>, <span class="str">"fs"</span> ]<br>
         </div>
       </code>
-      <div></div>
+      <div>
+        <div>
+          The only required fields are in the <code>[package]</code> section:
+          <code>name</code>, <code>version</code> and <code>edition</code>.<br>
+          The package <code>name</code> should use kebab-case. The crate name defaults to the same name converted to snake-case.<br>
+          Rust editions are used to introduce changes to the language without braking compatibility. It may change the
+          compiler behavior and add new syntax and keywords. <code>cargo fix --edition</code> can help adapt your code to a new edition.<br>
+          Crates using different editions can still depend on each other.<br>
+        </div>
+        <div>
+          Dependencies can define optional, named features. They specify which ones are enabled by default.
+          You can keep the default features, add some, or disable the defaults and select features explicitly.
+        </div>
+      </div>
     </div>
   </section>
   <section id="table-of-content">
