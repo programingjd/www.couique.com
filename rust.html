@@ -1102,29 +1102,53 @@ footer{
         grid-template-rows:auto 1fr;
         h1{grid-area:title}
         &>div{
-          font-size:1.5em;
+          font-size:.85em;
+          grid-area:content;
           columns:2;
-          column-gap:5em;
+          column-gap:4em;
+          text-wrap:balance;
           &>div{
             break-inside:avoid;
+            padding-bottom:1em;
+          }
+          h3{
+            font:inherit;
+            padding-bottom:.5em;
+          }
+          ul{
+            opacity:.67;
             padding:.5em 0;
-            h3{
+            list-style:none;
+            li{
+              padding:.25em 0;
+              line-height:1.25;
+            }
+          }
+          code{
+            font-style:italic;
+            .optional{opacity:.5}
+            .keyword{
+              color:oklch(from currentColor calc((l + 0.5) / 2) .1 67);
+            }
+            .fnname{
+              color:oklch(from currentColor calc((l + 0.5) / 2) .15 85);
+            }
+            .varname{
+              color:inherit;
+            }
+            .type{
+              color:oklch(from currentColor calc((l + 0.5) / 2) .1 140);
+            }
+            .str{
               font-weight:200;
-              font-style:italic;
+              color:oklch(from currentColor l .07 160);
             }
-            div:first-of-type{
-              font-weight:700;
-              i{
-                padding-left:.5em;
-                opacity:.5;
-              }
-            }
-            div:not(:first-of-type){
+            .bool,.num{
               font-weight:300;
-              font-stretch:80%;
-              i{
-                opacity:.75;
-              }
+              color:oklch(from currentColor calc((l + 0.5) / 2) .07 260);
+            }
+            .comment{
+              color:oklch(from currentColor calc((l + 0.5) / 2) 0 h / .5);
             }
           }
         }
@@ -1135,8 +1159,58 @@ footer{
       <h1>Variables</h1>
       <div>
         <div>
-          <h3>Syntax</h3>
-          <div><code><span class="keyword">let</span> <span class="varname">a</span><span class="optional">: <span class="type">bool</span></span> = <span class="bool">true</span>;</code></div>
+          <h3>Variable declaration and initialization:</h3>
+          <div><code><span class="keyword">let</span> <span class="varname">variable_name</span><span class="optional">: <span class="type">bool</span></span> = <span class="bool">true</span><span class="keyword">;</span></code></div>
+          <ul>
+            <li>The variable is immutable by default.</li>
+            <li>Variables are scoped, they are only valid inside the current block.</li>
+            <li>The type can be omitted if it can be inferred.</li>
+            <li>You can skip the initialization as long as you do it before the first use.</li>
+            <li>The convention is to use <i>snake_case</i> for the variable name.</li>
+            <li>The name <code>_</code> is reserved for variables (or bindings) that won't be used.</li>
+            <li>Names starting with <code>_</code> indicate that you intentionally might not use a value marked as <code>#[must_use]</code>.</li>
+          </ul>
+          <div><code><span class="keyword">let</span> <span class="varname">one_megabyte</span> = <span class="int">1_048_576_u32</span><span class="keyword">;</span></code></div>
+          <ul>
+            <li>You can disambiguate number types with a suffix on the value.</li>
+            <li>You can use <code>_</code> as an optional separator.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Mutable variable:</h3>
+          <div><code><span class="keyword">let mut</span> <span class="varname">variable_name</span><span class="optional">: <span class="type">bool</span></span> = <span class="bool">true</span><span class="keyword">;</span></code></div>
+        </div>
+        <div>
+          <h3>Shadowing:</h3>
+          <div><code>
+            <span class="keyword">let mut</span> <span class="varname">data</span> = <span class="fnname">read_data</span>(&<span class="keyword">mut</span> vec![])<span class="keyword">;</span><br>
+            <span class="keyword">let mut</span> <span class="varname">data</span> = <span class="fnname">read_data</span>(&<span class="keyword">mut</span> data)<span class="keyword">;</span><br>
+            <span class="keyword">let</span> <span class="varname">data</span> = <span class="varname">data</span><span class="keyword">;</span> <span class="comment">// drop the mut</span><br>
+          </code></div>
+          <ul>
+            <li>You can shadow a variable by reusing its name, rendering the previous one unreachable.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Constants:</h3>
+          <div><code><span class="keyword">const</span> <span class="varname">CONSTANT_NAME</span>: <span class="type">bool</span> = <span class="bool">true</span><span class="keyword">;</span></code></div>
+          <ul>
+            <li>The value must be known at compile time. It is inlined at compile-time.</li>
+            <li>Its scope is the same as a regular variable.</li>
+            <li>The convention is to use <i>SCREAMING_SNAKE_CASE</i> for the constant name.</li>
+            <li>You can't omit the type.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Static globals:</h3>
+          <div><code><span class="keyword">static</span> <span class="varname">GLOBAL_NAME</span>: <span class="type">bool</span> = <span class="bool">true</span><span class="keyword">;</span></code></div>
+          <ul>
+            <li>The value must be known at compile time.</li>
+            <li>Its scope is the same as a regular variable, even though it lives for the entire program duration.</li>
+            <li>The convention is to use <i>SCREAMING_SNAKE_CASE</i> for the global name.</li>
+            <li>You can't omit the type.</li>
+            <li>If it's mutable, you can only access it from an <code>unsafe</code> block, as it is your responsibility to ensure thread safety.</li>
+          </ul>
         </div>
       </div>
     </div>
