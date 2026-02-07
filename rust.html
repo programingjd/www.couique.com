@@ -681,13 +681,14 @@ footer{
         }
         &>div{
           grid-area:content;
-          padding:0 5em;
+          padding:0 4em;
           columns:2;
-          column-gap:5em;
+          column-gap:4em;
           &>div{
             font-size:.9em;
             break-inside:avoid;
             padding:.5em 0;
+            text-wrap:balance;
             code{
               font-style:italic;
               color:oklch(from var(--accent-color) l .05 h);
@@ -939,7 +940,7 @@ footer{
         padding:3em;
         display:grid;
         place-items:center;
-        gap:3em;
+        gap:1em 3em;
         grid-template-areas:
           "manifest title"
           "manifest subtitle"
@@ -955,7 +956,7 @@ footer{
         }
         &>code{
           grid-area:manifest;
-          font-size:.9em;
+          font-size:.75em;
           .optional{opacity:.67}
           &>div>span:first-of-type{font-weight:600}
           .key,.attr{
@@ -966,7 +967,7 @@ footer{
             font-weight:200;
             color:oklch(from currentColor l .07 160);
           }
-          .bool{
+          .bool,.num{
             font-weight:300;
             color:oklch(from currentColor calc((l + 0.5) / 2) .07 260);
           }
@@ -977,8 +978,14 @@ footer{
         }
         &>code+div{
           grid-area:content;
-          font-size:.9em;
-          display:flex;flex-direction:column;gap:1em;
+          font-size:.85em;
+          columns:2;
+          column-gap:4em;
+          text-wrap:balance;
+          &>div{
+            break-inside:avoid;
+            padding-bottom:1em;
+          }
           code{
             font-style:italic;
             color:oklch(from var(--accent-color) l .05 h);
@@ -997,8 +1004,8 @@ footer{
           <span class="key">version</span> = <span class="str">"0.1.0"</span><br>
           <span class="key">edition</span> = <span class="str">"2024"</span></div>
         <div class="optional">
-          <span class="key">[dependencies]</span><br>
-          <span class="key">tracing</span> = { <span class="attr">optional</span> = <span class="bool">true</span> }<br>
+          <span>[dependencies]</span><br>
+          <span class="key">tracing</span> = { <span class="attr">optional</span> = <span class="bool">true</span>, <span class="attr">version</span> = <span class="str">"0.1"</span> }<br>
           <span class="key">serde</span> = { <span class="attr">version</span> = <span class="str">"1"</span>, <span class="attr">features</span> = [ <span class="str">"derive"</span> ] }<br>
           <span class="key">serde_json</span> = <span class="str">"1"</span>
         </div>
@@ -1009,11 +1016,24 @@ footer{
           <span class="key">features</span> = [ <span class="str">"rt"</span>, <span class="str">"fs"</span> ]<br>
         </div>
         <div class="optional">
+          <span>[dev-dependencies]</span><br>
+          <span class="key">tracing-subscriber</span> = <span class="str">"0.3"</span><br>
+        </div>
+        <div class="optional">
           <span>[features]</span><br>
           <span class="key">default</span> = [ <span class="str">"std"</span> ]<br>
           <span class="key">std</span> = []<br>
           <span class="key">tracing</span> = [ <span class="str">"dep:tracing"</span> ]<br>
           <span class="key">log</span> = [ <span class="str">"tracing?/log-always"</span> ]<br>
+        </div>
+        <div class="optional">
+          <span>[[example]]</span><br>
+          <span class="key">name</span> = <span class="str">"demo"</span><br>
+          <span class="key">required-features</span> = [ <span class="str">"tracing"</span> ]<br>
+        </div>
+        <div class="optional">
+          <span>[profile.release]</span><br>
+          <span class="key">codegen-units</span> = <span class="num">1</span><br>
         </div>
         <div class="optional">
           <span>[lints.rust]</span><br>
@@ -1028,17 +1048,41 @@ footer{
         <div>
           The only required fields are in the <code>[package]</code> section:
           <code>name</code>, <code>version</code> and <code>edition</code>.<br>
-          The package <code>name</code> should use kebab-case. The crate name defaults to the same name converted to snake-case.<br>
-          Rust editions are used to introduce changes to the language without braking compatibility. It may change the
-          compiler behavior and add new syntax and keywords. <code>cargo fix --edition</code> can help adapt your code to a new edition.<br>
-          Crates using different editions can still depend on each other.<br>
+          The package <code>name</code> should use <i>kebab-case</i>. The crate name defaults to the same name converted to <i>snake_case</i>.
         </div>
         <div>
-          Dependencies can define optional, named features. They specify which ones are enabled by default.
-          You can keep the default features, add some, or disable the defaults and select features explicitly.
+          Rust editions are used to introduce changes to the language without braking compatibility. They can change the
+          compiler behavior and add new syntax and keywords.<br>
+          <code>cargo fix --edition</code> adapts the code to a new edition.<br>
+          Crates using different editions can still depend on each&nbsp;other.<br>
         </div>
         <div>
+          Packages can define optional, named <code>features</code>. They specify which ones are enabled by default.<br>
           Features can enable other features, optional dependencies, and even dependency features.
+        </div>
+        <div>
+          For the project <code>dependencies</code>, you can keep the default features, add some, or disable the defaults and select features explicitly.<br>
+          By default, dependencies are fetched from the <a href="https://crates.io" target="_blank">crates.io&nbsp;registry</a>,
+          but you can also specify another registry, a local path, or a git repository with an optional branch, tag, or revision.<br>
+          Credentials for alternate repositories can be defined globally or in the project <code>.cargo/config.toml</code> file.
+        </div>
+        <div>
+          You can rename dependencies to avoid conflicts, specify different dependencies based on the platform, and override inherited dependency versions.
+        </div>
+        <div>
+          <code>dev-dependencies</code> are only available for the tests, and the examples.<br>
+          <code>build-dependencies</code> are only available for the build script.
+        </div>
+        <div>
+          Binaries and examples can declare that they require some features to be enabled.
+        </div>
+        <div>
+          You can change the default profile options and even create new profiles. By default, the <code>dev</code> profile
+          (used by <code>cargo build</code> unless another profile is explicitly specified) keeps debugging information and disables optimizations
+          to make the build faster. The <code>release</code> profile is optimized for size and speed but takes a lot longer to build.
+        </div>
+        <div>
+          You can customize the lints levels and priority.
         </div>
       </div>
     </div>
