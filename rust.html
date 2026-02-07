@@ -1087,6 +1087,150 @@ footer{
       </div>
     </div>
   </section>
+  <section id="variables">
+    <style>
+    @scope{
+      style+div{
+        position:absolute;
+        inset:0;
+        padding:3em;
+        display:grid;
+        place-items:center;
+        grid-template-areas:
+          "title"
+          "content";
+        grid-template-rows:auto 1fr;
+        h1{grid-area:title}
+        &>div{
+          font-size:1.5em;
+          columns:2;
+          column-gap:5em;
+          &>div{
+            break-inside:avoid;
+            padding:.5em 0;
+            h3{
+              font-weight:200;
+              font-style:italic;
+            }
+            div:first-of-type{
+              font-weight:700;
+              i{
+                padding-left:.5em;
+                opacity:.5;
+              }
+            }
+            div:not(:first-of-type){
+              font-weight:300;
+              font-stretch:80%;
+              i{
+                opacity:.75;
+              }
+            }
+          }
+        }
+      }
+    }
+    </style>
+    <div>
+      <h1>Variables</h1>
+      <div>
+        <div>
+          <h3>Syntax</h3>
+          <div><code><span class="keyword">let</span> <span class="varname">a</span><span class="optional">: <span class="type">bool</span></span> = <span class="bool">true</span>;</code></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section id="primitive-types">
+    <style>
+    @scope{
+      style+div{
+        position:absolute;
+        inset:0;
+        padding:3em;
+        display:grid;
+        place-items:center;
+        grid-template-areas:
+          "title"
+          "list";
+        grid-template-rows:auto 1fr;
+        h1{grid-area:title}
+        &>div{
+          font-size:1.5em;
+          columns:2;
+          column-gap:5em;
+          &>div{
+            break-inside:avoid;
+            padding:.5em 0;
+            h3{
+              font-weight:200;
+              font-style:italic;
+            }
+            div:first-of-type{
+              font-weight:700;
+              i{
+                padding-left:.5em;
+                opacity:.5;
+              }
+            }
+            div:not(:first-of-type){
+              font-weight:300;
+              font-stretch:80%;
+              i{
+                opacity:.75;
+              }
+            }
+          }
+        }
+      }
+    }
+    </style>
+    <div>
+      <h1>Primitive types</h1>
+      <div>
+        <div>
+          <h3>Signed integers</h3>
+          <div><code>i8</code>, <code>i16</code>, <code>i32</code>, <code>i64</code>, <code>i128</code>, <code>isize</code></div>
+        </div>
+        <div>
+          <h3>Unsigned integers</h3>
+          <div><code>u8</code>, <code>u16</code>, <code>u32</code>, <code>u64</code>, <code>u128</code>, <code>usize</code></div>
+        </div>
+        <div>
+          <h3>Floating points</h3>
+          <div><code>f32</code>, <code>f64</code></div>
+        </div>
+        <div>
+          <h3>Boolean</h3>
+          <div><code>bool</code></div>
+        </div>
+        <div>
+          <h3>Character</h3>
+          <div><code>char</code> <i>(stored as a 4-byte unicode value)</i></div>
+        </div>
+        <div>
+          <h3>Unicode sequences</h3>
+          <div><code>str</code> <i>(valid utf-8 byte sequences)</i></div>
+        </div>
+        <div>
+          <h3>Unit</h3>
+          <div><code>()</code> <i>(empty tuple)</i></div>
+        </div>
+        <div>
+          <h3>Never</h3>
+          <div><code>!</code> <i>(represents something that never happens or never finishes)</i></div>
+        </div>
+        <div>
+          <h3>References</h3>
+          <div><code>&</code> <i>(<code>&{referenced_variable}</code>)</i></div>
+        </div>
+        <div>
+          <h3>Pointers</h3>
+          <div><code>*</code> <i>(<code>&{referenced_variable}</code>)</i></div>
+        </div>
+      </div>
+    </div>
+  </section>
   <section id="table-of-content">
     <h1>Table of content</h1>
     <ul id="slides"></ul>
