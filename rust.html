@@ -1114,8 +1114,10 @@ footer{
             padding-bottom:1em;
           }
           h3{
-            font:inherit;
-            padding-bottom:.5em;
+            padding-bottom:.25em;
+            color:var(--accent-color);
+            font-weight:200;
+            font-style:italic;
           }
           ul{
             opacity:.67;
@@ -1161,7 +1163,7 @@ footer{
       <h1>Variables</h1>
       <div>
         <div>
-          <h3>Variable declaration and initialization:</h3>
+          <h3>Variable declaration and initialization</h3>
           <div><code><span class="keyword">let</span> <span class="varname">variable_name</span><span class="optional">: <span class="type">bool</span></span> = <span class="bool">true</span><span class="keyword">;</span></code></div>
           <ul>
             <li>The variable is immutable by default.</li>
@@ -1179,11 +1181,11 @@ footer{
           </ul>
         </div>
         <div>
-          <h3>Mutable variable:</h3>
+          <h3>Mutable variable</h3>
           <div><code><span class="keyword">let mut</span> <span class="varname">variable_name</span><span class="optional">: <span class="type">bool</span></span> = <span class="bool">true</span><span class="keyword">;</span></code></div>
         </div>
         <div>
-          <h3>Shadowing:</h3>
+          <h3>Shadowing</h3>
           <div><code>
             <span class="keyword">let mut</span> <span class="varname">data</span> = <span class="fnname">read_data</span>(&<span class="keyword">mut</span> vec![])<span class="keyword">;</span><br>
             <span class="keyword">let mut</span> <span class="varname">data</span> = <span class="fnname">read_data</span>(&<span class="keyword">mut</span> data)<span class="keyword">;</span><br>
@@ -1194,7 +1196,7 @@ footer{
           </ul>
         </div>
         <div>
-          <h3>Constants:</h3>
+          <h3>Constants</h3>
           <div><code><span class="keyword">const</span> <span class="varname">CONSTANT_NAME</span>: <span class="type">bool</span> = <span class="bool">true</span><span class="keyword">;</span></code></div>
           <ul>
             <li>The value must be known at compile time. It is inlined at compile-time.</li>
@@ -1204,7 +1206,7 @@ footer{
           </ul>
         </div>
         <div>
-          <h3>Static globals:</h3>
+          <h3>Static globals</h3>
           <div><code><span class="keyword">static</span> <span class="varname">GLOBAL_NAME</span>: <span class="type">bool</span> = <span class="bool">true</span><span class="keyword">;</span></code></div>
           <ul>
             <li>The value must be known at compile time.</li>
