@@ -445,6 +445,8 @@ footer{
         }
         h3{
           color:var(--accent-color);
+          font-weight:200;
+          font-style:italic;
         }
         &>div:nth-of-type(1){
           grid-area:description;
@@ -1230,28 +1232,55 @@ footer{
         grid-template-rows:auto 1fr;
         h1{grid-area:title}
         &>div{
-          font-size:1.5em;
-          columns:2;
+          padding:0 3em;
+          columns:3;
           column-gap:5em;
           &>div{
             break-inside:avoid;
             padding:.5em 0;
             h3{
+              color:var(--accent-color);
               font-weight:200;
               font-style:italic;
+              padding-bottom:.25em;
             }
             div:first-of-type{
-              font-weight:700;
+              code{
+                font-weight:700;
+              }
               i{
                 padding-left:.5em;
                 opacity:.5;
               }
             }
             div:not(:first-of-type){
+              font-size:.85em;
+              padding-top:.5em;
               font-weight:300;
               font-stretch:80%;
+              &>div{padding-bottom:.5em}
               i{
                 opacity:.75;
+              }
+              code{
+                font-style:italic;
+                .optional{opacity:.5;letter-spacing:-.1em;word-spacing:-.25em}
+                .keyword{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 67);
+                }
+                .varname{
+                  color:inherit;
+                }
+                .type{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 140);
+                }
+                .num{
+                  font-weight:300;
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .07 260);
+                }
+                .macro{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 200);
+                }
               }
             }
           }
@@ -1264,11 +1293,13 @@ footer{
       <div>
         <div>
           <h3>Signed integers</h3>
-          <div><code>i8</code>, <code>i16</code>, <code>i32</code>, <code>i64</code>, <code>i128</code>, <code>isize</code></div>
+          <div><code>i8</code>, <code>i16</code>, <code>i32</code>, <code>i64</code>, <code>i128</code>,<br>
+          <code>isize</code><i>(platform specific)</i></div>
         </div>
         <div>
           <h3>Unsigned integers</h3>
-          <div><code>u8</code>, <code>u16</code>, <code>u32</code>, <code>u64</code>, <code>u128</code>, <code>usize</code></div>
+          <div><code>u8</code>, <code>u16</code>, <code>u32</code>, <code>u64</code>, <code>u128</code>,<br>
+          <code>usize</code><i>(platform specific)</i></div>
         </div>
         <div>
           <h3>Floating points</h3>
@@ -1280,7 +1311,7 @@ footer{
         </div>
         <div>
           <h3>Character</h3>
-          <div><code>char</code> <i>(stored as a 4-byte unicode value)</i></div>
+          <div><code>char</code> <i>(4-byte unicode value)</i></div>
         </div>
         <div>
           <h3>Unicode sequences</h3>
@@ -1292,15 +1323,37 @@ footer{
         </div>
         <div>
           <h3>Never</h3>
-          <div><code>!</code> <i>(represents something that never happens or never finishes)</i></div>
+          <div><code>!</code> <i>(something that never happens or&nbsp;never finishes)</i></div>
         </div>
         <div>
-          <h3>References</h3>
-          <div><code>&</code> <i>(<code>&{referenced_variable}</code>)</i></div>
+          <h3>References (borrows)</h3>
+          <div><code>&amp;</code> <i>(borrow)</i><br><code>&amp;mut</code> <i>(mutable borrow)</i></div>
+          <div>
+            <code>
+              <span class="keyword">let mut</span> <span class="varname">a</span> = <span class="num">1</span><span class="keyword">;</span><br>
+              <span class="keyword">let</span> <span class="varname">b</span> = &amp;<span class="varname">a</span><span class="keyword">;</span><br>
+              <span class="macro">assert_eq!</span>(*<span class="varname">b</span>, <span class="num">1</span>)<span class="keyword">;</span><br>
+              <span class="keyword">let</span> <span class="varname">c</span> = &<span class="keyword">mut</span> <span class="varname">a</span><span class="keyword">;</span><br>
+              *<span class="varname">c</span> = <span class="num">2</span><span class="keyword">;</span><br>
+              <span class="macro">assert_eq!</span>(<span class="varname">a</span>, <span class="num">2</span>)<span class="keyword">;</span>
+            </code>
+          </div>
         </div>
         <div>
-          <h3>Pointers</h3>
-          <div><code>*</code> <i>(<code>&{referenced_variable}</code>)</i></div>
+          <h3>Raw pointers</h3>
+          <div><code>*const</code> <i>(<code>const*</code> in C)</i><br><code>*mut</code> <i>(<code>*</code> in C)</i></div>
+          <div>
+            <div>You cannot dereference them outside unsafe blocks because<br>it is your responsibility to ensure they still point to valid memory.</div>
+            <code>
+              <span class="keyword">let</span> <span class="varname">x</span> = <span class="num">1.2</span><span class="keyword">;</span><br>
+              <span class="keyword">let</span> x_ptr: *<span class="keyword">const</span> <span class="type">f64</span> = &x<span class="optional"> as *const f64</span><span class="keyword">;</span><br>
+              <span class="macro">assert_eq!</span>(<span class="keyword">unsafe</span> { *<span class="varname">x_ptr</span> }, <span class="num">1.2</span>)<span class="keyword">;</span><br>
+              <span class="keyword">let mut</span> <span class="varname">y</span> = <span class="num">0.5</span><span class="keyword">;</span><br>
+              <span class="keyword">let</span> <span class="varname">y_ptr</span>: *<span class="keyword">mut</span> <span class="type">f64</span> = &<span class="keyword">mut</span> <span class="varnam">y</span><span class="keyword">;</span><br>
+              <span class="keyword">unsafe</span> { *<span class="varname">y_ptr</span> = <span class="num">1.5</span><span class="keyword">;</span> }<br>
+              <span class="macro">assert_eq!</span>(<span class="varname">y</span>, <span class="num">1.5</span>)<span class="keyword">;</span>
+            </code>
+          </div>
         </div>
       </div>
     </div>
