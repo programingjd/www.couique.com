@@ -1360,6 +1360,233 @@ footer{
       </div>
     </div>
   </section>
+  <section id="tuples">
+    <style>
+    @scope{
+      style+div{
+        position:absolute;
+        inset:0;
+        padding:3em;
+        display:grid;
+        place-items:center;
+        grid-template-areas:
+          "title"
+          "text"
+          "code";
+        grid-template-rows:auto 1fr 1fr;
+        gap:1em;
+        h1{grid-area:title}
+        &>div{
+          font-size:1.5em;
+          display:flex;
+          flex-direction:column;
+          gap:.5em;
+          i{
+            opacity:.7;
+          }
+        }
+        code{
+          font-size:1.25em;
+          padding:.5em 0;
+          line-height:2;
+          font-style:italic;
+          .optional{opacity:.5;letter-spacing:-.1em;word-spacing:-.25em}
+          .keyword{
+            color:oklch(from currentColor calc((l + 0.5) / 2) .1 67);
+          }
+          .varname{
+            color:inherit;
+          }
+          .type{
+            color:oklch(from currentColor calc((l + 0.5) / 2) .1 140);
+          }
+          .bool,.num{
+            font-weight:300;
+            color:oklch(from currentColor calc((l + 0.5) / 2) .07 260);
+          }
+          .str{
+            font-weight:200;
+            color:oklch(from currentColor l .07 160);
+          }
+          .macro{
+            color:oklch(from currentColor calc((l + 0.5) / 2) .1 200);
+          }
+        }
+      }
+    }
+    </style>
+    <div>
+      <h1>Tuples</h1>
+      <div>
+        <div>A tuple is a group of unamed values.</div>
+        <div>
+          <i>The size and types are part of the type, they can't be modified.</i><br>
+          <i>You can access the values by destructuring or by index.</i>
+        </div>
+      </div>
+      <code>
+        <span class="keyword">let</span> <span class="varname">tuple</span><span class="optional">:
+        (usize, usize, bool, &str)</span> = (<span class="num">1_usize</span>, <span class="num">4_usize</span>, <span class="bool">true</span>, <span class="str">"one"</span>)<span class="keyword">;</span><br>
+        <span class="keyword">let</span> (first, _, third, ..) = tuple<span class="keyword">;</span><br>
+        <span class="macro">assert_eq!</span>(<span class="varname">first</span>, <span class="varname">tuple</span>.<span class="num">0</span>)<span class="keyword">;</span><br>
+        <span class="macro">assert_eq!</span>(<span class="varname">third</span>, <span class="varname">tuple</span>.<span class="num">2</span>)<span class="keyword">;</span><br>
+      </code>
+    </div>
+  </section>
+  <section id="structs">
+    <style>
+    @scope{
+      style+div{
+        position:absolute;
+        inset:0;
+        padding:3em;
+        display:grid;
+        place-items:center;
+        grid-template-areas:
+          "title"
+          "list";
+        grid-template-rows:auto 1fr;
+        h1{grid-area:title}
+        &>div{
+          padding:0 3em;
+          columns:3;
+          column-gap:5em;
+          &>div{
+            break-inside:avoid;
+            padding:.5em 0;
+            h3{
+              color:var(--accent-color);
+              font-weight:200;
+              font-style:italic;
+              padding-bottom:.25em;
+            }
+            div:first-of-type{
+              code{
+                font-weight:700;
+              }
+              i{
+                padding-left:.5em;
+                opacity:.5;
+              }
+            }
+            div:not(:first-of-type){
+              font-size:.85em;
+              padding-top:.5em;
+              font-weight:300;
+              font-stretch:80%;
+              &>div{padding-bottom:.5em}
+              i{
+                opacity:.75;
+              }
+              code{
+                font-style:italic;
+                .optional{opacity:.5;letter-spacing:-.1em;word-spacing:-.25em}
+                .keyword{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 67);
+                }
+                .varname{
+                  color:inherit;
+                }
+                .type{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 140);
+                }
+                .num{
+                  font-weight:300;
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .07 260);
+                }
+                .macro{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 200);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    </style>
+    <div>
+      <h1>Ownership</h1>
+      <div>
+      </div>
+    </div>
+  </section>
+  <section id="ownership">
+    <style>
+    @scope{
+      style+div{
+        position:absolute;
+        inset:0;
+        padding:3em;
+        display:grid;
+        place-items:center;
+        grid-template-areas:
+          "title"
+          "list";
+        grid-template-rows:auto 1fr;
+        h1{grid-area:title}
+        &>div{
+          padding:0 3em;
+          columns:3;
+          column-gap:5em;
+          &>div{
+            break-inside:avoid;
+            padding:.5em 0;
+            h3{
+              color:var(--accent-color);
+              font-weight:200;
+              font-style:italic;
+              padding-bottom:.25em;
+            }
+            div:first-of-type{
+              code{
+                font-weight:700;
+              }
+              i{
+                padding-left:.5em;
+                opacity:.5;
+              }
+            }
+            div:not(:first-of-type){
+              font-size:.85em;
+              padding-top:.5em;
+              font-weight:300;
+              font-stretch:80%;
+              &>div{padding-bottom:.5em}
+              i{
+                opacity:.75;
+              }
+              code{
+                font-style:italic;
+                .optional{opacity:.5;letter-spacing:-.1em;word-spacing:-.25em}
+                .keyword{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 67);
+                }
+                .varname{
+                  color:inherit;
+                }
+                .type{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 140);
+                }
+                .num{
+                  font-weight:300;
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .07 260);
+                }
+                .macro{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 200);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    </style>
+    <div>
+      <h1>Ownership</h1>
+      <div>
+      </div>
+    </div>
+  </section>
   <section id="table-of-content">
     <h1>Table of content</h1>
     <ul id="slides"></ul>
