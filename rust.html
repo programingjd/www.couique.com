@@ -1371,21 +1371,28 @@ footer{
         place-items:center;
         grid-template-areas:
           "title"
-          "text"
-          "code";
-        grid-template-rows:auto 1fr 1fr;
+          "text1"
+          "code"
+          "text2";
+        grid-template-rows:auto 1fr 1fr 1fr;
         gap:1em;
         h1{grid-area:title}
         &>div{
           font-size:1.5em;
-          display:flex;
-          flex-direction:column;
-          gap:.5em;
+          &:first-of-type{
+            display:flex;
+            flex-direction:column;
+            gap:.5em;
+          }
           i{
             opacity:.7;
           }
+          code{
+            font-style:italic;
+            opacity:.7;
+          }
         }
-        code{
+        &>code{
           font-size:1.25em;
           padding:.5em 0;
           line-height:2;
@@ -1421,7 +1428,7 @@ footer{
         <div>A tuple is a group of unamed values.</div>
         <div>
           <i>The size and types are part of the type, they can't be modified.</i><br>
-          <i>You can access the values by destructuring or by index.</i>
+          <i>You can access the values by destructuring or by index (0-based).</i>
         </div>
       </div>
       <code>
@@ -1430,6 +1437,180 @@ footer{
         <span class="keyword">let</span> (first, _, third, ..) = tuple<span class="keyword">;</span><br>
         <span class="macro">assert_eq!</span>(<span class="varname">first</span>, <span class="varname">tuple</span>.<span class="num">0</span>)<span class="keyword">;</span><br>
         <span class="macro">assert_eq!</span>(<span class="varname">third</span>, <span class="varname">tuple</span>.<span class="num">2</span>)<span class="keyword">;</span><br>
+      </code>
+      <div>An empty tuple <code>()</code> represents the <code>Unit</code> type (<code>void</code>).</div>
+    </div>
+  </section>
+  <section id="arrays">
+    <style>
+    @scope{
+      style+div{
+        position:absolute;
+        inset:0;
+        padding:3em;
+        display:grid;
+        place-items:center;
+        grid-template-areas:
+          "title"
+          "text"
+          "code";
+        grid-template-rows:auto 1fr 1fr;
+        gap:1em;
+        h1{grid-area:title}
+        &>div{
+          font-size:1.5em;
+          &:first-of-type{
+            display:flex;
+            flex-direction:column;
+            gap:.5em;
+          }
+          i{
+            opacity:.7;
+          }
+          code{
+            font-style:italic;
+            opacity:.7;
+          }
+        }
+        &>code{
+          font-size:1.25em;
+          padding:.5em 0;
+          line-height:2;
+          font-style:italic;
+          .optional{opacity:.5;letter-spacing:-.1em;word-spacing:-.25em}
+          .keyword{
+            color:oklch(from currentColor calc((l + 0.5) / 2) .1 67);
+          }
+          .varname{
+            color:inherit;
+          }
+          .fnname{
+            color:oklch(from currentColor calc((l + 0.5) / 2) .15 85);
+          }
+          .type{
+            color:oklch(from currentColor calc((l + 0.5) / 2) .1 140);
+          }
+          .bool,.num{
+            font-weight:300;
+            color:oklch(from currentColor calc((l + 0.5) / 2) .07 260);
+          }
+          .str{
+            font-weight:200;
+            color:oklch(from currentColor l .07 160);
+          }
+          .macro{
+            color:oklch(from currentColor calc((l + 0.5) / 2) .1 200);
+          }
+        }
+      }
+    }
+    </style>
+    <div>
+      <h1>Arrays</h1>
+      <div>
+        <div>An array is an ordered group of elements of the same type.</div>
+        <div>
+          <i>The size and element type are part of the array type, they can't be modified.</i><br>
+          <i>You can access the values by destructuring or by index (0-based).</i><br>
+          <i>Elements are stored in contiguous memory.</i>
+        </div>
+      </div>
+      <code>
+        <span class="keyword">let</span> <span class="varname">array</span><span class="optional">:
+        [usize; 5]</span> = [<span class="num">1_usize</span>, <span class="num">4_usize</span>, <span class="num">6_usize</span>, <span class="num">0_usize</span>, <span class="num">1_usize</span>]<span class="keyword">;</span><br>
+        <span class="keyword">let</span> [first, _, third, .., last] = array<span class="keyword">;</span><br>
+        <span class="macro">assert_eq!</span>(<span class="num">5</span>, <span class="varname">array</span>.<span class="fnname">len</span>())<span class="keyword">;</span><br>
+        <span class="macro">assert_eq!</span>(<span class="varname">first</span>, <span class="varname">array</span>[<span class="num">0</span>])<span class="keyword">;</span><br>
+        <span class="macro">assert_eq!</span>(<span class="type">Some</span>(&<span class="varname">third</span>), <span class="varname">array</span>[<span class="num">2</span>])<span class="keyword">;</span><br>
+        <span class="macro">assert_eq!</span>(<span class="type">Some</span>(&<span class="varname">last</span>), <span class="varname">array</span>.<span class="fnname">last</span>())<span class="keyword">;</span><br>
+      </code>
+    </div>
+  </section>
+  <section id="slices">
+    <style>
+    @scope{
+      style+div{
+        position:absolute;
+        inset:0;
+        padding:3em;
+        display:grid;
+        place-items:center;
+        grid-template-areas:
+          "title"
+          "text"
+          "code";
+        grid-template-rows:auto 1fr 1fr;
+        gap:1em;
+        h1{grid-area:title}
+        &>div{
+          font-size:1.5em;
+          &:first-of-type{
+            display:flex;
+            flex-direction:column;
+            gap:.5em;
+          }
+          i{
+            opacity:.7;
+          }
+          code{
+            font-style:italic;
+            opacity:.7;
+          }
+        }
+        &>code{
+          font-size:1.25em;
+          padding:.5em 0;
+          line-height:2;
+          font-style:italic;
+          .optional{opacity:.5;letter-spacing:-.1em;word-spacing:-.25em}
+          .keyword{
+            color:oklch(from currentColor calc((l + 0.5) / 2) .1 67);
+          }
+          .varname{
+            color:inherit;
+          }
+          .fnname{
+            color:oklch(from currentColor calc((l + 0.5) / 2) .15 85);
+          }
+          .type{
+            color:oklch(from currentColor calc((l + 0.5) / 2) .1 140);
+          }
+          .bool,.num{
+            font-weight:300;
+            color:oklch(from currentColor calc((l + 0.5) / 2) .07 260);
+          }
+          .str{
+            font-weight:200;
+            color:oklch(from currentColor l .07 160);
+          }
+          .macro{
+            color:oklch(from currentColor calc((l + 0.5) / 2) .1 200);
+          }
+        }
+      }
+    }
+    </style>
+    <div>
+      <h1>Slices</h1>
+      <div>
+        <div>Slices are references to a section of an array.</div>
+        <div>
+          <i>Unlike arrays, their size doesn't need to be known at compile time.</i><br>
+          <i>You can access the values by index (0-based).</i>
+        </div>
+      </div>
+      <code>
+        <span class="keyword">let</span> <span class="varname">array</span> = ['<span class="str">a</span>', '<span class="str">b</span>', '<span class="str">c</span>', '<span class="str">d</span>', '<span class="str">e</span>', '<span class="str">f</span>']<span class="keyword">;</span><br>
+        <span class="keyword">let</span> slice<span class="optional">: &[char]</span> = array.<span class="fnname">as_slice</span>()<span class="keyword">;</span><br>
+        <span class="keyword">let</span> slice: &[<span class="type">char</span>] = &array<span class="keyword">;</span><br>
+        <span class="keyword">let</span> slice<span class="optional">: &[char]</span> = &array<span class="keyword">[..];</span><br>
+        <span class="keyword">let</span> first_two = &<span class="varname">array</span>[..<span class="num">2</span>]<span class="keyword">;</span><br>
+        <span class="keyword">let</span> next_two = &<span class="varname">array</span>[<span class="num">2</span>..<span class="num">4</span>]<span class="keyword">;</span><br>
+        <span class="keyword">let</span> last_two = &<span class="varname">array</span>[<span class="num">2</span>..]<span class="keyword">;</span><br>
+        <span class="keyword">let</span> index_one_to_three_inclusive = &<span class="varname">array</span>[<span class="num">1</span>..=<span class="num">3</span>]<span class="keyword">;</span><br>
+        <span class="macro">assert_eq!</span>(<span class="varname">array</span>.<span class="fnname">len</span>(), <span class="varname">slice</span>.<span class="fnname">len</span>())<span class="keyword">;</span><br>
+        <span class="macro">assert_eq!</span>('<span class="str">c</span>', <span class="varname">next_two</span>[<span class="num">0</span>])<span class="keyword">;</span><br>
+        <span class="macro">assert_eq!</span>(&['<span class="str">c</span>', <span class="str">'d'</span>], <span class="varname">next_two</span>)<span class="keyword">;</span><br>
       </code>
     </div>
   </section>
@@ -1505,7 +1686,7 @@ footer{
     }
     </style>
     <div>
-      <h1>Ownership</h1>
+      <h1>Structs</h1>
       <div>
       </div>
     </div>
