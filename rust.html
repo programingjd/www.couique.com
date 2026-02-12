@@ -135,6 +135,8 @@ main{
     grid-template-rows:auto 1fr;
     :is(ul,ol){
       list-style:none;
+      column-count:2;
+      column-gap:5em;
       a{
         padding:.25em;
         color:inherit;
@@ -1687,6 +1689,83 @@ footer{
     </style>
     <div>
       <h1>Structs</h1>
+      <div>
+      </div>
+    </div>
+  </section>
+  <section id="enums">
+    <style>
+    @scope{
+      style+div{
+        position:absolute;
+        inset:0;
+        padding:3em;
+        display:grid;
+        place-items:center;
+        grid-template-areas:
+          "title"
+          "list";
+        grid-template-rows:auto 1fr;
+        h1{grid-area:title}
+        &>div{
+          padding:0 3em;
+          columns:3;
+          column-gap:5em;
+          &>div{
+            break-inside:avoid;
+            padding:.5em 0;
+            h3{
+              color:var(--accent-color);
+              font-weight:200;
+              font-style:italic;
+              padding-bottom:.25em;
+            }
+            div:first-of-type{
+              code{
+                font-weight:700;
+              }
+              i{
+                padding-left:.5em;
+                opacity:.5;
+              }
+            }
+            div:not(:first-of-type){
+              font-size:.85em;
+              padding-top:.5em;
+              font-weight:300;
+              font-stretch:80%;
+              &>div{padding-bottom:.5em}
+              i{
+                opacity:.75;
+              }
+              code{
+                font-style:italic;
+                .optional{opacity:.5;letter-spacing:-.1em;word-spacing:-.25em}
+                .keyword{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 67);
+                }
+                .varname{
+                  color:inherit;
+                }
+                .type{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 140);
+                }
+                .num{
+                  font-weight:300;
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .07 260);
+                }
+                .macro{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 200);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    </style>
+    <div>
+      <h1>Enums</h1>
       <div>
       </div>
     </div>
