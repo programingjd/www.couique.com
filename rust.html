@@ -1631,14 +1631,14 @@ footer{
         grid-template-rows:auto 1fr 1fr;
         grid-template-columns:1fr auto 1fr;
         gap:1em;
-        h1{grid-area:title}
+        h1{grid-area:title;padding-bottom:0;padding-top:.5em}
         &>div{
           grid-column:text;
           justify-self:start;
+          font-size:.85em;
           &>div{
             padding-bottom:.25em;
             &:first-of-type{
-              font-size:1.25em;
               display:flex;
               flex-direction:column;
               gap:.5em;
