@@ -1626,62 +1626,61 @@ footer{
         display:grid;
         place-items:center;
         grid-template-areas:
-          "title"
-          "list";
-        grid-template-rows:auto 1fr;
+          "title title title"
+          "space_left text space_right";
+        grid-template-rows:auto 1fr 1fr;
+        grid-template-columns:1fr auto 1fr;
+        gap:1em;
         h1{grid-area:title}
         &>div{
-          padding:0 3em;
-          columns:3;
-          column-gap:5em;
+          grid-column:text;
+          justify-self:start;
           &>div{
-            break-inside:avoid;
-            padding:.5em 0;
-            h3{
-              color:var(--accent-color);
-              font-weight:200;
+            padding-bottom:.25em;
+            &:first-of-type{
+              font-size:1.25em;
+              display:flex;
+              flex-direction:column;
+              gap:.5em;
+            }
+            i{
+              opacity:.7;
+            }
+            code{
               font-style:italic;
-              padding-bottom:.25em;
+              opacity:.7;
             }
-            div:first-of-type{
-              code{
-                font-weight:700;
-              }
-              i{
-                padding-left:.5em;
-                opacity:.5;
-              }
+          }
+          &>code{
+            padding:.5em 0;
+            font-style:italic;
+            .optional{opacity:.5;letter-spacing:-.1em;word-spacing:-.25em}
+            .keyword{
+              color:oklch(from currentColor calc((l + 0.5) / 2) .1 67);
             }
-            div:not(:first-of-type){
-              font-size:.85em;
-              padding-top:.5em;
+            .varname{
+              color:inherit;
+            }
+            .fnname{
+              color:oklch(from currentColor calc((l + 0.5) / 2) .15 85);
+            }
+            .type{
+              color:oklch(from currentColor calc((l + 0.5) / 2) .1 140);
+            }
+            .bool,.num{
               font-weight:300;
-              font-stretch:80%;
-              &>div{padding-bottom:.5em}
-              i{
-                opacity:.75;
-              }
-              code{
-                font-style:italic;
-                .optional{opacity:.5;letter-spacing:-.1em;word-spacing:-.25em}
-                .keyword{
-                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 67);
-                }
-                .varname{
-                  color:inherit;
-                }
-                .type{
-                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 140);
-                }
-                .num{
-                  font-weight:300;
-                  color:oklch(from currentColor calc((l + 0.5) / 2) .07 260);
-                }
-                .macro{
-                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 200);
-                }
-              }
+              color:oklch(from currentColor calc((l + 0.5) / 2) .07 260);
             }
+            .str{
+              font-weight:200;
+              color:oklch(from currentColor l .07 160);
+            }
+            .macro{
+              color:oklch(from currentColor calc((l + 0.5) / 2) .1 200);
+            }
+            .indent1{margin-left:4ch}
+            .indent2{margin-left:8ch}
+            .indent3{margin-left:12ch}
           }
         }
       }
@@ -1690,6 +1689,40 @@ footer{
     <div>
       <h1>Structs</h1>
       <div>
+        <div>Named tuples</div>
+        <code>
+          <span class="keyword">struct</span> <span class="type">Measure</span>(<span class="type">f64</span>, <span class="type">UnitOfMeasure</span>)<span class="keyword">;</span><br>
+          <span class="keyword">let</span> <span class="varname">height</span> = Measure(<span class="num">1.8</span>, <span class="type">UnitOfMeasure::Meter</span>)<span class="keyword">;</span><br>
+          <span class="macro">assert_eq!</span>(<span class="num">1.8</span>, <span class="varname">height</span>.<span class="num">0</span>)<span class="keyword">;</span><br>
+        </code>
+      </div>
+      <div>
+        <div>Unit (empty) structs</div>
+        <div>They can be used as marker types, to hold implementation, or to encode state into the type system.</div>
+        <div>They are zero-sized, meaning that the compiler will not</div>
+        <code>
+          #[<span class="keyword">derive</span>(<span class="type">Debug</span>)]<br>
+          <span class="keyword">struct</span> <span class="type">Empty</span><span class="keyword">;</span><br>
+          <span class="keyword"></span>
+          <span class="keyword">let</span> <span class="varname">empty></span> = Empty<span class="keyword">;</span><br>
+          <span class="macro">println!</span>(<span class="str">"{</span><span class="varname">empty</span><span class="str">:?}"</span>)<span class="keyword">;</span><br>
+        </code>
+      </div>
+      <div>
+        <div>Structs with named fields</div>
+        <code>
+          <span class="keyword">struct</span> <span class="type">Coordinate</span> {<br>
+          <span class="indent1">x: <span class="type">f64</span>,</span><br>
+          <span class="indent1">y: <span class="type">f64</span>,</span><br>
+          <span class="indent1">projection: <span class="type">Projection</span>,</span><br>
+          }<br>
+          <span class="keyword">let</span> <span class="varname">x</span> = <span class="num">2.5</span><span class="keyword">;</span><br>
+          <span class="keyword">let</span> <span class="varname">coord</span> = <span class="type">Coordinate</span> {
+          <span class="varname">projection</span>: <span class="type">Projection</span>::<span class="type">Mercator</span>, <span class="varname">x</span>, <span class="varname">y</span>: <span class="num">1.5</span>
+          }<span class="keyword">;</span><br>
+          <span class="macro">assert_eq!</span>(<span class="varname">x</span>, <span class="varname">coord</span>.<span class="varname">x</span>)<span class="keyword">;</span><br>
+          <span class="macro">assert_eq!</span>(<span class="num">1.5</span>, <span class="varname">coord</span>.<span class="varname">y</span>)<span class="keyword">;</span><br>
+        </code>
       </div>
     </div>
   </section>
