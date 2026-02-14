@@ -135,8 +135,8 @@ main{
     grid-template-rows:auto 1fr;
     :is(ul,ol){
       list-style:none;
-      column-count:2;
-      column-gap:5em;
+      column-count:3;
+      column-gap:8em;
       a{
         padding:.25em;
         color:inherit;
@@ -1091,6 +1091,118 @@ footer{
       </div>
     </div>
   </section>
+  <section id="comments">
+    <style>
+    @scope{
+      style+div{
+        position:absolute;
+        inset:0;
+        padding:3em;
+        display:grid;
+        place-items:center;
+        grid-template-areas:
+          "title title title title title"
+          "space_left left1 space_middle right space_right"
+          "space_left left2 space_middle right space_right"
+          "space space space space space";
+        grid-template-rows:3fr auto auto 2fr;
+        grid-template-columns:1fr auto 1fr auto 1fr;
+        gap:1em;
+        h1{grid-area:title}
+        &>div{
+          &:nth-of-type(1){grid-area:left1}
+          &:nth-of-type(2){grid-area:left2}
+          &:nth-of-type(3){grid-area:right}
+          justify-self:start;
+          &>div{
+            font-size:1.25em;
+            padding-bottom:.5em;
+            &:first-of-type{
+              font-size:1.25em;
+              display:flex;
+              flex-direction:column;
+              gap:.5em;
+            }
+            i{
+              opacity:.7;
+            }
+            code{
+              font-style:italic;
+              opacity:.7;
+            }
+          }
+          &>code{
+            padding:.5em 0;
+            font-style:italic;
+            .optional{opacity:.5;letter-spacing:-.1em;word-spacing:-.25em}
+            .keyword{
+              color:oklch(from currentColor calc((l + 0.5) / 2) .1 67);
+            }
+            .varname{
+              color:inherit;
+            }
+            .fnname{
+              color:oklch(from currentColor calc((l + 0.5) / 2) .15 85);
+            }
+            .type{
+              color:oklch(from currentColor calc((l + 0.5) / 2) .1 140);
+            }
+            .bool,.num{
+              font-weight:300;
+              color:oklch(from currentColor calc((l + 0.5) / 2) .07 260);
+            }
+            .str{
+              font-weight:200;
+              color:oklch(from currentColor l .07 160);
+            }
+            .macro{
+              color:oklch(from currentColor calc((l + 0.5) / 2) .1 200);
+            }
+            .comment{
+              color:oklch(from currentColor calc((l + 0.5) / 2) 0 h / .75);
+            }
+          }
+        }
+      }
+    }
+    </style>
+    <div>
+      <h1>Comments</h1>
+      <div>
+        <div>Line comments</div>
+        <code>
+          <span class="comment">// This is a line comment</span><br>
+          <span class="keyword">let</span> <span class="varname">first</span> = <span class="bool">true</span><span class="keyword">;</span> <span class="comment">// Another line comment</span>
+        </code>
+      </div>
+      <div>
+        <div>Block comments</div>
+        <code>
+          <span class="comment">/*</span><br>
+          <span class="comment">&nbsp; &nbsp;Block comments</span><br>
+          <span class="comment">&nbsp; &nbsp;can span multiple lines,</span><br>
+          <span class="comment">&nbsp; &nbsp;and can be /* nested */.</span><br>
+          <span class="comment">*/</span><br>
+          <span class="keyword">let</span> <span class="varname">n</span> = <span class="num">2.5</span> <span class="comment">/* + 1.2 */</span><span class="keyword">;</span>
+        </code>
+      </div>
+      <div>
+        <div>Doc comments</div>
+        <div>They are used by <code>rustdoc</code> to generate the documentation.</div>
+        <div>Markdown formatting can be used, including code blocks for examples.<br>
+        Those examples can use dev dependencies, and are treated as tests.</div>
+        <code>
+          <span class="comment">/// Struct description</span><br>
+          <span class="comment">/// <b># Example</b></span><br>
+          <span class="comment">/// ```</span><br>
+          <span class="comment">/// <span class="keyword">let</span> <span class="varname">example</span> = <span class="type">Example</span><span class="keyword">;</span></span><br>
+          <span class="comment">/// ```</span><br>
+          <span class="keyword">struct</span> <span class="type">Example</span><span class="keyword">;</span><br>
+        </code>
+      </div>
+      <div></div>
+    </div>
+  </section>
   <section id="variables">
     <style>
     @scope{
@@ -1360,6 +1472,128 @@ footer{
           </div>
         </div>
       </div>
+    </div>
+  </section>
+  <section id="string-literals">
+    <style>
+    @scope{
+      style+div{
+        position:absolute;
+        inset:0;
+        padding:3em;
+        display:grid;
+        place-items:center;
+        grid-template-areas:
+          "title title title title title"
+          "space_left left1 left1 left1 space_right"
+          "space_left left2 space_middle right space_right"
+          "space space space space space";
+        grid-template-rows:3fr auto auto 2fr;
+        grid-template-columns:1fr auto 1fr auto 1fr;
+        gap:1em;
+        h1{grid-area:title}
+        &>div{
+          &:nth-of-type(1){grid-area:left1}
+          &:nth-of-type(2){grid-area:left2}
+          &:nth-of-type(3){grid-area:right}
+          justify-self:start;
+          &>div{
+            padding-bottom:.5em;
+            &:first-of-type{
+              font-size:1.25em;
+              display:flex;
+              flex-direction:column;
+              gap:.5em;
+            }
+            i{
+              opacity:.7;
+            }
+            code{
+              font-style:italic;
+              opacity:.7;
+            }
+          }
+          &>code{
+            padding:.5em 0;
+            font-style:italic;
+            .optional{opacity:.5;letter-spacing:-.1em;word-spacing:-.25em}
+            .keyword,.escape{
+              color:oklch(from currentColor calc((l + 0.5) / 2) .1 67);
+            }
+            .varname{
+              color:inherit;
+            }
+            .fnname{
+              color:oklch(from currentColor calc((l + 0.5) / 2) .15 85);
+            }
+            .type{
+              color:oklch(from currentColor calc((l + 0.5) / 2) .1 140);
+            }
+            .bool,.num{
+              font-weight:300;
+              color:oklch(from currentColor calc((l + 0.5) / 2) .07 260);
+            }
+            .str{
+              font-weight:200;
+              color:oklch(from currentColor l .07 160);
+            }
+            .macro{
+              color:oklch(from currentColor calc((l + 0.5) / 2) .1 200);
+            }
+            .comment{
+              color:oklch(from currentColor calc((l + 0.5) / 2) 0 h / .75);
+            }
+            .indent1{margin-left:4ch}
+            .nobreak{white-space:nowrap}
+          }
+        }
+      }
+    }
+    </style>
+    <div>
+      <h1>String literals</h1>
+      <div>
+        <div>Double quoted</div>
+        <div>You can use backslash-escapes for double quotes, backslashes, hex values and unicode characters.</div>
+        <div>They can span multiple lines with the use of a trailing backslash.<br>
+          The next line leading whitespace is automatically trimmed.</div>
+        <code>
+          <span class="keyword">let</span> <span class="varname">text</span><span class="optional">: &str</span> = <span class="str">"text"</span><span class="keyword">;</span><br>
+          <span class="keyword">let</span> <span class="varname">text</span><span class="optional">: &str</span> = <span class="str">"<span class="escape">\</span></span><br>
+          <span class="indent1 nobreak str">Some inner 'single quoted' text and<span class="escape">\n</span>Escape<span class="escape">\xa0</span>sequences <span class="escape">\</span></span><br>
+          <span class="indent1 nobreak str"><span class="escape">\"</span><span class="escape">\u{1f60a}</span><span class="escape">\"</span>.<span class="escape">\</span></span><br>
+          <span class="str">"</span><span class="keyword">;</span>
+        </code>
+      </div>
+      <div>
+        <div>Raw strings</div>
+        <div>They are double-quoted strings with the r prefix.</div>
+        <div>You can add as many <code>#</code> as needed as a prefix and suffix.</div>
+        <div>You can't use escape sequences in raw strings.</div>
+        <div>They can span multiple lines.</div>
+        <code>
+          <span class="keyword">let</span> <span class="varname">text</span><span class="optional">: &str</span> =
+          <span class="nobreak str">r"Multi</span><br>
+          <span class="str nobreak"> line."</span><span class="keyword">;</span><br>
+          <span class="keyword">let</span> <span class="varname">text</span><span class="optional">: &str</span> =
+          r#<span class="nobreak str">"Inner "double quotes""</span>#<span class="keyword">;</span><br>
+          <span class="keyword">let</span> <span class="varname">text</span><span class="optional">: &str</span> =<br>
+          <span class="indent1"></span>r###<span class="nobreak str">"Text with "quotes" and ##hashes##."</span>###<span class="keyword">;</span><br>
+        </code>
+      </div>
+      <div>
+        <div>Byte strings</div>
+        <div>They are prefixed with a <code>b</code>.</div>
+        <div>You can also use raw byte strings prefixed with <code>br</code>.</div>
+        <div>Their content doesn't need to be valid UTF-8.</div>
+        <code>
+          <span class="keyword">let</span> <span class="varname">bytes</span><span class="optional">: &[u8]</span> =
+          <span class="nobreak str">b"abc<span class="escape">\n</span>def<span class="escape">\x00"</span><span class="keyword">;</span><br>
+          <span class="keyword">let</span> <span class="varname">bytes</span><span class="optional">: &[u8]</span> =
+          br#<span class="nobreak str">""quoted""</span>#<span class="keyword">;</span><br>
+        </code>
+      </div>
+      <div></div>
     </div>
   </section>
   <section id="tuples">
@@ -1682,8 +1916,6 @@ footer{
               color:oklch(from currentColor calc((l + 0.5) / 2) .1 200);
             }
             .indent1{margin-left:4ch}
-            .indent2{margin-left:8ch}
-            .indent3{margin-left:12ch}
           }
         }
       }
@@ -1702,7 +1934,7 @@ footer{
       <div>
         <div>Unit (empty) structs</div>
         <div>They can be used as marker types, to hold implementation, or to encode state into the type system.</div>
-        <div>They are zero-sized, meaning that the compiler will not</div>
+        <div>They are zero-sized, meaning that the compiler will optimize them out.</div>
         <code>
           #[<span class="keyword">derive</span>(<span class="type">Debug</span>)]<br>
           <span class="keyword">struct</span> <span class="type">Empty</span><span class="keyword">;</span><br>
@@ -1802,6 +2034,240 @@ footer{
     </style>
     <div>
       <h1>Enums</h1>
+      <div>
+
+      </div>
+    </div>
+  </section>
+  <section id="results">
+    <style>
+    @scope{
+      style+div{
+        position:absolute;
+        inset:0;
+        padding:3em;
+        display:grid;
+        place-items:center;
+        grid-template-areas:
+          "title"
+          "list";
+        grid-template-rows:auto 1fr;
+        h1{grid-area:title}
+        &>div{
+          padding:0 3em;
+          columns:3;
+          column-gap:5em;
+          &>div{
+            break-inside:avoid;
+            padding:.5em 0;
+            h3{
+              color:var(--accent-color);
+              font-weight:200;
+              font-style:italic;
+              padding-bottom:.25em;
+            }
+            div:first-of-type{
+              code{
+                font-weight:700;
+              }
+              i{
+                padding-left:.5em;
+                opacity:.5;
+              }
+            }
+            div:not(:first-of-type){
+              font-size:.85em;
+              padding-top:.5em;
+              font-weight:300;
+              font-stretch:80%;
+              &>div{padding-bottom:.5em}
+              i{
+                opacity:.75;
+              }
+              code{
+                font-style:italic;
+                .optional{opacity:.5;letter-spacing:-.1em;word-spacing:-.25em}
+                .keyword{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 67);
+                }
+                .varname{
+                  color:inherit;
+                }
+                .type{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 140);
+                }
+                .num{
+                  font-weight:300;
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .07 260);
+                }
+                .macro{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 200);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    </style>
+    <div>
+      <h1>Results</h1>
+      <div>
+
+      </div>
+    </div>
+  </section>
+  <section id="options">
+    <style>
+    @scope{
+      style+div{
+        position:absolute;
+        inset:0;
+        padding:3em;
+        display:grid;
+        place-items:center;
+        grid-template-areas:
+          "title"
+          "list";
+        grid-template-rows:auto 1fr;
+        h1{grid-area:title}
+        &>div{
+          padding:0 3em;
+          columns:3;
+          column-gap:5em;
+          &>div{
+            break-inside:avoid;
+            padding:.5em 0;
+            h3{
+              color:var(--accent-color);
+              font-weight:200;
+              font-style:italic;
+              padding-bottom:.25em;
+            }
+            div:first-of-type{
+              code{
+                font-weight:700;
+              }
+              i{
+                padding-left:.5em;
+                opacity:.5;
+              }
+            }
+            div:not(:first-of-type){
+              font-size:.85em;
+              padding-top:.5em;
+              font-weight:300;
+              font-stretch:80%;
+              &>div{padding-bottom:.5em}
+              i{
+                opacity:.75;
+              }
+              code{
+                font-style:italic;
+                .optional{opacity:.5;letter-spacing:-.1em;word-spacing:-.25em}
+                .keyword{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 67);
+                }
+                .varname{
+                  color:inherit;
+                }
+                .type{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 140);
+                }
+                .num{
+                  font-weight:300;
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .07 260);
+                }
+                .macro{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 200);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    </style>
+    <div>
+      <h1>Options</h1>
+      <div>
+
+      </div>
+    </div>
+  </section>
+  <section id="pattern-matching">
+    <style>
+    @scope{
+      style+div{
+        position:absolute;
+        inset:0;
+        padding:3em;
+        display:grid;
+        place-items:center;
+        grid-template-areas:
+          "title"
+          "list";
+        grid-template-rows:auto 1fr;
+        h1{grid-area:title}
+        &>div{
+          padding:0 3em;
+          columns:3;
+          column-gap:5em;
+          &>div{
+            break-inside:avoid;
+            padding:.5em 0;
+            h3{
+              color:var(--accent-color);
+              font-weight:200;
+              font-style:italic;
+              padding-bottom:.25em;
+            }
+            div:first-of-type{
+              code{
+                font-weight:700;
+              }
+              i{
+                padding-left:.5em;
+                opacity:.5;
+              }
+            }
+            div:not(:first-of-type){
+              font-size:.85em;
+              padding-top:.5em;
+              font-weight:300;
+              font-stretch:80%;
+              &>div{padding-bottom:.5em}
+              i{
+                opacity:.75;
+              }
+              code{
+                font-style:italic;
+                .optional{opacity:.5;letter-spacing:-.1em;word-spacing:-.25em}
+                .keyword{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 67);
+                }
+                .varname{
+                  color:inherit;
+                }
+                .type{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 140);
+                }
+                .num{
+                  font-weight:300;
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .07 260);
+                }
+                .macro{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 200);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    </style>
+    <div>
+      <h1>Pattern matching</h1>
       <div>
       </div>
     </div>
@@ -2033,6 +2499,1007 @@ footer{
     </style>
     <div>
       <h1>Traits</h1>
+      <div>
+      </div>
+    </div>
+  </section>
+  <section id="impl-blocks">
+    <style>
+    @scope{
+      style+div{
+        position:absolute;
+        inset:0;
+        padding:3em;
+        display:grid;
+        place-items:center;
+        grid-template-areas:
+          "title"
+          "list";
+        grid-template-rows:auto 1fr;
+        h1{grid-area:title}
+        &>div{
+          padding:0 3em;
+          columns:3;
+          column-gap:5em;
+          &>div{
+            break-inside:avoid;
+            padding:.5em 0;
+            h3{
+              color:var(--accent-color);
+              font-weight:200;
+              font-style:italic;
+              padding-bottom:.25em;
+            }
+            div:first-of-type{
+              code{
+                font-weight:700;
+              }
+              i{
+                padding-left:.5em;
+                opacity:.5;
+              }
+            }
+            div:not(:first-of-type){
+              font-size:.85em;
+              padding-top:.5em;
+              font-weight:300;
+              font-stretch:80%;
+              &>div{padding-bottom:.5em}
+              i{
+                opacity:.75;
+              }
+              code{
+                font-style:italic;
+                .optional{opacity:.5;letter-spacing:-.1em;word-spacing:-.25em}
+                .keyword{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 67);
+                }
+                .varname{
+                  color:inherit;
+                }
+                .type{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 140);
+                }
+                .num{
+                  font-weight:300;
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .07 260);
+                }
+                .macro{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 200);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    </style>
+    <div>
+      <h1>impl blocks</h1>
+      <div>
+      </div>
+    </div>
+  </section>
+  <section id="associated-types">
+    <style>
+    @scope{
+      style+div{
+        position:absolute;
+        inset:0;
+        padding:3em;
+        display:grid;
+        place-items:center;
+        grid-template-areas:
+          "title"
+          "list";
+        grid-template-rows:auto 1fr;
+        h1{grid-area:title}
+        &>div{
+          padding:0 3em;
+          columns:3;
+          column-gap:5em;
+          &>div{
+            break-inside:avoid;
+            padding:.5em 0;
+            h3{
+              color:var(--accent-color);
+              font-weight:200;
+              font-style:italic;
+              padding-bottom:.25em;
+            }
+            div:first-of-type{
+              code{
+                font-weight:700;
+              }
+              i{
+                padding-left:.5em;
+                opacity:.5;
+              }
+            }
+            div:not(:first-of-type){
+              font-size:.85em;
+              padding-top:.5em;
+              font-weight:300;
+              font-stretch:80%;
+              &>div{padding-bottom:.5em}
+              i{
+                opacity:.75;
+              }
+              code{
+                font-style:italic;
+                .optional{opacity:.5;letter-spacing:-.1em;word-spacing:-.25em}
+                .keyword{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 67);
+                }
+                .varname{
+                  color:inherit;
+                }
+                .type{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 140);
+                }
+                .num{
+                  font-weight:300;
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .07 260);
+                }
+                .macro{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 200);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    </style>
+    <div>
+      <h1>Associated types</h1>
+      <div>
+      </div>
+    </div>
+  </section>
+  <section id="loops">
+    <style>
+    @scope{
+      style+div{
+        position:absolute;
+        inset:0;
+        padding:3em;
+        display:grid;
+        place-items:center;
+        grid-template-areas:
+          "title"
+          "list";
+        grid-template-rows:auto 1fr;
+        h1{grid-area:title}
+        &>div{
+          padding:0 3em;
+          columns:3;
+          column-gap:5em;
+          &>div{
+            break-inside:avoid;
+            padding:.5em 0;
+            h3{
+              color:var(--accent-color);
+              font-weight:200;
+              font-style:italic;
+              padding-bottom:.25em;
+            }
+            div:first-of-type{
+              code{
+                font-weight:700;
+              }
+              i{
+                padding-left:.5em;
+                opacity:.5;
+              }
+            }
+            div:not(:first-of-type){
+              font-size:.85em;
+              padding-top:.5em;
+              font-weight:300;
+              font-stretch:80%;
+              &>div{padding-bottom:.5em}
+              i{
+                opacity:.75;
+              }
+              code{
+                font-style:italic;
+                .optional{opacity:.5;letter-spacing:-.1em;word-spacing:-.25em}
+                .keyword{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 67);
+                }
+                .varname{
+                  color:inherit;
+                }
+                .type{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 140);
+                }
+                .num{
+                  font-weight:300;
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .07 260);
+                }
+                .macro{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 200);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    </style>
+    <div>
+      <h1>Loops</h1>
+      <div>
+      </div>
+    </div>
+  </section>
+  <section id="derives">
+    <style>
+    @scope{
+      style+div{
+        position:absolute;
+        inset:0;
+        padding:3em;
+        display:grid;
+        place-items:center;
+        grid-template-areas:
+          "title"
+          "list";
+        grid-template-rows:auto 1fr;
+        h1{grid-area:title}
+        &>div{
+          padding:0 3em;
+          columns:3;
+          column-gap:5em;
+          &>div{
+            break-inside:avoid;
+            padding:.5em 0;
+            h3{
+              color:var(--accent-color);
+              font-weight:200;
+              font-style:italic;
+              padding-bottom:.25em;
+            }
+            div:first-of-type{
+              code{
+                font-weight:700;
+              }
+              i{
+                padding-left:.5em;
+                opacity:.5;
+              }
+            }
+            div:not(:first-of-type){
+              font-size:.85em;
+              padding-top:.5em;
+              font-weight:300;
+              font-stretch:80%;
+              &>div{padding-bottom:.5em}
+              i{
+                opacity:.75;
+              }
+              code{
+                font-style:italic;
+                .optional{opacity:.5;letter-spacing:-.1em;word-spacing:-.25em}
+                .keyword{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 67);
+                }
+                .varname{
+                  color:inherit;
+                }
+                .type{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 140);
+                }
+                .num{
+                  font-weight:300;
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .07 260);
+                }
+                .macro{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 200);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    </style>
+    <div>
+      <h1>Derives</h1>
+      <div>
+      </div>
+    </div>
+  </section>
+  <section id="generics">
+    <style>
+    @scope{
+      style+div{
+        position:absolute;
+        inset:0;
+        padding:3em;
+        display:grid;
+        place-items:center;
+        grid-template-areas:
+          "title"
+          "list";
+        grid-template-rows:auto 1fr;
+        h1{grid-area:title}
+        &>div{
+          padding:0 3em;
+          columns:3;
+          column-gap:5em;
+          &>div{
+            break-inside:avoid;
+            padding:.5em 0;
+            h3{
+              color:var(--accent-color);
+              font-weight:200;
+              font-style:italic;
+              padding-bottom:.25em;
+            }
+            div:first-of-type{
+              code{
+                font-weight:700;
+              }
+              i{
+                padding-left:.5em;
+                opacity:.5;
+              }
+            }
+            div:not(:first-of-type){
+              font-size:.85em;
+              padding-top:.5em;
+              font-weight:300;
+              font-stretch:80%;
+              &>div{padding-bottom:.5em}
+              i{
+                opacity:.75;
+              }
+              code{
+                font-style:italic;
+                .optional{opacity:.5;letter-spacing:-.1em;word-spacing:-.25em}
+                .keyword{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 67);
+                }
+                .varname{
+                  color:inherit;
+                }
+                .type{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 140);
+                }
+                .num{
+                  font-weight:300;
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .07 260);
+                }
+                .macro{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 200);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    </style>
+    <div>
+      <h1>Generics</h1>
+      <div>
+      </div>
+    </div>
+  </section>
+  <section id="lifetimes">
+    <style>
+    @scope{
+      style+div{
+        position:absolute;
+        inset:0;
+        padding:3em;
+        display:grid;
+        place-items:center;
+        grid-template-areas:
+          "title"
+          "list";
+        grid-template-rows:auto 1fr;
+        h1{grid-area:title}
+        &>div{
+          padding:0 3em;
+          columns:3;
+          column-gap:5em;
+          &>div{
+            break-inside:avoid;
+            padding:.5em 0;
+            h3{
+              color:var(--accent-color);
+              font-weight:200;
+              font-style:italic;
+              padding-bottom:.25em;
+            }
+            div:first-of-type{
+              code{
+                font-weight:700;
+              }
+              i{
+                padding-left:.5em;
+                opacity:.5;
+              }
+            }
+            div:not(:first-of-type){
+              font-size:.85em;
+              padding-top:.5em;
+              font-weight:300;
+              font-stretch:80%;
+              &>div{padding-bottom:.5em}
+              i{
+                opacity:.75;
+              }
+              code{
+                font-style:italic;
+                .optional{opacity:.5;letter-spacing:-.1em;word-spacing:-.25em}
+                .keyword{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 67);
+                }
+                .varname{
+                  color:inherit;
+                }
+                .type{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 140);
+                }
+                .num{
+                  font-weight:300;
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .07 260);
+                }
+                .macro{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 200);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    </style>
+    <div>
+      <h1>Lifetimes</h1>
+      <div>
+      </div>
+    </div>
+  </section>
+  <section id="modules">
+    <style>
+    @scope{
+      style+div{
+        position:absolute;
+        inset:0;
+        padding:3em;
+        display:grid;
+        place-items:center;
+        grid-template-areas:
+          "title"
+          "list";
+        grid-template-rows:auto 1fr;
+        h1{grid-area:title}
+        &>div{
+          padding:0 3em;
+          columns:3;
+          column-gap:5em;
+          &>div{
+            break-inside:avoid;
+            padding:.5em 0;
+            h3{
+              color:var(--accent-color);
+              font-weight:200;
+              font-style:italic;
+              padding-bottom:.25em;
+            }
+            div:first-of-type{
+              code{
+                font-weight:700;
+              }
+              i{
+                padding-left:.5em;
+                opacity:.5;
+              }
+            }
+            div:not(:first-of-type){
+              font-size:.85em;
+              padding-top:.5em;
+              font-weight:300;
+              font-stretch:80%;
+              &>div{padding-bottom:.5em}
+              i{
+                opacity:.75;
+              }
+              code{
+                font-style:italic;
+                .optional{opacity:.5;letter-spacing:-.1em;word-spacing:-.25em}
+                .keyword{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 67);
+                }
+                .varname{
+                  color:inherit;
+                }
+                .type{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 140);
+                }
+                .num{
+                  font-weight:300;
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .07 260);
+                }
+                .macro{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 200);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    </style>
+    <div>
+      <h1>Modules</h1>
+      <div>
+      </div>
+    </div>
+  </section>
+  <section id="imports">
+    <style>
+    @scope{
+      style+div{
+        position:absolute;
+        inset:0;
+        padding:3em;
+        display:grid;
+        place-items:center;
+        grid-template-areas:
+          "title"
+          "list";
+        grid-template-rows:auto 1fr;
+        h1{grid-area:title}
+        &>div{
+          padding:0 3em;
+          columns:3;
+          column-gap:5em;
+          &>div{
+            break-inside:avoid;
+            padding:.5em 0;
+            h3{
+              color:var(--accent-color);
+              font-weight:200;
+              font-style:italic;
+              padding-bottom:.25em;
+            }
+            div:first-of-type{
+              code{
+                font-weight:700;
+              }
+              i{
+                padding-left:.5em;
+                opacity:.5;
+              }
+            }
+            div:not(:first-of-type){
+              font-size:.85em;
+              padding-top:.5em;
+              font-weight:300;
+              font-stretch:80%;
+              &>div{padding-bottom:.5em}
+              i{
+                opacity:.75;
+              }
+              code{
+                font-style:italic;
+                .optional{opacity:.5;letter-spacing:-.1em;word-spacing:-.25em}
+                .keyword{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 67);
+                }
+                .varname{
+                  color:inherit;
+                }
+                .type{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 140);
+                }
+                .num{
+                  font-weight:300;
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .07 260);
+                }
+                .macro{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 200);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    </style>
+    <div>
+      <h1>Imports</h1>
+      <div>
+      </div>
+    </div>
+  </section>
+  <section id="attributes">
+    <style>
+    @scope{
+      style+div{
+        position:absolute;
+        inset:0;
+        padding:3em;
+        display:grid;
+        place-items:center;
+        grid-template-areas:
+          "title"
+          "list";
+        grid-template-rows:auto 1fr;
+        h1{grid-area:title}
+        &>div{
+          padding:0 3em;
+          columns:3;
+          column-gap:5em;
+          &>div{
+            break-inside:avoid;
+            padding:.5em 0;
+            h3{
+              color:var(--accent-color);
+              font-weight:200;
+              font-style:italic;
+              padding-bottom:.25em;
+            }
+            div:first-of-type{
+              code{
+                font-weight:700;
+              }
+              i{
+                padding-left:.5em;
+                opacity:.5;
+              }
+            }
+            div:not(:first-of-type){
+              font-size:.85em;
+              padding-top:.5em;
+              font-weight:300;
+              font-stretch:80%;
+              &>div{padding-bottom:.5em}
+              i{
+                opacity:.75;
+              }
+              code{
+                font-style:italic;
+                .optional{opacity:.5;letter-spacing:-.1em;word-spacing:-.25em}
+                .keyword{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 67);
+                }
+                .varname{
+                  color:inherit;
+                }
+                .type{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 140);
+                }
+                .num{
+                  font-weight:300;
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .07 260);
+                }
+                .macro{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 200);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    </style>
+    <div>
+      <h1>Attributes</h1>
+      <div>
+      </div>
+    </div>
+  </section>
+  <section id="declarative-macros">
+    <style>
+    @scope{
+      style+div{
+        position:absolute;
+        inset:0;
+        padding:3em;
+        display:grid;
+        place-items:center;
+        grid-template-areas:
+          "title"
+          "list";
+        grid-template-rows:auto 1fr;
+        h1{grid-area:title}
+        &>div{
+          padding:0 3em;
+          columns:3;
+          column-gap:5em;
+          &>div{
+            break-inside:avoid;
+            padding:.5em 0;
+            h3{
+              color:var(--accent-color);
+              font-weight:200;
+              font-style:italic;
+              padding-bottom:.25em;
+            }
+            div:first-of-type{
+              code{
+                font-weight:700;
+              }
+              i{
+                padding-left:.5em;
+                opacity:.5;
+              }
+            }
+            div:not(:first-of-type){
+              font-size:.85em;
+              padding-top:.5em;
+              font-weight:300;
+              font-stretch:80%;
+              &>div{padding-bottom:.5em}
+              i{
+                opacity:.75;
+              }
+              code{
+                font-style:italic;
+                .optional{opacity:.5;letter-spacing:-.1em;word-spacing:-.25em}
+                .keyword{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 67);
+                }
+                .varname{
+                  color:inherit;
+                }
+                .type{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 140);
+                }
+                .num{
+                  font-weight:300;
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .07 260);
+                }
+                .macro{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 200);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    </style>
+    <div>
+      <h1>Declarative macros</h1>
+      <div>
+      </div>
+    </div>
+  </section>
+  <section id="procedural-macros">
+    <style>
+    @scope{
+      style+div{
+        position:absolute;
+        inset:0;
+        padding:3em;
+        display:grid;
+        place-items:center;
+        grid-template-areas:
+          "title"
+          "list";
+        grid-template-rows:auto 1fr;
+        h1{grid-area:title}
+        &>div{
+          padding:0 3em;
+          columns:3;
+          column-gap:5em;
+          &>div{
+            break-inside:avoid;
+            padding:.5em 0;
+            h3{
+              color:var(--accent-color);
+              font-weight:200;
+              font-style:italic;
+              padding-bottom:.25em;
+            }
+            div:first-of-type{
+              code{
+                font-weight:700;
+              }
+              i{
+                padding-left:.5em;
+                opacity:.5;
+              }
+            }
+            div:not(:first-of-type){
+              font-size:.85em;
+              padding-top:.5em;
+              font-weight:300;
+              font-stretch:80%;
+              &>div{padding-bottom:.5em}
+              i{
+                opacity:.75;
+              }
+              code{
+                font-style:italic;
+                .optional{opacity:.5;letter-spacing:-.1em;word-spacing:-.25em}
+                .keyword{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 67);
+                }
+                .varname{
+                  color:inherit;
+                }
+                .type{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 140);
+                }
+                .num{
+                  font-weight:300;
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .07 260);
+                }
+                .macro{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 200);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    </style>
+    <div>
+      <h1>Procedural macros</h1>
+      <div>
+      </div>
+    </div>
+  </section>
+  <section id="tests">
+    <style>
+    @scope{
+      style+div{
+        position:absolute;
+        inset:0;
+        padding:3em;
+        display:grid;
+        place-items:center;
+        grid-template-areas:
+          "title"
+          "list";
+        grid-template-rows:auto 1fr;
+        h1{grid-area:title}
+        &>div{
+          padding:0 3em;
+          columns:3;
+          column-gap:5em;
+          &>div{
+            break-inside:avoid;
+            padding:.5em 0;
+            h3{
+              color:var(--accent-color);
+              font-weight:200;
+              font-style:italic;
+              padding-bottom:.25em;
+            }
+            div:first-of-type{
+              code{
+                font-weight:700;
+              }
+              i{
+                padding-left:.5em;
+                opacity:.5;
+              }
+            }
+            div:not(:first-of-type){
+              font-size:.85em;
+              padding-top:.5em;
+              font-weight:300;
+              font-stretch:80%;
+              &>div{padding-bottom:.5em}
+              i{
+                opacity:.75;
+              }
+              code{
+                font-style:italic;
+                .optional{opacity:.5;letter-spacing:-.1em;word-spacing:-.25em}
+                .keyword{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 67);
+                }
+                .varname{
+                  color:inherit;
+                }
+                .type{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 140);
+                }
+                .num{
+                  font-weight:300;
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .07 260);
+                }
+                .macro{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 200);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    </style>
+    <div>
+      <h1>Tests</h1>
+      <div>
+      </div>
+    </div>
+  </section>
+  <section id="unsafe">
+    <style>
+    @scope{
+      style+div{
+        position:absolute;
+        inset:0;
+        padding:3em;
+        display:grid;
+        place-items:center;
+        grid-template-areas:
+          "title"
+          "list";
+        grid-template-rows:auto 1fr;
+        h1{grid-area:title}
+        &>div{
+          padding:0 3em;
+          columns:3;
+          column-gap:5em;
+          &>div{
+            break-inside:avoid;
+            padding:.5em 0;
+            h3{
+              color:var(--accent-color);
+              font-weight:200;
+              font-style:italic;
+              padding-bottom:.25em;
+            }
+            div:first-of-type{
+              code{
+                font-weight:700;
+              }
+              i{
+                padding-left:.5em;
+                opacity:.5;
+              }
+            }
+            div:not(:first-of-type){
+              font-size:.85em;
+              padding-top:.5em;
+              font-weight:300;
+              font-stretch:80%;
+              &>div{padding-bottom:.5em}
+              i{
+                opacity:.75;
+              }
+              code{
+                font-style:italic;
+                .optional{opacity:.5;letter-spacing:-.1em;word-spacing:-.25em}
+                .keyword{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 67);
+                }
+                .varname{
+                  color:inherit;
+                }
+                .type{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 140);
+                }
+                .num{
+                  font-weight:300;
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .07 260);
+                }
+                .macro{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 200);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    </style>
+    <div>
+      <h1>Unsafe</h1>
       <div>
       </div>
     </div>
