@@ -241,8 +241,8 @@ footer{
         inset:0;
         display:grid;
         place-items:center;
-        gap:3em;
-        padding:3em;
+        gap:2em 3em;
+        padding:6em;
         grid-template-areas:
           "logo mascot logo_alt"
           "logo_text mascot_text logo_alt_text"
@@ -252,7 +252,7 @@ footer{
         grid-template-columns:repeat(3, 1fr);
         h1{display:none}
         h3,div{font-size:1.5em;font-weight:inherit;padding:0;margin:0;line-height:inherit}
-        svg,img{padding:1em;width:100%;height:100%;max-width:25em;max-height:25em}
+        svg,img{padding:1em;width:100%;height:100%;max-width:16em;max-height:16em}
         svg:nth-of-type(1){grid-area:logo}
         svg:nth-of-type(2){grid-area:mascot}
         img{grid-area:logo_alt}
@@ -1296,7 +1296,12 @@ footer{
         </div>
         <div>
           <h3>Mutable variable</h3>
-          <div><code><span class="keyword">let mut</span> <span class="varname">variable_name</span><span class="optional">: <span class="type">bool</span></span> = <span class="bool">true</span><span class="keyword">;</span></code></div>
+          <div>
+            <code>
+              <span class="keyword">let mut</span> <span class="varname">variable_name</span><span class="optional">: <span class="type">bool</span></span> = <span class="bool">true</span><span class="keyword">;</span><br>
+              <span class="varname">variable_name</span> = <span class="bool">false</span><span class="keyword">;</span>
+            </code>
+          </div>
         </div>
         <div>
           <h3>Shadowing</h3>
@@ -1313,7 +1318,7 @@ footer{
           <h3>Constants</h3>
           <div><code><span class="keyword">const</span> <span class="varname">CONSTANT_NAME</span>: <span class="type">bool</span> = <span class="bool">true</span><span class="keyword">;</span></code></div>
           <ul>
-            <li>The value must be known at compile time. It is inlined at compile-time.</li>
+            <li>The value must be known at compile time, as the compiler simply inlines it.</li>
             <li>Its scope is the same as a regular variable.</li>
             <li>The convention is to use <i>SCREAMING_SNAKE_CASE</i> for the constant name.</li>
             <li>You can't omit the type.</li>
@@ -1459,7 +1464,7 @@ footer{
           <h3>Raw pointers</h3>
           <div><code>*const</code> <i>(<code>const*</code> in C)</i><br><code>*mut</code> <i>(<code>*</code> in C)</i></div>
           <div>
-            <div>You cannot dereference them outside unsafe blocks because<br>it is your responsibility to ensure they still point to valid memory.</div>
+            <div>You cannot dereference them outside unsafe blocks because it is your responsibility to ensure they still point to valid memory.</div>
             <code>
               <span class="keyword">let</span> <span class="varname">x</span> = <span class="num">1.2</span><span class="keyword">;</span><br>
               <span class="keyword">let</span> x_ptr: *<span class="keyword">const</span> <span class="type">f64</span> = &x<span class="optional"> as *const f64</span><span class="keyword">;</span><br>
@@ -1497,14 +1502,15 @@ footer{
           &:nth-of-type(2){grid-area:left2}
           &:nth-of-type(3){grid-area:right}
           justify-self:start;
+          h3{
+            color:var(--accent-color);
+            font-size:1.25em;
+            font-weight:200;
+            font-style:italic;
+            padding-bottom:.25em;
+          }
           &>div{
             padding-bottom:.5em;
-            &:first-of-type{
-              font-size:1.25em;
-              display:flex;
-              flex-direction:column;
-              gap:.5em;
-            }
             i{
               opacity:.7;
             }
@@ -1553,7 +1559,7 @@ footer{
     <div>
       <h1>String literals</h1>
       <div>
-        <div>Double quoted</div>
+        <h3>Double-quoted</h3>
         <div>You can use backslash-escapes for double quotes, backslashes, hex values and unicode characters.</div>
         <div>They can span multiple lines with the use of a trailing backslash.<br>
           The next line leading whitespace is automatically trimmed.</div>
@@ -1566,7 +1572,7 @@ footer{
         </code>
       </div>
       <div>
-        <div>Raw strings</div>
+        <h3>Raw strings</h3>
         <div>They are double-quoted strings with the r prefix.</div>
         <div>You can add as many <code>#</code> as needed as a prefix and suffix.</div>
         <div>You can't use escape sequences in raw strings.</div>
@@ -1582,13 +1588,13 @@ footer{
         </code>
       </div>
       <div>
-        <div>Byte strings</div>
+        <h3>Byte strings</h3>
         <div>They are prefixed with a <code>b</code>.</div>
         <div>You can also use raw byte strings prefixed with <code>br</code>.</div>
         <div>Their content doesn't need to be valid UTF-8.</div>
         <code>
           <span class="keyword">let</span> <span class="varname">bytes</span><span class="optional">: &[u8]</span> =
-          <span class="nobreak str">b"abc<span class="escape">\n</span>def<span class="escape">\x00"</span><span class="keyword">;</span><br>
+          <span class="nobreak str">b"abc</span><span class="escape">\n</span>def<span class="escape">\x00"</span><span class="keyword">;</span><br>
           <span class="keyword">let</span> <span class="varname">bytes</span><span class="optional">: &[u8]</span> =
           br#<span class="nobreak str">""quoted""</span>#<span class="keyword">;</span><br>
         </code>
@@ -1842,7 +1848,7 @@ footer{
         <span class="keyword">let</span> slice<span class="optional">: &[char]</span> = &array<span class="keyword">[..];</span><br>
         <span class="keyword">let</span> first_two = &<span class="varname">array</span>[..<span class="num">2</span>]<span class="keyword">;</span><br>
         <span class="keyword">let</span> next_two = &<span class="varname">array</span>[<span class="num">2</span>..<span class="num">4</span>]<span class="keyword">;</span><br>
-        <span class="keyword">let</span> last_two = &<span class="varname">array</span>[<span class="num">2</span>..]<span class="keyword">;</span><br>
+        <span class="keyword">let</span> skip_first_two = &<span class="varname">array</span>[<span class="num">2</span>..]<span class="keyword">;</span><br>
         <span class="keyword">let</span> index_one_to_three_inclusive = &<span class="varname">array</span>[<span class="num">1</span>..=<span class="num">3</span>]<span class="keyword">;</span><br>
         <span class="macro">assert_eq!</span>(<span class="varname">array</span>.<span class="fnname">len</span>(), <span class="varname">slice</span>.<span class="fnname">len</span>())<span class="keyword">;</span><br>
         <span class="macro">assert_eq!</span>('<span class="str">c</span>', <span class="varname">next_two</span>[<span class="num">0</span>])<span class="keyword">;</span><br>
@@ -1861,25 +1867,38 @@ footer{
         place-items:center;
         grid-template-areas:
           "title title title"
+          "subtitle subtitle subtitle"
           "space_left text space_right"
           "space_left text space_right"
-          "space_left text space_right";
-        grid-template-rows:1fr repeat(3, auto);
+          "space_left text space_right"
+          "space space space";
+        grid-template-rows:1fr repeat(4, auto) 1fr;
         grid-template-columns:1fr auto 1fr;
         gap:1em;
-        h1{grid-area:title}
+        h1{grid-area:title;padding:.5em 1em}
         &>div{
+          &:first-of-type{
+            grid-area:subtitle;
+            place-self:center;
+            font-size:1em;
+            opacity:.7;
+            padding-bottom:1em;
+          }
+          &:last-of-type{
+            grid-area:space;
+          }
           grid-column:text;
           justify-self:start;
           font-size:.85em;
+          h3{
+            color:var(--accent-color);
+            font-size:1.25em;
+            font-weight:200;
+            font-style:italic;
+            padding-bottom:.25em;
+          }
           &>div{
             padding-bottom:.25em;
-            &:first-of-type{
-              font-size:1.25em;
-              display:flex;
-              flex-direction:column;
-              gap:.5em;
-            }
             i{
               opacity:.7;
             }
@@ -1923,8 +1942,9 @@ footer{
     </style>
     <div>
       <h1>Structs</h1>
+      <div>The convention is to use PascalCase for the struct name.</div>
       <div>
-        <div>Named tuples</div>
+        <h3>Named tuples</h3>
         <code>
           <span class="keyword">struct</span> <span class="type">Measure</span>(<span class="type">f64</span>, <span class="type">UnitOfMeasure</span>)<span class="keyword">;</span><br>
           <span class="keyword">let</span> <span class="varname">height</span> = Measure(<span class="num">1.8</span>, <span class="type">UnitOfMeasure::Meter</span>)<span class="keyword">;</span><br>
@@ -1932,7 +1952,7 @@ footer{
         </code>
       </div>
       <div>
-        <div>Unit (empty) structs</div>
+        <h3>Unit (empty) structs</h3>
         <div>They can be used as marker types, to hold implementation, or to encode state into the type system.</div>
         <div>They are zero-sized, meaning that the compiler will optimize them out.</div>
         <code>
@@ -1944,7 +1964,7 @@ footer{
         </code>
       </div>
       <div>
-        <div>Structs with named fields</div>
+        <h3>Structs with named fields</h3>
         <code>
           <span class="keyword">struct</span> <span class="type">Coordinate</span> {<br>
           <span class="indent1">x: <span class="type">f64</span>,</span><br>
@@ -1959,6 +1979,7 @@ footer{
           <span class="macro">assert_eq!</span>(<span class="num">1.5</span>, <span class="varname">coord</span>.<span class="varname">y</span>)<span class="keyword">;</span><br>
         </code>
       </div>
+      <div></div>
     </div>
   </section>
   <section id="enums">
@@ -1972,62 +1993,56 @@ footer{
         place-items:center;
         grid-template-areas:
           "title"
-          "list";
-        grid-template-rows:auto 1fr;
+          "text"
+          "code";
+        grid-template-rows:auto 1fr 1fr;
+        gap:1em;
         h1{grid-area:title}
         &>div{
-          padding:0 3em;
-          columns:3;
-          column-gap:5em;
           &>div{
-            break-inside:avoid;
-            padding:.5em 0;
-            h3{
-              color:var(--accent-color);
-              font-weight:200;
-              font-style:italic;
-              padding-bottom:.25em;
-            }
-            div:first-of-type{
-              code{
-                font-weight:700;
-              }
-              i{
-                padding-left:.5em;
-                opacity:.5;
-              }
-            }
-            div:not(:first-of-type){
-              font-size:.85em;
-              padding-top:.5em;
-              font-weight:300;
-              font-stretch:80%;
-              &>div{padding-bottom:.5em}
-              i{
-                opacity:.75;
-              }
-              code{
-                font-style:italic;
-                .optional{opacity:.5;letter-spacing:-.1em;word-spacing:-.25em}
-                .keyword{
-                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 67);
-                }
-                .varname{
-                  color:inherit;
-                }
-                .type{
-                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 140);
-                }
-                .num{
-                  font-weight:300;
-                  color:oklch(from currentColor calc((l + 0.5) / 2) .07 260);
-                }
-                .macro{
-                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 200);
-                }
-              }
+            padding-bottom:1em;
+            &:first-child{
+              font-size:1.5em;
             }
           }
+          i{
+            opacity:.7;
+          }
+          code{
+            font-style:italic;
+            opacity:.7;
+          }
+        }
+        &>code{
+          font-size:1.25em;
+          padding:.5em 0;
+          line-height:2;
+          font-style:italic;
+          .optional{opacity:.5;letter-spacing:-.1em;word-spacing:-.25em}
+          .keyword{
+            color:oklch(from currentColor calc((l + 0.5) / 2) .1 67);
+          }
+          .varname{
+            color:inherit;
+          }
+          .fnname{
+            color:oklch(from currentColor calc((l + 0.5) / 2) .15 85);
+          }
+          .type{
+            color:oklch(from currentColor calc((l + 0.5) / 2) .1 140);
+          }
+          .bool,.num{
+            font-weight:300;
+            color:oklch(from currentColor calc((l + 0.5) / 2) .07 260);
+          }
+          .str{
+            font-weight:200;
+            color:oklch(from currentColor l .07 160);
+          }
+          .macro{
+            color:oklch(from currentColor calc((l + 0.5) / 2) .1 200);
+          }
+          .indent1{margin-left:4ch}
         }
       }
     }
@@ -2035,8 +2050,16 @@ footer{
     <div>
       <h1>Enums</h1>
       <div>
-
+        <div>An Enum is a group of named variants that can have different types.</div>
+        <div>The convention is to use PascalCase for the enum name and the variant names.</div>
       </div>
+      <code>
+      <span class="keyword">enum</span> <span class="type">Event</span> {<br>
+        <span class="indent1 type">Focus</span>,<br>
+        <span class="indent1 type">Keypress</span>(<span class="type">char</span>),<br>
+        <span class="indent1 type">Click</span> { <span class="varbame">x</span>: <span class="type">f32</span>, <span class="varbame">y</span>: <span class="type">f32</span> },<br>
+      }
+      </code>
     </div>
   </section>
   <section id="results">
@@ -2734,6 +2757,83 @@ footer{
       </div>
     </div>
   </section>
+  <section id="async">
+    <style>
+    @scope{
+      style+div{
+        position:absolute;
+        inset:0;
+        padding:3em;
+        display:grid;
+        place-items:center;
+        grid-template-areas:
+          "title"
+          "list";
+        grid-template-rows:auto 1fr;
+        h1{grid-area:title}
+        &>div{
+          padding:0 3em;
+          columns:3;
+          column-gap:5em;
+          &>div{
+            break-inside:avoid;
+            padding:.5em 0;
+            h3{
+              color:var(--accent-color);
+              font-weight:200;
+              font-style:italic;
+              padding-bottom:.25em;
+            }
+            div:first-of-type{
+              code{
+                font-weight:700;
+              }
+              i{
+                padding-left:.5em;
+                opacity:.5;
+              }
+            }
+            div:not(:first-of-type){
+              font-size:.85em;
+              padding-top:.5em;
+              font-weight:300;
+              font-stretch:80%;
+              &>div{padding-bottom:.5em}
+              i{
+                opacity:.75;
+              }
+              code{
+                font-style:italic;
+                .optional{opacity:.5;letter-spacing:-.1em;word-spacing:-.25em}
+                .keyword{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 67);
+                }
+                .varname{
+                  color:inherit;
+                }
+                .type{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 140);
+                }
+                .num{
+                  font-weight:300;
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .07 260);
+                }
+                .macro{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 200);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    </style>
+    <div>
+      <h1>Async</h1>
+      <div>
+      </div>
+    </div>
+  </section>
   <section id="derives">
     <style>
     @scope{
@@ -2884,6 +2984,83 @@ footer{
     </style>
     <div>
       <h1>Generics</h1>
+      <div>
+      </div>
+    </div>
+  </section>
+  <section id="dynamic-dispatch">
+    <style>
+    @scope{
+      style+div{
+        position:absolute;
+        inset:0;
+        padding:3em;
+        display:grid;
+        place-items:center;
+        grid-template-areas:
+          "title"
+          "list";
+        grid-template-rows:auto 1fr;
+        h1{grid-area:title}
+        &>div{
+          padding:0 3em;
+          columns:3;
+          column-gap:5em;
+          &>div{
+            break-inside:avoid;
+            padding:.5em 0;
+            h3{
+              color:var(--accent-color);
+              font-weight:200;
+              font-style:italic;
+              padding-bottom:.25em;
+            }
+            div:first-of-type{
+              code{
+                font-weight:700;
+              }
+              i{
+                padding-left:.5em;
+                opacity:.5;
+              }
+            }
+            div:not(:first-of-type){
+              font-size:.85em;
+              padding-top:.5em;
+              font-weight:300;
+              font-stretch:80%;
+              &>div{padding-bottom:.5em}
+              i{
+                opacity:.75;
+              }
+              code{
+                font-style:italic;
+                .optional{opacity:.5;letter-spacing:-.1em;word-spacing:-.25em}
+                .keyword{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 67);
+                }
+                .varname{
+                  color:inherit;
+                }
+                .type{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 140);
+                }
+                .num{
+                  font-weight:300;
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .07 260);
+                }
+                .macro{
+                  color:oklch(from currentColor calc((l + 0.5) / 2) .1 200);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    </style>
+    <div>
+      <h1>Dynamic dispatch</h1>
       <div>
       </div>
     </div>
