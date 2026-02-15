@@ -2103,6 +2103,9 @@ footer{
           line-height:2;
           font-style:italic;
           .optional{opacity:.5;letter-spacing:-.1em;word-spacing:-.25em}
+          .attribute{
+            color:oklch(from currentColor calc((l + 0.5) / 2) .15 95);
+          }
           .keyword{
             color:oklch(from currentColor calc((l + 0.5) / 2) .1 67);
           }
@@ -2136,8 +2139,11 @@ footer{
       <div>
       </div>
       <code>
-        <span class="keyword">enum</span> <span class="type">Result</span>&lt;T, E&gt;</T> {<br>
-        <span class="indent1 varname"></span> <span class="type">Ok</span>(T),<br>
+        <span class="attribute">#[must_use]</span><br>
+        <span class="attribute">#[derive(</span><span class="type">Copy</span>, <span class="type">Debug</span>, <span class="type">Hash</span>, <span class="type">PartialEq</span>, <span class="type">PartialOrd</span>, <span class="type">Eq</span>, <span class="type">Ord</span><span class="attribute">)]</span><br>
+        <span class="keyword">enum</span> <span class="type">Result</span>&lt;<span class="type">T</span>, <span class="type">E</span>&gt; {<br>
+        <span class="indent1 varname"></span> <span class="type">Ok</span>(<span class="type">T</span>),<br>
+        <span class="indent1 varname"></span> <span class="type">Err</span>(<span class="type">E</span>),<br>
         }<br>
       </code>
     </div>
