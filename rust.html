@@ -1114,15 +1114,16 @@ footer{
           &:nth-of-type(2){grid-area:left2}
           &:nth-of-type(3){grid-area:right}
           justify-self:start;
+          h3{
+            color:var(--accent-color);
+            font-size:1.25em;
+            font-weight:200;
+            font-style:italic;
+            padding-bottom:.25em;
+          }
           &>div{
             font-size:1.25em;
             padding-bottom:.5em;
-            &:first-of-type{
-              font-size:1.25em;
-              display:flex;
-              flex-direction:column;
-              gap:.5em;
-            }
             i{
               opacity:.7;
             }
@@ -1169,14 +1170,14 @@ footer{
     <div>
       <h1>Comments</h1>
       <div>
-        <div>Line comments</div>
+        <h3>Line comments</h3>
         <code>
           <span class="comment">// This is a line comment</span><br>
           <span class="keyword">let</span> <span class="varname">first</span> = <span class="bool">true</span><span class="keyword">;</span> <span class="comment">// Another line comment</span>
         </code>
       </div>
       <div>
-        <div>Block comments</div>
+        <h3>Block comments</h3>
         <code>
           <span class="comment">/*</span><br>
           <span class="comment">&nbsp; &nbsp;Block comments</span><br>
@@ -1187,7 +1188,7 @@ footer{
         </code>
       </div>
       <div>
-        <div>Doc comments</div>
+        <h3>Doc comments</h3>
         <div>They are used by <code>rustdoc</code> to generate the documentation.</div>
         <div>Markdown formatting can be used, including code blocks for examples.<br>
         Those examples can use dev dependencies, and are treated as tests.</div>
