@@ -300,6 +300,10 @@ document.body.addEventListener('paste',async e=>{
   const blob=[...e.clipboardData.files]?.[0]??new Blob([new TextEncoder().encode(e.clipboardData.getData('text/plain')??'')],{type:'text/plain'});
   await open(blob);
 });
+encoded.addEventListener('copy',e=>{
+  e.preventDefault();
+  navigator.clipboard.writeText(encoded.textContent);
+});
 encoded.addEventListener('click',e=>{
   if(e.detail===2){
     e.preventDefault();
@@ -309,7 +313,7 @@ encoded.addEventListener('click',e=>{
 encoded.addEventListener('touchend',e=>{
   e.preventDefault();
   getSelection().setBaseAndExtent(encoded,0,encoded.nextElementSibling,0);
-  navigator.clipboard.writeText(getSelection().toString());
+  navigator.clipboard.writeText(encoded.textContent);
   copy.textContent='copied';
   setTimeout(()=>{copy.textContent='copy'},300);
 });
