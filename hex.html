@@ -33,13 +33,10 @@ input[type="file"]{width:10px;height:10px;opacity:0;overflow:hidden;position:abs
 .row p{font-weight:250}
 [slot="header"],[slot="footer"]{padding:.25em}
 [slot="placeholder"]{padding:1em;place-self:center}
-.row>pre{text-indent:1em}
-list-view:empty:after{
-  content:'Paste or drag & drop';
-  font-style:italic;
-  display:grid;
-  place-items:center;
-}
+.row>div{user-select:none}
+.row>pre{text-indent:1em;user-select:none}
+body.side-focus .row>pre{background:#222;user-select:auto}
+body.side-focus .row>:not(pre){user-select:none}
 </style>
 <style class="media-query"></style>
 </head>
@@ -91,12 +88,26 @@ const open=async(data)=>{
     reader.readAsArrayBuffer(data);
   }));
 };
-['dragenter','dragover','dragleave','drop'].forEach(type=>document.body.addEventListener(type,e=>{
+['mousedown','touchstart'].forEach(type=>document.body.addEventListener(type,e=>{
+  if(e.target.tagName==='PRE') document.body.classList.add('side-focus');
+  else document.body.classList.remove('side-focus');
+}));
+['dragstart'].forEach(type=>document.body.addEventListener(type,e=>{
+  e.preventDefault();e.stopPropagation();
+}));
+['dragenter','dragleave','drop'].forEach(type=>document.body.addEventListener(type,e=>{
   e.preventDefault();e.stopPropagation();
   document.body.classList.remove('dragover');
 }));
 document.body.addEventListener('dragover',e=>{
-  e.dataTransfer.dropEffect='copy';document.body.classList.add('dragover');
+  if(e.dataTransfer.types.includes('Files')){
+    e.preventDefault();e.stopPropagation();
+    e.dataTransfer.dropEffect='copy';
+    document.body.classList.add('dragover');
+  }else{
+    e.dataTransfer.dropEffect='none';
+    document.body.classList.remove('dragover');
+  }
 });
 document.body.addEventListener('drop',async e=>{
   const file=[...e.dataTransfer.files]?.[0];
@@ -106,6 +117,15 @@ document.body.addEventListener('paste',async e=>{
   e.preventDefault();
   const blob=[...e.clipboardData.files]?.[0]??new Blob([new TextEncoder().encode(e.clipboardData.getData('text/plain')??'')],{type:'text/plain'});
   await open(blob);
+});
+document.body.addEventListener('copy',e=>{
+  e.preventDefault();
+  const selection=window.getSelection();
+  if(!selection.rangeCount) return;
+  const range=selection.getRangeAt(0);
+  const contents=range.cloneContents();
+  const text=[...contents.querySelectorAll(contents.querySelector('div:first-of-type>span')?'.row>span':'.row>pre')].map(it=>it.textContent).join('');
+  navigator.clipboard.writeText(text);
 });
 const uploader=document.querySelector('#file');
 uploader.addEventListener('change',async e=>{
