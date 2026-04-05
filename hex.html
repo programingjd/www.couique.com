@@ -114,6 +114,13 @@ uploader.addEventListener('change',async e=>{
   console.log(file);
   await open(file);
 });
+const hash=(location.hash||'#').substring(1);
+if(hash.startsWith('blob:')){
+  try{
+    const blob=await(await fetch(hash)).blob();
+    await open(blob);
+  }catch(_){}
+}
 </script>
 <script type="application/ld+json">
 {
