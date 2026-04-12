@@ -53,6 +53,7 @@ const open=async(blob)=>{
   });
   const {metadata,subset:_subset}=await mod;
   const info=await metadata(data,signal);
+  console.log(JSON.stringify(info,null,2));
   if(signal.aborted) return;
   clearTimeout(timeout);
   document.body.removeAttribute('inert');
