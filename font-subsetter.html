@@ -33,7 +33,7 @@ input[type="file"]{width:10px;height:10px;opacity:0;overflow:hidden;position:abs
 <div id="helper">Paste, drag &amp; drop,<br>or <input tabindex="0" type="file" id="file" title=" "><label for="file">select a font file (ttf, otf or woff2)</label>.</div>
 </body>
 <script type="module">
-let mod=import('font-subsetter/lib.mjs');
+let mod=import('./font-subsetter/lib.mjs');
 let controller;
 const open=async(blob)=>{
   if(!blob) return;
