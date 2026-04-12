@@ -41,8 +41,18 @@ const open=async(blob)=>{
   controller=new AbortController();
   const signal=controller.signal;
   const timeout=setTimeout(()=>document.body.setAttribute('inert',''),100);
+  const data=await new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    signal.onabort=e=>{
+      reader.abort();
+      reject(e);
+    };
+    reader.onload=e=>resolve(new Uint8Array(e.target.result));
+    reader.onerror=e=>reject(e?.target?.error||e);
+    reader.readAsArrayBuffer(blob);
+  });
   const {metadata,subset:_subset}=await mod;
-  const info=await metadata(blob,signal);
+  const info=await metadata(data,signal);
   if(signal.aborted) return;
   clearTimeout(timeout);
   document.body.removeAttribute('inert');
