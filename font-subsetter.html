@@ -41,7 +41,7 @@ const open=async(blob)=>{
   controller=new AbortController();
   const signal=controller.signal;
   const timeout=setTimeout(()=>document.body.setAttribute('inert',''),100);
-  const {default:{metadata,subset:_subset}}=await mod;
+  const {metadata,subset:_subset}=await mod;
   const info=await metadata(blob,signal);
   if(signal.aborted) return;
   clearTimeout(timeout);
