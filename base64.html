@@ -9,7 +9,7 @@
 <link rel="icon" href="/favicon.svg" sizes="any" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple.png">
 <link rel="manifest" href="/pwa.json">
-<link rel="canonical" href="https://www.couique.com/dataurl">
+<link rel="canonical" href="https://www.couique.com/base64">
 <style>
 @import './fonts/asap.css';
 @import './fonts/cascadia_code.css';
@@ -55,7 +55,6 @@ legend{color:#ffc6ff;padding:0 .5em}
 #copy,#copy_or_download{font-style:italic;display:inline-block;text-align:center}#copy{min-width:6.5ch}#copy_or_download{min-width:10.5ch}
 input[type="file"]{width:10px;height:10px;opacity:0;overflow:hidden;position:absolute;z-index:-1;pointer-events:none}
 </style>
-<style class="media-query"></style>
 </head>
 <body>
 <div></div>
@@ -525,7 +524,7 @@ await (await fetch('/lib/brotli_enc_worker_script.mjs')).arrayBuffer();
   "@context": "https://schema.org",
   "@type": "WebApplication",
   "name": "Base64 Encoder and Decoder",
-  "url": "https://www.couique.com/dataurl",
+  "url": "https://www.couique.com/base64",
   "description": "Encode/Decode data to/from its printable Base64 representation",
   "applicationCategory": "UtilitiesApplication",
   "browserRequirements": "Requires JavaScript.",
