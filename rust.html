@@ -1766,6 +1766,8 @@ footer{
       </div>
       <code>
         <span class="keyword">let</span> <span class="varname">array</span><span class="optional">:
+        [usize; 5]</span> = [<span class="num">0_usize</span>; <span class="num">5</span>]<span class="keyword">;</span><br>
+        <span class="keyword">let</span> <span class="varname">array</span><span class="optional">:
         [usize; 5]</span> = [<span class="num">1_usize</span>, <span class="num">4_usize</span>, <span class="num">6_usize</span>, <span class="num">0_usize</span>, <span class="num">1_usize</span>]<span class="keyword">;</span><br>
         <span class="keyword">let</span> [first, _, third, .., last] = array<span class="keyword">;</span><br>
         <span class="macro">assert_eq!</span>(<span class="num">5</span>, <span class="varname">array</span>.<span class="fnname">len</span>())<span class="keyword">;</span><br>
@@ -1850,7 +1852,7 @@ footer{
         <span class="keyword">let</span> <span class="varname">array</span> = ['<span class="str">a</span>', '<span class="str">b</span>', '<span class="str">c</span>', '<span class="str">d</span>', '<span class="str">e</span>', '<span class="str">f</span>']<span class="keyword">;</span><br>
         <span class="keyword">let</span> slice<span class="optional">: &[char]</span> = array.<span class="fnname">as_slice</span>()<span class="keyword">;</span><br>
         <span class="keyword">let</span> slice: &[<span class="type">char</span>] = &array<span class="keyword">;</span><br>
-        <span class="keyword">let</span> slice<span class="optional">: &[char]</span> = &array<span class="keyword">[..];</span><br>
+        <span class="keyword">let</span> slice<span class="optional">: &[char]</span> = &array[..]<span class="keyword">;</span><br>
         <span class="keyword">let</span> first_two = &<span class="varname">array</span>[..<span class="num">2</span>]<span class="keyword">;</span><br>
         <span class="keyword">let</span> next_two = &<span class="varname">array</span>[<span class="num">2</span>..<span class="num">4</span>]<span class="keyword">;</span><br>
         <span class="keyword">let</span> skip_first_two = &<span class="varname">array</span>[<span class="num">2</span>..]<span class="keyword">;</span><br>
@@ -1964,7 +1966,7 @@ footer{
           #[<span class="keyword">derive</span>(<span class="type">Debug</span>)]<br>
           <span class="keyword">struct</span> <span class="type">Empty</span><span class="keyword">;</span><br>
           <span class="keyword"></span>
-          <span class="keyword">let</span> <span class="varname">empty></span> = Empty<span class="keyword">;</span><br>
+          <span class="keyword">let</span> <span class="varname">empty</span> = Empty<span class="keyword">;</span><br>
           <span class="macro">println!</span>(<span class="str">"{</span><span class="varname">empty</span><span class="str">:?}"</span>)<span class="keyword">;</span><br>
         </code>
       </div>
