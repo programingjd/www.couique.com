@@ -6,3 +6,10 @@
   unicode-range:U+20-7E,U+A9,U+AE,U+2026,U+20AC,U+2122;
   /*cursive -> CRSV from 0 to 1, proportional numbers -> pnum, a variant -> ss01, g variant -> ss02, dotted zero -> ss10*/
 }
+@font-face{
+  font-family:'__recursive__';
+  src:url(recursive-extended.woff2) format("woff2");
+  font-weight:300 1000;
+  font-style:oblique 0deg 15deg;
+  unicode-range:U+A0-A8,U+AA-AD,U+AF-FF,U+100-17F,U+180-18F,U+190-1DF,U+1E0-1FF,U+200-2FF,U+370-3FF,U+3D0-3FF,U+E00-1EFF,U+200B-200D,U+2010-2015,U+2018,U+201A-201B,U+201E-2025,U+2027-20AB,U+20AD-20FF,U+2100-2121,U+2123-FB00,U+FB03-FFFF;
+}
