@@ -25,14 +25,54 @@ body.dragover{
 @keyframes conic-bg-angle{100%{--conic-bg-angle:1turn}}@property --conic-bg-angle{syntax:'<angle>';inherits:false;initial-value:0deg}
 h1{color:#daf;font-size:2rem;text-align:center;font-weight:900;font-stretch:125%;font-style:italic;letter-spacing:.05em;text-wrap:pretty}
 h1>span{-webkit-text-stroke:initial;color:#9bf6ff}
-a,button,label{color:#adf;text-decoration-color:rgba(170,221,255,.5);text-decoration:underline;cursor:pointer}a:hover,button:hover,label:hover{color:#6af}
+a,button,input[type="file"]+label{color:#adf;text-decoration-color:rgba(170,221,255,.5);text-decoration:underline;cursor:pointer}a:hover,button:hover,input[type="file"]+label:hover{color:#6af}
 input[type="file"]{width:10px;height:10px;opacity:0;overflow:hidden;position:absolute;z-index:-1;pointer-events:none}
+main{display:grid;grid-template-columns:1fr;grid-template-rows:auto 1fr;gap:1em;justify-items:center;align-items:center;max-width:80vw}
+#slider{}
+.preview{
+  height:6rem;
+  overflow:auto;
+  font-size:calc(var(--size,100)/100*1em);
+  font-variation-settings:"slnt" var(--slnt,0),"wdth" var(--wdth,0),"wght" var(--wght,0);
+  outline:none;
+  scrollbar-gutter:stable;
+  display:grid;
+  place-items:center;
+  text-align:center;
+  caret-shape:block;
+  caret-color:#adf;
+  text-wrap:pretty;
+}
+.tables{
+  justify-self:stretch;
+  display:grid;
+  grid-template-columns:1fr;
+  gap:1em;
+}
+.table{
+  display:grid;
+  grid-auto-flow:row;
+  grid-template-columns:repeat(auto-fill,2.5em);
+  gap:.25em;
+}
+.table>h3{
+  grid-column:1 / -1;
+  text-align:center;
+}
+.codepoint{
+  width:2.5em;height:2.5em;
+  display:grid;place-items:center;
+  border:1px solid rgb(from currentColor r g b / .25);
+  border-radius:.25em;
+  padding:.25em;
+}
+.codepoint.disabled>span{opacity:.1}
 </style>
 </head>
 <body>
 <h1>Font Subsetter</h1>
 <main>
-Paste, drag &amp; drop,<br>or <input tabindex="0" type="file" id="file" title=" "><label for="file">select a font file (ttf, otf or woff2)</label>.
+  <div>Paste, drag &amp; drop,<br>or <input tabindex="0" type="file" id="file" title=" "><label for="file">select a font file</label> (ttf, otf or woff2).</div>
 </main>
 </body>
 <script type="module">
@@ -84,30 +124,71 @@ const open=async(blob)=>{
     if(previousFontFace) await document.fonts.delete(previousFontFace);
     fontFace=newFontFace;
     await document.fonts.add(fontFace);
-    if(info.axes?.length){
-      const ul=document.createElement('ul');
-      for (const axis of info.axes){
-        console.log(axis);
-        const li=document.createElement('li');
-        const label=document.createElement('label');
-        label.textContent=axis.tag;
-        const input=document.createElement('input');
-        input.type='range';
-        input.max=axis.max;
-        input.min=axis.min;
-        input.value=axis.default;
-        label.appendChild(input);
-        li.appendChild(label);
-        ul.appendChild(li);
-      }
-      container.appendChild(ul);
+    const sliders=document.createElement('ul');
+    sliders.classList.add('sliders');
+    for (const {tag,min,max,default:value} of [{tag:'size',min:'50','max':'200'},...info.axes??[]]){
+      const li=document.createElement('li');
+      li.classList.add('axis-slider');
+      const label=document.createElement('label');
+      label.textContent=tag;
+      const input=document.createElement('input');
+      input.type='range';
+      input.max=max;
+      input.min=min;
+      input.value=value;
+      input.addEventListener('change',_=>{
+        container.style.setProperty(`--${tag}`,input.value);
+      });
+      label.appendChild(input);
+      li.appendChild(label);
+      sliders.appendChild(li);
     }
+    container.appendChild(sliders);
     const preview=document.createElement('div');
     preview.contentEditable='plaintext-only';
     preview.classList.add('preview');
     preview.style.fontFamily=`__${info.family_name}`;
     preview.textContent=`The quick brown fox jumps over the lazy dog.\nA very bad quack might jinx zippy fowls; beware!`;
     container.appendChild(preview);
+    if(info.features?.length){
+      const features=document.createElement('ul');
+      features.classList.add('features');
+      for(const {tag,name} of info.features){
+        const li=document.createElement('li');
+        const label=document.createElement('label');
+        label.textContent=name;
+        const code=document.createElement('code');
+        code.textContent=tag;
+        label.appendChild(code);
+        li.appendChild(label);
+        features.appendChild(li);
+      }
+      container.appendChild(features);
+    }
+    const tables=document.createElement('div');
+    tables.classList.add('tables');
+    for(const {name,start,end,codepoints,codepoint_names} of info.tables){
+      const section=document.createElement('section');
+      section.classList.add('table');
+      const h3=document.createElement('h3');
+      h3.textContent=name;
+      section.appendChild(h3);
+      const points=new Set(codepoints);
+      const names=new Map(codepoint_names.map(({n,name})=>[n,name]));
+      for(let cp=start;cp<end;++cp){
+        const div=document.createElement('div');
+        div.classList.add('codepoint');
+        if(!points.has(cp)) div.classList.add('disabled');
+        const name=names.get(cp);
+        if(name) div.title=name;
+        const span=document.createElement('span');
+        span.textContent=String.fromCodePoint(cp);
+        div.appendChild(span);
+        section.appendChild(div);
+      }
+      tables.appendChild(section);
+    }
+    container.appendChild(tables);
     clearTimeout(timeout);
   }finally{
     document.body.removeAttribute('inert');
