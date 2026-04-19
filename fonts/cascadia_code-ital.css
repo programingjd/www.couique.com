@@ -9,8 +9,7 @@
 @font-face{
   font-family:'__cascadia_code__';
   src:url(cascadia_code-ital-extended.woff2) format("woff2");
-  font-weight:50 900;
-  font-stretch:75% 125%;
+  font-weight:200 700;
   font-style:italic;
   unicode-range:U+A1-FF,U+100-17F,U+180-24F,U+1E00-1EFF;
 }
