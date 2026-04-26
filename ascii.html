@@ -45,9 +45,23 @@ pre{font:inherit;display:inline}
   section:nth-of-type(2){grid-row:2 / -1;grid-column:2}
   section:last-of-type{grid-row:3;grid-column:1;padding-bottom:16em}
 }
+header{position:absolute;top:0;left:0;font-size:max(10pt,1em);width:4em;height:4em}
+header a{position:absolute;inset:0}
+header svg{position:absolute;inset:0;border-radius:0 0 .5em 0}
+header svg:hover{filter:url(#neon)}
 </style>
 </head>
 <body>
+<header><a href="/" title="Couique Home"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <filter id="neon">
+    <feFlood flood-color="#c33" flood-opacity="0.67" in="SourceGraphic"/>
+    <feComposite operator="in" in2="SourceGraphic"/>
+    <feGaussianBlur stdDeviation="16"/>
+    <feComponentTransfer result="glow"><feFuncA type="linear" slope="4" intercept="0"/></feComponentTransfer>
+    <feMerge><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <use x="256" y="256" href="/favicon.svg#logo"></use>
+</svg></a></header>
 <h1>ASCII</h1>
 <section>
   <h2>Control characters</h2>
