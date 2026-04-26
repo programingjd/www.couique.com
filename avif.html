@@ -98,6 +98,7 @@ const compressed=document.querySelector('#compressed');
 const img=document.createElement('img');
 let resizer=import('./lib/resize_worker.mjs');
 let encoder=import('./lib/avif_worker.mjs');
+let decoder=import('./lib/heic_worker.mjs');
 let controller;
 function bytes(file){
   return new Promise((resolve,reject)=>{
@@ -117,6 +118,7 @@ const _open=async({bytes,type,uhd})=>{
   controller?.abort();
   spinner.setAttribute('active','');
   controller=new AbortController();
+  let length=bytes.length;
   const blob=new Blob([bytes],{type});
   let url=URL.createObjectURL(blob);
   try{
@@ -127,7 +129,29 @@ const _open=async({bytes,type,uhd})=>{
     });
   }catch(_){
     URL.revokeObjectURL(url);
-    return;
+    // try heic
+    const {heic}=await decoder;
+    try{
+      const {rgba,width,height}=await heic(bytes,controller.signal,true);
+      const imageData=new ImageData(new Uint8ClampedArray(rgba),width,height,{pixelFormat:'rgba-unorm8'});
+      const canvas=new OffscreenCanvas(width,height);
+      const ctx=canvas.getContext('2d');
+      ctx.putImageData(imageData,0,0);
+      const blob=await canvas.convertToBlob({type:'image/png'});
+      url=URL.createObjectURL(blob);
+      try{
+        await new Promise((r,t)=>{
+          img.addEventListener('load',r);
+          img.addEventListener('error',t);
+          img.src=url;
+        });
+      }catch(_){
+        URL.revokeObjectURL(url);
+        return;
+      }
+    }catch(_){
+      return;
+    }
   }
   await new Promise(r=>{
     original.addEventListener('load',r);
@@ -138,12 +162,12 @@ const _open=async({bytes,type,uhd})=>{
     compressed.addEventListener('load',r);
     compressed.src=url;
   });
-  document.body.setAttribute('data-original-size-label',sizeLabel(bytes.length,true));
+  document.body.setAttribute('data-original-size-label',sizeLabel(length,true));
   const width=img.width;
   const height=img.height;
   uhd=uhd??(width+height)>5030;
   let su='b';
-  let size=bytes.length;
+  let size=length;
   if(size>1024){
     size/=1024;
     su='kb';
@@ -236,7 +260,9 @@ uploader.addEventListener('change',async e=>{
   e.preventDefault();
   const file=[...uploader.files]?.[0];
   console.log(file);
-  await open({bytes:await bytes(file),type:file.type});
+  if(file?.type?.indexOf('image')===0||file?.name?.toLowerCase()?.endsWith('.heic')){
+    await open({bytes: await bytes(file),type: file.type});
+  }
 });
 document.querySelector('#example').addEventListener('click',async e=>{
   e.preventDefault();
@@ -267,17 +293,17 @@ document.body.addEventListener('dragover',e=>{
   }
 });
 document.body.addEventListener('drop',async e=>{
-  for(const item of e.dataTransfer.items){
-    if(item.kind==='file')
-    console.log(item);
-  }
   const file=[...e.dataTransfer.files]?.[0];
-  if(file?.type?.indexOf('image')===0) await open({bytes:await bytes(file),type:file.type});
+  if(file?.type?.indexOf('image')===0||file?.name?.toLowerCase()?.endsWith('.heic')){
+    await open({bytes:await bytes(file),type:file.type});
+  }
 });
 document.body.addEventListener('paste',async e=>{
   e.preventDefault();
   const file=[...e.clipboardData.files]?.[0];
-  if(file?.type?.indexOf('image')===0) await open({bytes:await bytes(file),type:file.type});
+  if(file?.type?.indexOf('image')===0||file?.name?.toLowerCase()?.endsWith('.heic')){
+    await open({bytes:await bytes(file),type:file.type});
+  }
 });
 const handle=document.querySelector('#handle');
 handle.addEventListener('pointerdown',e=>{
