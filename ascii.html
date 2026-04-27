@@ -48,13 +48,13 @@ pre{font:inherit;display:inline}
 header{position:absolute;top:0;left:0;font-size:max(10pt,1em);width:4em;height:4em}
 header a{position:absolute;inset:0}
 header svg{position:absolute;inset:0;border-radius:0 0 .5em 0}
-header svg:hover{filter:url(#neon)}
+header svg:hover{filter:url(#glow)}
 </style>
 </head>
 <body>
 <header><a href="/" title="Couique Home"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
-  <filter id="neon">
-    <feFlood flood-color="#c33" flood-opacity="0.67" in="SourceGraphic"/>
+  <filter id="glow">
+    <feFlood flood-color="#f00" flood-opacity="0.67" in="SourceGraphic"/>
     <feComposite operator="in" in2="SourceGraphic"/>
     <feGaussianBlur stdDeviation="16"/>
     <feComponentTransfer result="glow"><feFuncA type="linear" slope="4" intercept="0"/></feComponentTransfer>
