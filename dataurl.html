@@ -46,13 +46,13 @@ body.dragover{
 #encoding{color:#ffc6ff}
 #encoded{position:relative;display:inline-block;border:0 solid #45494a;border-bottom-width:1px;outline:none;max-width:120ch;overflow-x:hidden}
 #encoded[tabindex]:focus-within{border-color:#6af}
-#encoded:not([tabindex]){user-select:none;border:none}
+#encoded:not([tabindex]){border:none}
 #encoded:not(:focus-within){text-overflow:ellipsis}
 #stats{font-size:.75em;display:grid;gap:1em;grid-template-columns:auto auto 5em auto auto;grid-template-rows:auto auto}
 #stats div{opacity:.67;;font-style:italic;white-space:nowrap}
 #stats div:first-child{max-width:max(25vw,12ch);padding-right:.5ch;overflow:hidden;text-overflow:ellipsis;direction:ltr}
 #stats div[aria-labelledby]{opacity:.85;font-style:normal;min-width:12ch;text-align:right}
-#copy{font-style:italic;display:inline-block;padding-inline:.5em .25em;text-align:center;min-width:6.5ch}
+#copy{font-style:italic;display:inline-block;padding-inline:.5em .25em;text-align:center;min-width:6.5ch;user-select:none}
 input[type="file"]{width:10px;height:10px;opacity:0;overflow:hidden;position:absolute;z-index:-1;pointer-events:none}
 header{position:absolute;top:0;left:0;font-size:max(10pt,1em);width:4em;height:4em}
 header a{position:absolute;inset:0}
@@ -146,11 +146,14 @@ const types={
   woff2: 'font/woff2',
   xml: 'application/xml'
 };
-const prefix=document.querySelector("#prefix");
-const suffix=document.querySelector("#suffix");
-const mediaType=document.querySelector("#media-type");
-const encoded=document.querySelector('#encoded');
-const copy=document.querySelector('#copy');
+const dataUrl=document.querySelector('#dataurl');
+const prefix=dataUrl.querySelector("#prefix");
+const scheme=dataUrl.querySelector("#scheme");
+const suffix=dataUrl.querySelector("#suffix");
+const mediaType=dataUrl.querySelector("#media-type");
+const encoding=dataUrl.querySelector("#encoding");
+const encoded=dataUrl.querySelector('#encoded');
+const copy=dataUrl.querySelector('#copy');
 const stats=[...document.querySelectorAll('#stats>div')];
 const compress=async(bytes,signal)=>{
   const worker=new Worker('/lib/brotli_enc_worker_script.mjs',{type:'module'});
@@ -224,6 +227,7 @@ const formatLength=(len,other)=>{
   const rounded=parseFloat(len.toFixed(2));
   return `${rounded}${unit}`;
 }
+let b64=encoded.textContent;
 let controller;
 const open=async(blob)=>{
   if(!blob) return;
@@ -233,6 +237,7 @@ const open=async(blob)=>{
   const timeout=setTimeout(()=>document.body.setAttribute('inert',''),100);
   const type=mediaTypeOf(blob);
   const [category,sub]=type.split('/');
+  b64=null;
   mediaType.textContent=type;
   stats.forEach(it=>it.textContent='');
   switch(category){
@@ -270,7 +275,7 @@ const open=async(blob)=>{
   encodedLabel.textContent=`encoded: `;
   originalSize.textContent=formatLength(blob.size,url.length-i);
   encodedSize.textContent=formatLength(url.length-i,blob.size);
-  const b64=url.substring(i);
+  b64=url.substring(i);
   Promise.all([
     compress(new Uint8Array(await blob.arrayBuffer()),signal),
     compress(new TextEncoder().encode(b64),signal)
@@ -316,21 +321,59 @@ document.body.addEventListener('paste',async e=>{
   const blob=[...e.clipboardData.files]?.[0]??new Blob([new TextEncoder().encode(e.clipboardData.getData('text/plain')??'')],{type:'text/plain'});
   await open(blob);
 });
-encoded.addEventListener('copy',e=>{
+dataUrl.addEventListener('copy',e=>{
   e.preventDefault();
-  navigator.clipboard.writeText(encoded.textContent);
-});
-encoded.addEventListener('click',e=>{
-  if(e.detail===2){
-    e.preventDefault();
-    getSelection().setBaseAndExtent(encoded,0,encoded.nextElementSibling,0);
+  const range=getSelection()?.rangeCount?getSelection().getRangeAt(0):null;
+  console.log(range);
+  if(!range||(range.startContainer===range.endContainer&&range.startOffset===range.endOffset)){
+    if(document.activeElement===encoded||range?.startContainer===encoded) navigator.clipboard.writeText(b64);
+    else navigator.clipboard.writeText(
+      `${prefix.textContent}${scheme.textContent}:${mediaType.textContent};${encoding.textContent},${b64}${suffix.textContent}`
+    );
+  }else{
+    let s='';
+    let visit=node=>{
+      if(node.id==='copy') return;
+      if(node.id==='encoded'&&node.textContent.endsWith('…')) s+=b64;
+      else if(node.nodeType===Node.TEXT_NODE) s+=node.textContent.trim();
+      else node.childNodes.forEach(it=>visit(it));
+    };
+    visit(range.cloneContents());
+    navigator.clipboard.writeText(s);
   }
 });
-encoded.addEventListener('touchend',e=>{
+dataUrl.addEventListener('click',e=>{
+  if(e.target===copy) return;
+  switch(e.detail){
+    case 2: {
+      e.preventDefault();
+      if(e.target===prefix){
+        getSelection().setBaseAndExtent(dataUrl,0,dataUrl.nextElementSibling,0);
+      }else if(e.target===encoded){
+        getSelection().setBaseAndExtent(encoded,0,encoded.nextElementSibling,0);
+      }else{
+        getSelection().setBaseAndExtent(scheme,0,encoding.nextElementSibling,0);
+      }
+      break;
+    }
+    case 3: {
+      e.preventDefault();
+      getSelection().setBaseAndExtent(dataUrl,0,dataUrl.nextElementSibling,0);
+      break;
+    }
+  }
+});
+dataUrl.addEventListener('touchend',e=>{
   e.preventDefault();
-  getSelection().setBaseAndExtent(encoded,0,encoded.nextElementSibling,0);
-  navigator.clipboard.writeText(encoded.textContent);
-  copy.textContent='copied';
+  if(e.target===encoded){
+    getSelection().setBaseAndExtent(encoded,0,encoded.nextElementSibling,0);
+    navigator.clipboard.writeText(b64);
+  }else{
+    getSelection().setBaseAndExtent(dataUrl,0,dataUrl.nextElementSibling,0);
+    navigator.clipboard.writeText(
+      `${prefix.textContent}${scheme.textContent}:${mediaType.textContent};${encoding.textContent},${b64}${suffix.textContent}`
+    );
+  }
   setTimeout(()=>{copy.textContent='copy'},300);
 });
 const uploader=document.querySelector('#file');
