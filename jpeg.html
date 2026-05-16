@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>AVIF Encoder</title>
+<title>JPEG Encoder</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="Convert your image to AVIF and compare quality and size.">
@@ -9,7 +9,7 @@
 <link rel="icon" href="/favicon.svg" sizes="any" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple.png">
 <link rel="manifest" href="/pwa.json">
-<link rel="canonical" href="https://www.couique.com/avif">
+<link rel="canonical" href="https://www.couique.com/jpeg">
 <style>
 @import './fonts/asap.css';
 *{margin:0;padding:0;box-sizing:border-box}
@@ -97,7 +97,7 @@ const original=document.querySelector('#original');
 const compressed=document.querySelector('#compressed');
 const img=document.createElement('img');
 let resizer=import('./lib/resize_worker.mjs');
-let encoder=import('./lib/avif_worker.mjs');
+let encoder=import('./lib/jpg_worker.mjs');
 let decoder=import('./lib/heic_worker.mjs');
 let controller;
 function bytes(file){
@@ -195,12 +195,12 @@ const _open=async({bytes,type,uhd})=>{
   let rgba=new Uint8Array(context.getImageData(0,0,width,height).data);
   canvas.width=canvas.height=1;
   const {resize}=await resizer;
-  const {avif}=await encoder;
+  const {jpg}=await encoder;
   const ratio=Math.min(1,(uhd?2160:1440)/Math.min(width,height));
   let compressedUrl;
   const updateConverted=async(bytes)=>{
     URL.revokeObjectURL(compressedUrl);
-    const blob=new Blob([bytes],{type:'image/avif'});
+    const blob=new Blob([bytes],{type:'image/jpeg'});
     compressedUrl=URL.createObjectURL(blob);
     try {
       await new Promise((r, t) => {
@@ -209,7 +209,7 @@ const _open=async({bytes,type,uhd})=>{
         compressed.src=compressedUrl;
       });
     }catch(_){
-      console.error('AVIF not natively supported');
+      console.error('JPEG not supported');
       return;
     }
     document.body.setAttribute('data-compressed-size-label',sizeLabel(bytes.length));
@@ -217,41 +217,22 @@ const _open=async({bytes,type,uhd})=>{
   };
   const w=Math.round(width*ratio);
   const h=Math.round(height*ratio);
-  const w2=Math.round(w*.75);
-  const h2=Math.round(h*.75);
-  let resized=await resize(rgba,width,height,w2,h2,true,controller.signal);
-  await (async()=>{
-    const target=uhd?75:85;
-    let bytes=await avif(
-      resized,w2,h2,target,9,controller.signal,`AVIF(quality = ${target}%, speed = .9, resize(image, ${w2}, ${h2}))`
-    );
-    await updateConverted(bytes);
-  })();
-  resized=ratio!==1?await resize(rgba,width,height,w,h,true,controller.signal):rgba;
-  rgba=null;
-  const controller2=new AbortController();
-  await Promise.all([
-    (async()=>{
-      const target=uhd?65:70;
-      const bytes=await avif(
-        resized,w,h,target,7,controller2.signal,`AVIF(quality = ${target}%, speed = 7/10, width = ${w}px, height = ${h}px)`
-      );
-      await updateConverted(bytes);
-    })(),
-    (async()=>{
-      const target=uhd?65:70;
-      let bytes;
-      try{
-        bytes=await avif(
-          resized,w,h,target,2,controller.signal,`AVIF(quality = ${target}%, speed = 2/10, width = ${w}px, height = ${h}px)`
-        );
-      }finally{
-        controller2.abort(`AVIF(quality = ${target}%, speed = 2/10, width = ${w}px, height = ${h}px) finished first.`);
-        spinner.removeAttribute('active');
-      }
-      await updateConverted(bytes);
-    })()
-  ]);
+  const resized=ratio!==1?await resize(rgba,width,height,w,h,true,controller.signal,true):rgba;
+  const target=uhd?75:80;
+  const encoded=await jpg(resized,w,h,target,controller.signal,true);
+  su='b';
+  size=encoded.length;
+  if(size>1024){
+    size/=1024;
+    su='kb';
+    if(size>1024){
+      size/=1024;
+      su='mb';
+    }
+  }
+  console.info(`Compressed image: width = ${w}px, height = ${h}px, ${size}${su}`);
+  await updateConverted(encoded);
+  spinner.removeAttribute('active');
 };
 const uploader=document.querySelector('#file');
 uploader.addEventListener('change',async e=>{
@@ -265,10 +246,10 @@ uploader.addEventListener('change',async e=>{
 document.querySelector('#example').addEventListener('click',async e=>{
   e.preventDefault();
   const samples=[
-    './samples/lowes-takes-photos-s8-unsplash.webp',
-    './samples/jan-kopriva-24-unsplash.webp',
-    './samples/asher-zhang-ro-unsplash.webp',
-    './samples/maxime-gilbert-v8jnzMR3wrM-unsplash.webp'
+    './samples/aarn-giri-3lGi0BXJ1W0-unsplash.webp',
+    './samples/clay-banks-w5X79sXkCr8-unsplash.webp',
+    './samples/keyur-nandaniya-0CXFhfKLIeA-unsplash.webp',
+    './samples/picsar-3GEsT9U3J24-unsplash.webp'
   ];
   const response=await fetch(samples[Math.trunc(Math.random()*samples.length)]);
   await open({bytes:new Uint8Array(await response.arrayBuffer()),type:response.headers.get('content-type')});
@@ -335,15 +316,15 @@ handle.addEventListener('pointerdown',e=>{
 {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "AVIF Photo Encoder",
-  "url": "https://www.couique.com/avif",
-  "description": "Encode a photo to the AVIF format",
+  "name": "JPEG Photo Encoder",
+  "url": "https://www.couique.com/jpeg",
+  "description": "Encode a photo to the JPEG format",
   "applicationCategory": "UtilitiesApplication",
   "browserRequirements": "Requires JavaScript.",
   "operatingSystem": "All",
   "about": {
     "@type": "Thing",
-    "description": "Encode a photo to AVIF, and show a side by side comparison between the original and the encoded version."
+    "description": "Encode a photo to JPEG, and show a side by side comparison between the original and the encoded version."
   },
   "author": {
     "@id":  "https://about.programingjd.me"
