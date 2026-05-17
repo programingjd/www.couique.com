@@ -21,6 +21,7 @@ body[data-original-size-label]:before{content:attr(data-original-size-label);pos
 body[data-compressed-size-label]:after{content:attr(data-compressed-size-label);position:absolute;bottom:0;left:0;z-index:1;font-size:.5em;padding:.5em 1em;background:rgba(0,0,0,.2);color:#fff;border-top-right-radius:1em}
 #helper{display:grid;place-self:stretch;place-items:center;grid-template-columns:auto;grid-template-rows:1fr auto}
 #helper>div{max-width:24ch;text-align:center}
+#helper>div>h1{color:#daf;font-size:1.5em;text-align:center;font-weight:900;font-stretch:125%;font-style:italic;letter-spacing:.05em;text-wrap:pretty;padding-bottom:20vh}
 #helper>header{font-size:clamp(10pt, calc(4pt + 1vw), 36pt);position:absolute;top:0;left:0;width:4em;height:4em}
 #helper>header a{position:absolute;inset:0}
 #helper>header svg{position:absolute;inset:0;border-radius:0 0 .5em 0}
@@ -71,6 +72,7 @@ img{position:absolute;width:auto;height:100%}
     <use x="256" y="256" href="/favicon.svg#logo"></use>
   </svg></a></header>
   <div>
+    <h1>JPEG encoder</h1>
     Paste, drag&nbsp;&amp;&nbsp;drop,<br>or <input tabindex="0" type="file" accept="image/*" id="file" title=" "><label for="file">select&nbsp;a&nbsp;photograph</label>.
     <br><br>
     Or load <a id="example">an&nbsp;example</a>
