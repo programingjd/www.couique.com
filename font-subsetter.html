@@ -23,17 +23,27 @@ body.dragover{
   background:conic-gradient(from var(--conic-bg-angle) at 125% 50%, #282828, #1f2b3a, #312837, #1f2b3a, #282828);
 }
 @keyframes conic-bg-angle{100%{--conic-bg-angle:1turn}}@property --conic-bg-angle{syntax:'<angle>';inherits:false;initial-value:0deg}
-h1{color:#daf;font-size:2rem;text-align:center;font-weight:900;font-stretch:125%;font-style:italic;letter-spacing:.05em;text-wrap:pretty}
+h1,h2{color:#daf;font-size:2rem;text-align:center;font-weight:900;font-stretch:125%;font-style:italic;letter-spacing:.05em;text-wrap:pretty}
+h2{color:#e45854;font-size:1.5rem;padding-top:2em}
 h1>span{-webkit-text-stroke:initial;color:#9bf6ff}
+input:hover,input:focus-visible{accent-color:#e45854}
 a,button,input[type="file"]+label{color:#adf;text-decoration-color:rgba(170,221,255,.5);text-decoration:underline;cursor:pointer}a:hover,button:hover,input[type="file"]+label:hover{color:#6af}
 input[type="file"]{width:10px;height:10px;opacity:0;overflow:hidden;position:absolute;z-index:-1;pointer-events:none}
-main{display:grid;grid-template-columns:1fr;grid-template-rows:auto 1fr;gap:1em;justify-items:center;align-items:center;max-width:80vw}
-#slider{}
+main{display:grid;grid-template-columns:1fr;grid-auto-rows:auto;gap:1em;justify-items:center;align-items:center;width:80vw}
+.preview,.codepoint:not(.disabled)>span{
+  font-family:var(--font-family,__asap__);
+  font-variation-settings:"slnt" var(--slnt,0),"wdth" var(--wdth,0),"wght" var(--wght,0);
+  font-feature-settings:"aalt"var(--aalt,0),"abvf"var(--abvf,0),"abvm"var(--abvm,0),"abvs"var(--abvs,0),"afrc"var(--afrc,0),"akhn"var(--akhn,0),"apkn"var(--apkn,0),"blwf"var(--blwf,0),"blwm"var(--blwm,0),"blws"var(--blws,0),"calt"var(--calt,0),"case"var(--case,0),"ccmp"var(--ccmp,0),"cfar"var(--cfar,0),"chws"var(--chws,0),"cjct"var(--cjct,0),"clig"var(--clig,0),"cpct"var(--cpct,0),"cpsp"var(--cpsp,0),"cswh"var(--cswh,0),"curs"var(--curs,0),"c2pc"var(--c2pc,0),"c2sc"var(--c2sc,0),"dist"var(--dist,0),"dlig"var(--dlig,0),"dnom"var(--dnom,0),"dtls"var(--dtls,0),"expt"var(--expt,0),"falt"var(--falt,0),"fin2"var(--fin2,0),"fin3"var(--fin3,0),"fina"var(--fina,0),"flac"var(--flac,0),"frac"var(--frac,0),"fwid"var(--fwid,0),"half"var(--half,0),"haln"var(--haln,0),"halt"var(--halt,0),"hist"var(--hist,0),"hkna"var(--hkna,0),"hlig"var(--hlig,0),"hngl"var(--hngl,0),"hojo"var(--hojo,0),"hwid"var(--hwid,0),"init"var(--init,0),"isol"var(--isol,0),"ital"var(--ital,0),"jalt"var(--jalt,0),"jp78"var(--jp78,0),"jp83"var(--jp83,0),"jp90"var(--jp90,0),"jp04"var(--jp04,0),"kern"var(--kern,0),"lfbd"var(--lfbd,0),"liga"var(--liga,0),"ljmo"var(--ljmo,0),"lnum"var(--lnum,0),"locl"var(--locl,0),"ltra"var(--ltra,0),"ltrm"var(--ltrm,0),"mark"var(--mark,0),"med2"var(--med2,0),"medi"var(--medi,0),"mgrk"var(--mgrk,0),"mkmk"var(--mkmk,0),"mset"var(--mset,0),"nalt"var(--nalt,0),"nlck"var(--nlck,0),"nukt"var(--nukt,0),"numr"var(--numr,0),"onum"var(--onum,0),"opbd"var(--opbd,0),"ordn"var(--ordn,0),"ornm"var(--ornm,0),"palt"var(--palt,0),"pcap"var(--pcap,0),"pkna"var(--pkna,0),"pnum"var(--pnum,0),"pref"var(--pref,0),"pres"var(--pres,0),"pstf"var(--pstf,0),"psts"var(--psts,0),"pwid"var(--pwid,0),"qwid"var(--qwid,0),"rand"var(--rand,0),"rclt"var(--rclt,0),"rkrf"var(--rkrf,0),"rlig"var(--rlig,0),"rphf"var(--rphf,0),"rtbd"var(--rtbd,0),"rtla"var(--rtla,0),"rtlm"var(--rtlm,0),"ruby"var(--ruby,0),"rvrn"var(--rvrn,0),"salt"var(--salt,0),"sinf"var(--sinf,0),"size"var(--size,0),"smcp"var(--smcp,0),"smpl"var(--smpl,0),"ssty"var(--ssty,0),"stch"var(--stch,0),"subs"var(--subs,0),"sups"var(--sups,0),"swsh"var(--swsh,0),"titl"var(--titl,0),"tjmo"var(--tjmo,0),"tnam"var(--tnam,0),"tnum"var(--tnum,0),"trad"var(--trad,0),"twid"var(--twid,0),"unic"var(--unic,0),"valt"var(--valt,0),"vapk"var(--vapk,0),"vatu"var(--vatu,0),"vchw"var(--vchw,0),"vert"var(--vert,0),"vhal"var(--vhal,0),"vjmo"var(--vjmo,0),"vkna"var(--vkna,0),"vkrn"var(--vkrn,0),"vpal"var(--vpal,0),"vrt2"var(--vrt2,0),"vrtr"var(--vrtr,0),"zero"var(--zero,0),"cv00"var(--cv00,0),"cv01"var(--cv01,0),"cv02"var(--cv02,0),"cv03"var(--cv03,0),"cv04"var(--cv04,0),"cv05"var(--cv05,0),"cv06"var(--cv06,0),"cv07"var(--cv07,0),"cv08"var(--cv08,0),"cv09"var(--cv09,0),"cv10"var(--cv10,0),"cv11"var(--cv11,0),"cv12"var(--cv12,0),"cv13"var(--cv13,0),"cv14"var(--cv14,0),"cv15"var(--cv15,0),"cv16"var(--cv16,0),"cv17"var(--cv17,0),"cv18"var(--cv18,0),"cv19"var(--cv19,0),"cv20"var(--cv20,0),"cv21"var(--cv21,0),"cv22"var(--cv22,0),"cv23"var(--cv23,0),"cv24"var(--cv24,0),"cv25"var(--cv25,0),"cv26"var(--cv26,0),"cv27"var(--cv27,0),"cv28"var(--cv28,0),"cv29"var(--cv29,0),"cv30"var(--cv30,0),"cv31"var(--cv31,0),"cv32"var(--cv32,0),"cv33"var(--cv33,0),"cv34"var(--cv34,0),"cv35"var(--cv35,0),"cv36"var(--cv36,0),"cv37"var(--cv37,0),"cv38"var(--cv38,0),"cv39"var(--cv39,0),"cv40"var(--cv40,0),"cv41"var(--cv41,0),"cv42"var(--cv42,0),"cv43"var(--cv43,0),"cv44"var(--cv44,0),"cv45"var(--cv45,0),"cv46"var(--cv46,0),"cv47"var(--cv47,0),"cv48"var(--cv48,0),"cv49"var(--cv49,0),"cv50"var(--cv50,0),"cv51"var(--cv51,0),"cv52"var(--cv52,0),"cv53"var(--cv53,0),"cv54"var(--cv54,0),"cv55"var(--cv55,0),"cv56"var(--cv56,0),"cv57"var(--cv57,0),"cv58"var(--cv58,0),"cv59"var(--cv59,0),"cv60"var(--cv60,0),"cv61"var(--cv61,0),"cv62"var(--cv62,0),"cv63"var(--cv63,0),"cv64"var(--cv64,0),"cv65"var(--cv65,0),"cv66"var(--cv66,0),"cv67"var(--cv67,0),"cv68"var(--cv68,0),"cv69"var(--cv69,0),"cv70"var(--cv70,0),"cv71"var(--cv71,0),"cv72"var(--cv72,0),"cv73"var(--cv73,0),"cv74"var(--cv74,0),"cv75"var(--cv75,0),"cv76"var(--cv76,0),"cv77"var(--cv77,0),"cv78"var(--cv78,0),"cv79"var(--cv79,0),"cv80"var(--cv80,0),"cv81"var(--cv81,0),"cv82"var(--cv82,0),"cv83"var(--cv83,0),"cv84"var(--cv84,0),"cv85"var(--cv85,0),"cv86"var(--cv86,0),"cv87"var(--cv87,0),"cv88"var(--cv88,0),"cv89"var(--cv89,0),"cv90"var(--cv90,0),"cv91"var(--cv91,0),"cv92"var(--cv92,0),"cv93"var(--cv93,0),"cv94"var(--cv94,0),"cv95"var(--cv95,0),"cv96"var(--cv96,0),"cv97"var(--cv97,0),"cv98"var(--cv98,0),"cv99"var(--cv99,0),"ss01"var(--ss01,0),"ss02"var(--ss02,0),"ss03"var(--ss03,0),"ss04"var(--ss04,0),"ss05"var(--ss05,0),"ss06"var(--ss06,0),"ss07"var(--ss07,0),"ss08"var(--ss08,0),"ss09"var(--ss09,0),"ss10"var(--ss10,0),"ss11"var(--ss11,0),"ss12"var(--ss12,0),"ss13"var(--ss13,0),"ss14"var(--ss14,0),"ss15"var(--ss15,0),"ss16"var(--ss16,0),"ss17"var(--ss17,0),"ss18"var(--ss18,0),"ss19"var(--ss19,0),"ss20"var(--ss20,0);
+}
 .preview{
-  height:6rem;
+  padding:.5em 1em;
+  border:1px solid rgb(from currentColor r g b / .25);
+  background:rgb(from currentColor r g b / .05);
+  border-radius:1rem;
+  min-height:15rem;
+  width:100%;
   overflow:auto;
   font-size:calc(var(--size,100)/100*1em);
-  font-variation-settings:"slnt" var(--slnt,0),"wdth" var(--wdth,0),"wght" var(--wght,0);
   outline:none;
   scrollbar-gutter:stable;
   display:grid;
@@ -43,6 +53,36 @@ main{display:grid;grid-template-columns:1fr;grid-template-rows:auto 1fr;gap:1em;
   caret-color:#adf;
   text-wrap:pretty;
 }
+.sliders{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  grid-auto-rows:auto;
+  list-style:none;
+  width:100%;
+  max-width:50ch;
+  gap:1em 2em;
+}
+.sliders li{
+  grid-column:1 / -1;
+  display:grid;
+  grid-template-columns:subgrid;
+}
+.sliders label{display:contents}
+.features{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  grid-auto-rows:auto;
+  list-style:none;
+  gap:.25em 1em;
+}
+.features li{
+  grid-column:1 / -1;
+  display:grid;
+  grid-template-columns:subgrid;
+  padding:.25em;
+}
+.features label{display:contents}
+
 .tables{
   justify-self:stretch;
   display:grid;
@@ -50,21 +90,25 @@ main{display:grid;grid-template-columns:1fr;grid-template-rows:auto 1fr;gap:1em;
   gap:1em;
 }
 .table{
+  font-size:1.5em;
   display:grid;
   grid-auto-flow:row;
-  grid-template-columns:repeat(auto-fill,2.5em);
-  gap:.25em;
+  grid-template-columns:repeat(auto-fill,3em);
+  gap:.1em;
 }
 .table>h3{
   grid-column:1 / -1;
   text-align:center;
 }
 .codepoint{
-  width:2.5em;height:2.5em;
+  width:3em;height:3em;
   display:grid;place-items:center;
-  border:1px solid rgb(from currentColor r g b / .25);
-  border-radius:.25em;
-  padding:.25em;
+  background:rgb(from currentColor r g b / .05);
+  user-select:none;
+}
+.codepoint:not(.disabled):hover{
+  user-select:auto;
+  background:#282828;
 }
 .codepoint.disabled>span{opacity:.1}
 </style>
@@ -121,9 +165,21 @@ const open=async(blob)=>{
     }
     if(signal.aborted|| !fontLoaded) return;
     container.textContent='';
+    container.style.setProperty('--font-family',`__${info.family_name}`);
     if(previousFontFace) await document.fonts.delete(previousFontFace);
     fontFace=newFontFace;
     await document.fonts.add(fontFace);
+    const previewTitle=document.createElement('h2');
+    previewTitle.textContent='Preview:';
+    container.appendChild(previewTitle);
+    const preview=document.createElement('div');
+    preview.contentEditable='plaintext-only';
+    preview.classList.add('preview');
+    preview.textContent=`The quick brown fox jumps over the lazy dog.\nA very bad quack might jinx zippy fowls; beware!`;
+    container.appendChild(preview);
+    const axesTitle=document.createElement('h2');
+    axesTitle.textContent='Axes:';
+    container.appendChild(axesTitle);
     const sliders=document.createElement('ul');
     sliders.classList.add('sliders');
     for (const {tag,min,max,default:value} of [{tag:'size',min:'50','max':'200'},...info.axes??[]]){
@@ -144,12 +200,9 @@ const open=async(blob)=>{
       sliders.appendChild(li);
     }
     container.appendChild(sliders);
-    const preview=document.createElement('div');
-    preview.contentEditable='plaintext-only';
-    preview.classList.add('preview');
-    preview.style.fontFamily=`__${info.family_name}`;
-    preview.textContent=`The quick brown fox jumps over the lazy dog.\nA very bad quack might jinx zippy fowls; beware!`;
-    container.appendChild(preview);
+    const featuresTitle=document.createElement('h2');
+    featuresTitle.textContent='Features:';
+    container.appendChild(featuresTitle);
     if(info.features?.length){
       const features=document.createElement('ul');
       features.classList.add('features');
@@ -159,12 +212,22 @@ const open=async(blob)=>{
         label.textContent=name;
         const code=document.createElement('code');
         code.textContent=tag;
-        label.appendChild(code);
+        label.prepend(code);
+        const checkbox=document.createElement('input');
+        checkbox.type='checkbox';
+        checkbox.id=`feature-${tag}`;
+        checkbox.addEventListener('change',_=>{
+          container.style.setProperty(`--${tag}`,checkbox.checked?'1':'0');
+        });
+        label.appendChild(checkbox);
         li.appendChild(label);
         features.appendChild(li);
       }
       container.appendChild(features);
     }
+    const tablesTitle=document.createElement('h2');
+    tablesTitle.textContent='Characters:';
+    container.appendChild(tablesTitle);
     const tables=document.createElement('div');
     tables.classList.add('tables');
     for(const {name,start,end,codepoints,codepoint_names} of info.tables){
