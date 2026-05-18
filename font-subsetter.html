@@ -165,6 +165,8 @@ const open=async(blob)=>{
     });
     const {metadata,subset: _subset}=await mod;
     const info=await metadata(data,signal);
+    if(!info.axes) info.axes=[];
+    if(!info.features) info.features=[];
     data=info.input;
     delete info.input;
     console.log(JSON.stringify(info,null,2));
@@ -177,7 +179,8 @@ const open=async(blob)=>{
     descriptors.style=slnt?`oblique ${-slnt.max}deg ${-slnt.min}deg`:'normal';
     if(signal.aborted) return;
     const previousFontFace=fontFace;
-    const newFontFace=new FontFace(`__${info.family_name}`,data,descriptors);
+    const familyName=info.family_name.trim().replace(/\s+/g,'_');
+    const newFontFace=new FontFace(`__${familyName}`,data,descriptors);
     let fontLoaded=false;
     try{
       await newFontFace.load();
@@ -187,7 +190,7 @@ const open=async(blob)=>{
     }
     if(signal.aborted|| !fontLoaded) return;
     container.textContent='';
-    container.style.setProperty('--font-family',`__${info.family_name}`);
+    container.style.setProperty('--font-family',`__${familyName}`);
     if(previousFontFace) await document.fonts.delete(previousFontFace);
     fontFace=newFontFace;
     await document.fonts.add(fontFace);
