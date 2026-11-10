@@ -9,13 +9,12 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="theme-color" content="#262626">
   <title>Seagull</title>
-  <base href="./seagull/">
-  <link rel="icon" type="image/svg+xml" href="./icons/ai.storyteller.vectorcraft.svg">
-  <link rel="icon" type="image/png" sizes="32x32" href="./icons/32/ai.storyteller.vectorcraft.png">
-  <link rel="apple-touch-icon" href="./icons/256/ai.storyteller.vectorcraft.png">
+  <link rel="icon" type="image/svg+xml" href="./seagull/icons/ai.storyteller.vectorcraft.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="./seagull/icons/32/ai.storyteller.vectorcraft.png">
+  <link rel="apple-touch-icon" href="./seagull/icons/256/ai.storyteller.vectorcraft.png">
 <script type="module">
-import init, * as bindings from './vectorcraft-web-503936561a152ce1.js';
-const wasm=await init({module_or_path:'./vectorcraft-web-e4554e240debbfbd_bg.wasm'});
+import init, * as bindings from './seagull/vectorcraft-web-503936561a152ce1.js';
+const wasm=await init({module_or_path:'./seagull/vectorcraft-web-e4554e240debbfbd_bg.wasm'});
 window.wasmBindings=bindings;
 dispatchEvent(new CustomEvent('TrunkApplicationStarted',{detail:{wasm}}));
 </script>
@@ -40,17 +39,17 @@ html,body{
 </style>
 <link
   rel="modulepreload"
-  href="./vectorcraft-web-503936561a152ce1.js"
+  href="./seagull/vectorcraft-web-503936561a152ce1.js"
   crossorigin="anonymous"
   integrity="sha384-s5+W5F7JNHFaOg+yQ08vuPJRRG4ZYTHvosUvsTiIIEIo7ofs0etTUBN6oOV2CJX8">
 <link
   rel="modulepreload"
-  href="./snippets/eframe-d31a8450ea12dfc1/inline0.js"
+  href="./seagull/snippets/eframe-d31a8450ea12dfc1/inline0.js"
   crossorigin="anonymous"
   integrity="sha384-uPZQ72BwgZ4v7Km6+UIFbkDDlt7ShGEsAVEHVN/+wZSGFhItJZB83iKMFQXauTSs">
 <link
   rel="preload"
-  href="./vectorcraft-web-e4554e240debbfbd_bg.wasm"
+  href="./seagull/vectorcraft-web-e4554e240debbfbd_bg.wasm"
   crossorigin="anonymous"
   integrity="sha384-tvh3hHbzUcyf7hbdhfNV4c5VRowLEPMDq5Hw58gobj9Hb4xVN5L1x6AUXK3OCm8I"
   as="fetch"
